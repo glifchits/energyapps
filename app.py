@@ -13,29 +13,27 @@ def index():
 
 @app.route('/auth')
 def auth():
-    app.logger.debug( request.args )
-    app.logger.debug( request.args.get('state') )
-    app.logger.debug( request.args.get('code') )
-
+    app.logger.debug( '/auth GET %s' % request.args )
     params = {
-        'grant_type': request.args.get('code'),
+        'grant_type': 'authorization_code', #request.args.get('code'),
         'code': request.args.get('code'),
-        'redirect_uri': config.GET_TOKEN_URL
+        'redirect_uri': config.REDIRECT_URI
     }
     from base64 import b64encode
-    auth_string = '%s%s' % (config.CLIENT_ID, config.CLIENT_SECRET)
+    auth_string = '%s:%s' % (config.CLIENT_ID, config.CLIENT_SECRET)
     auth_b64 = b64encode(auth_string)
     headers = {
         'Authorization' : 'Basic %s' % auth_b64
     }
-    r = requests.post(config.TOKEN_URL, data=params, headers=headers)
+    r = requests.post(config.TOKEN_URL, data=params, headers=headers, \
+            verify=False)
+    access_token = r.json().get('access_token')
+    if access_token is None:
+        raise ValueError("bad request")
+    app.logger.debug(access_token)
+    session['access_token'] = access_token
+    return render_template('basic.html')
 
-    return 'hi'
-
-@app.route('/token')
-def get_token():
-
-    return 'hi'
 
 if __name__ == '__main__':
     app.run()
