@@ -4,6 +4,7 @@ from flask import Flask, redirect, url_for, render_template, session, \
 import requests
 # stdlib imports
 import os
+import urllib
 from base64 import b64encode
 # my app imports
 import config
@@ -66,6 +67,20 @@ def read_service_status():
 @app.route('/read/auth_status')
 def read_auth_status():
     url = 'https://greenbutton.affsys.com/ldc/api/v1/ReadAuthorizationStatus'
+    r = requests.get(url, headers=bearer(session.get('access_token')), \
+            verify=False)
+    return r.text
+
+
+@app.route('/eui')
+def get_eui():
+    url = 'https://greenbutton.affsys.com/ldc/api/v1/UsagePoint?'
+    params = {
+        'start' : 1380600000,
+        'duration' : 1296000
+    }
+    url += urllib.urlencode(params)
+    app.logger.debug('getting url %s' % url)
     r = requests.get(url, headers=bearer(session.get('access_token')), \
             verify=False)
     return r.text
