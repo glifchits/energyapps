@@ -5,6 +5,7 @@ import requests
 # stdlib imports
 import os
 import urllib
+import time
 from base64 import b64encode
 # my app imports
 import config
@@ -83,6 +84,14 @@ def get_eui():
     app.logger.debug('getting url %s' % url)
     r = requests.get(url, headers=bearer(session.get('access_token')), \
             verify=False)
+
+    if r.text:
+        username = "%d %s" % (time.time(), session.get('access_token')[:10])
+        f = open('/Users/glifchits/Development/energyapp/data/%s.xml' % \
+                username, 'w')
+        f.write(r.text)
+        f.close()
+
     return r.text
 
 
