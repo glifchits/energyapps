@@ -9,6 +9,7 @@ import time
 from base64 import b64encode
 # my app imports
 import config
+import api_points as api
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -40,7 +41,7 @@ def auth():
         'code': request.args.get('code'),
         'redirect_uri': config.REDIRECT_URI
     }
-    r = requests.post(config.TOKEN_URL, data=params, headers=auth_header(), \
+    r = requests.post(config.TOKEN_URL, data=params, headers=auth_header(),
             verify=False)
     app.logger.debug(r.text)
     request_data = r.json()
@@ -59,30 +60,28 @@ def auth():
 
 @app.route('/read/service_status')
 def read_service_status():
-    url = 'https://greenbutton.affsys.com/ldc/api/v1/ReadServiceStatus'
-    r = requests.get(url, headers=auth_header(), verify=False)
+    r = requests.get(api.SERVICE_STATUS,
+            headers=auth_header(), verify=False)
     app.logger.debug(r.text)
     return r.text
 
 
 @app.route('/read/auth_status')
 def read_auth_status():
-    url = 'https://greenbutton.affsys.com/ldc/api/v1/ReadAuthorizationStatus'
-    r = requests.get(url, headers=bearer(session.get('access_token')), \
-            verify=False)
+    r = requests.get(api.AUTH_STATUS,
+            headers=bearer(session.get('access_token')), verify=False)
     return r.text
 
 
 @app.route('/eui')
 def get_eui():
-    url = 'https://greenbutton.affsys.com/ldc/api/v1/UsagePoint?'
     params = {
         'start' : 1380600000,
         'duration' : 1296000
     }
-    url += urllib.urlencode(params)
+    url = api.GET_EUI + '?' + urllib.urlencode(params)
     app.logger.debug('getting url %s' % url)
-    r = requests.get(url, headers=bearer(session.get('access_token')), \
+    r = requests.get(url, headers=bearer(session.get('access_token')),
             verify=False)
 
     if r.text:
