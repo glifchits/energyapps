@@ -9,19 +9,6 @@ connection = engine.connect()
 Base = declarative_base()
 
 
-class MeterReading(Base):
-    __tablename__ = 'meter_reading'
-
-    id = Column(Integer, primary_key=True)
-    reading_id = Column(Integer, ForeignKey('reading_type.id'))
-    time_start = Column(Integer)
-    time_duration = Column(Integer)
-    cost = Column(Integer)
-
-    reading = relationship("Reading", backref=backref('meter readings',
-        order_by=time_start))
-
-
 class Reading(Base):
     __tablename__ 'reading_type'
 
@@ -45,4 +32,17 @@ class Reading(Base):
 
     readings = relationship("MeterReading", order_by='MeterReading.time_start',
             backref='reading')
+
+
+class MeterReading(Base):
+    __tablename__ = 'meter_reading'
+
+    id = Column(Integer, primary_key=True)
+    reading_id = Column(Integer, ForeignKey('reading_type.id'))
+    time_start = Column(Integer)
+    time_duration = Column(Integer)
+    cost = Column(Integer)
+
+    reading = relationship("Reading", backref=backref('meter readings',
+        order_by=time_start))
 
