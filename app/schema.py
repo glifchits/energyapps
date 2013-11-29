@@ -1,60 +1,46 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, backref
 
-Base = declarative_base()
+from flask import Blueprint, current_app as app
+from flask.ext.sqlalchemy import SQLAlchemy
+from app import db
 
 
-class Reading(Base):
-    __tablename__ = 'reading'
-
-    id = Column(Integer, primary_key=True)
-    title = Column(String)
+class Reading(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String)
     # from ReadingType
-    accumulation_behaviour = Column(Integer)
-    commodity = Column(Integer)
-    currency = Column(Integer)
-    data_qualifier = Column(Integer)
-    flow_direction = Column(Integer)
-    interval_length = Column(Integer)
-    kind = Column(Integer)
-    multiplier = Column(Integer)
-    uom = Column(Integer)
+    accumulation_behaviour = db.Column(db.Integer)
+    commodity = db.Column(db.Integer)
+    currency = db.Column(db.Integer)
+    data_qualifier = db.Column(db.Integer)
+    flow_direction = db.Column(db.Integer)
+    interval_length = db.Column(db.Integer)
+    kind = db.Column(db.Integer)
+    multiplier = db.Column(db.Integer)
+    uom = db.Column(db.Integer)
     # from ServiceCategory
-    service_kind = Column(Integer)
+    service_kind = db.Column(db.Integer)
 
     # children (many)
-    intervals = relationship("Interval", backref=backref('intervals',
-        order_by=id))
+    intervals = db.relationship("Interval", backref='intervals',
+            lazy='dynamic')
 
 
-class Interval(Base):
-    __tablename__ = 'interval'
+class Interval(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    duration = db.Column(db.Integer)
+    start = db.Column(db.Integer)
+    reading_id = db.Column(db.Integer, db.ForeignKey('reading.id'))
 
-    id = Column(Integer, primary_key=True)
-    duration = Column(Integer)
-    start = Column(Integer)
-    reading_id = Column(Integer, ForeignKey('reading.id'))
-
-    # parent (one)
-    reading = relationship("Reading", backref=backref('readings',
-        order_by=id))
     # children (many)
-    readings = relationship("IntervalReading",
-        backref=backref('interval_readings', order_by=id))
+    readings = db.relationship("IntervalReading",
+        backref='interval_readings', lazy='dynamic')
 
 
-class IntervalReading(Base):
-    __tablename__ = 'interval_reading'
-
-    id = Column(Integer, primary_key=True)
-    interval_id = Column(Integer, ForeignKey('interval.id'))
-    start = Column(Integer)
-    duration = Column(Integer)
-    cost = Column(Integer)
-    value = Column(Integer)
-
-    # parent (one)
-    interval = relationship("Interval", backref=backref('interval',
-        order_by=id))
+class IntervalReading(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    interval_id = db.Column(db.Integer, db.ForeignKey('interval.id'))
+    start = db.Column(db.Integer)
+    duration = db.Column(db.Integer)
+    cost = db.Column(db.Integer)
+    value = db.Column(db.Integer)
 

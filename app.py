@@ -1,20 +1,13 @@
-# local package imports
-from flask import Flask, redirect, url_for, render_template, session, \
-        request, g
-import requests
-# stdlib imports
-import os
-import urllib
-import time
-from base64 import b64encode
-# my app imports
-import config
-import api_points as api
+from flask import render_template
 
-app = Flask(__name__)
-app.secret_key = os.urandom(24)
-app.debug = True
-
+from app import app
+from app import config
+from app.api import api
+app.register_blueprint(api)
+'''
+from app.data import data
+app.register_blueprint(data)
+'''
 
 @app.route('/')
 def index():

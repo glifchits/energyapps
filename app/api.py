@@ -2,6 +2,10 @@
 from flask import redirect, url_for, render_template, session, request
 from flask import Blueprint, current_app as app
 
+import requests
+from base64 import b64encode
+
+import config
 import api_points as apipt
 
 api = Blueprint('api', __name__)

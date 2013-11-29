@@ -3,22 +3,7 @@ import sys
 import os
 import xml.etree.ElementTree as ET
 
-from sqlalchemy.engine import create_engine
-from sqlalchemy.orm import sessionmaker
-
 import schema
-
-engine = create_engine('postgresql://localhost', echo=True)
-Session = sessionmaker(bind=engine)
-session = Session()
-schema.Base.metadata.create_all(engine)
-
-try:
-    filename = sys.argv[1]
-    assert(os.path.isfile(filename))
-except IndexError, AssertionError:
-    sys.stderr.write('Usage: %s [filename]\n' % sys.argv[0])
-    sys.exit()
 
 tree = ET.parse(filename)
 root = tree.getroot()
