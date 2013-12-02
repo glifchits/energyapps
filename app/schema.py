@@ -1,7 +1,8 @@
 
-from flask import Blueprint, current_app as app
+from flask import Blueprint, current_app
 from flask.ext.sqlalchemy import SQLAlchemy
-from app import db
+
+from __init__ import db
 
 
 class Reading(db.Model):

@@ -3,7 +3,11 @@ from flask import redirect, url_for, render_template, session, request
 from flask import Blueprint, current_app as app
 
 import requests
+import urllib
+import time
 from base64 import b64encode
+
+import data
 
 import config
 import api_points as apipt
@@ -75,12 +79,7 @@ def get_eui():
             verify=False)
 
     if r.text:
-        username = "%d %s" % (time.time(), session.get('access_token')[:10])
-        f = open('/Users/glifchits/Development/energyapi/data/%s.xml' % \
-                username, 'w')
-        f.write(r.text)
-        f.close()
-
+        data.process_data(r.text)
     return r.text
 
 
