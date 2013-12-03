@@ -7,6 +7,7 @@ from __init__ import db
 
 class Reading(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    owner = db.Column(db.Integer, db.ForeignKey('users.id'))
     title = db.Column(db.String)
     # from ReadingType
     accumulation_behaviour = db.Column(db.Integer)
@@ -47,6 +48,8 @@ class IntervalReading(db.Model):
 
 
 class User(db.Model):
+    __tablename__ = 'users'
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     email = db.Column(db.String, unique=True)
