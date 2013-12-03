@@ -50,6 +50,13 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     email = db.Column(db.String, unique=True)
+    password = db.Column(db.String)
+
+    def set_password(self, pw):
+        self.password = pw
+
+    def check_password(self, pw):
+        return self.password == pw
 
     # children (many)
     readings = db.relationship("Reading",
