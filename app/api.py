@@ -7,7 +7,7 @@ import urllib
 import time
 from base64 import b64encode
 
-import data
+import parsedata as data
 
 import config
 import api_points as apipt
@@ -77,6 +77,9 @@ def get_eui():
     app.logger.debug('getting url %s' % url)
     r = requests.get(url, headers=bearer(session.get('access_token')),
             verify=False)
+
+    if r.status_code != 200:
+        abort(r.status_code)
 
     if r.text:
         data.process_data(r.text)
