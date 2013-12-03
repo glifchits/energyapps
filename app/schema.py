@@ -45,3 +45,13 @@ class IntervalReading(db.Model):
     cost = db.Column(db.Integer)
     value = db.Column(db.Integer)
 
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    email = db.Column(db.String, unique=True)
+
+    # children (many)
+    readings = db.relationship("Reading",
+        backref='user_readings', lazy='dynamic')
+
