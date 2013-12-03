@@ -29,7 +29,7 @@ class Reading(db.Model):
 class Interval(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     duration = db.Column(db.Integer)
-    start = db.Column(db.Integer)
+    start = db.Column(db.DateTime)
     reading_id = db.Column(db.Integer, db.ForeignKey('reading.id'))
 
     # children (many)
@@ -40,7 +40,7 @@ class Interval(db.Model):
 class IntervalReading(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     interval_id = db.Column(db.Integer, db.ForeignKey('interval.id'))
-    start = db.Column(db.Integer)
+    start = db.Column(db.DateTime)
     duration = db.Column(db.Integer)
     cost = db.Column(db.Integer)
     value = db.Column(db.Integer)
