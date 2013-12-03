@@ -2,6 +2,7 @@
 import sys
 import os
 import xml.etree.ElementTree as ET
+import datetime
 
 import schema
 
@@ -22,6 +23,12 @@ LOCAL_TIME = '{http://naesb.org/espi}LocalTimeParameters'
 METER_READING = '{http://naesb.org/espi}MeterReading'
 INTERVAL_BLOCK = '{http://naesb.org/espi}IntervalBlock'
 READING_TYPE = '{http://naesb.org/espi}ReadingType'
+
+
+def from_timestamp(timestamp):
+    if type(timestamp) == str:
+        timestamp = int(timestamp)
+    return datetime.datetime.fromtimestamp(timestamp)
 
 
 def process_data(xml_string):
@@ -70,10 +77,10 @@ def process_data(xml_string):
 
         interval_block = schema.Interval(
             duration = duration.text,
-            start = start.text
+            start = from_timestamp(start.text)
         )
         interval_block.reading = reading
-        interval_blocks.append(interval_block)
+        reading.intervals.append(interval_block)
         session.add(interval_block)
 
         for i_reading in interval_readings:
@@ -81,7 +88,7 @@ def process_data(xml_string):
             duration, start = time_period.getchildren()
 
             interval_reading = schema.IntervalReading(
-                start = start.text,
+                start = from_timestamp(start.text),
                 duration = duration.text,
                 cost = cost.text,
                 value = value.text
