@@ -8,7 +8,7 @@ import time
 from base64 import b64encode
 
 import parsedata as data
-
+from auth import login_required
 import config
 import api_points as apipt
 
@@ -68,6 +68,7 @@ def read_auth_status():
 
 
 @api.route('/eui')
+@login_required
 def get_eui():
     params = {
         'start' : 1380600000,
