@@ -1,5 +1,6 @@
 
-from flask import redirect, url_for, render_template, session, request, flash
+from flask import redirect, url_for, render_template, session, request, flash,\
+        g
 from flask import Blueprint, current_app as app
 
 from functools import wraps
@@ -30,7 +31,16 @@ def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
-        flash((CSS_SUCC, "Success!"))
+
+        user = schema.User.query.filter_by(email=email).first()
+        if user.check_password(password):
+            app.logger.debug("logging in as %s" % user)
+            g.user = user
+            app.logger.debug('g.user is %s' % g.user)
+            flash((CSS_SUCC, "Success!"))
+            return redirect(url_for('home'))
+
+        flash((CSS_ERR, "Username or password incorrect"))
         return redirect(url_for('home'))
 
     return render_template('login.html')

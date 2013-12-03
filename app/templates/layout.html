@@ -5,9 +5,10 @@
     <link href='/static/css/styles.css' rel=stylesheet type=text/css>
   </head>
   <body>
+    {{ g }} {{ g['user'] }} {{ g.user }}
     <div class=login>
-      {% if 'user' in session %}
-      {{ session.user.name }}
+      {% if g.user %}
+      {{ g.user.name }}
       {% else %}
       <a href='{{ url_for('auth.login') }}'>Log in</a> or <a href='{{ url_for('auth.register') }}'>Sign up!</a>
       {% endif %}

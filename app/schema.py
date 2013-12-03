@@ -55,6 +55,9 @@ class User(db.Model):
     email = db.Column(db.String, unique=True)
     password = db.Column(db.String)
 
+    def __repr__(self):
+        return "<User %s>" % self.name
+
     def set_password(self, pw):
         self.password = pw
 
