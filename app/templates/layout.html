@@ -2,9 +2,37 @@
 <html>
   <head>
     <title>GeorgeEnergyApp</title>
+    <style>
+      body {
+        margin: 0 auto;
+        width: 500px;
+      }
+    </style>
   </head>
   <body>
+    <header>
+      <h1>EnergyApps</h1>
+    </header>
     <div class=content>
+
+      <span class=login>
+        {% if 'user' in session %}
+        {{ session.user.name }}
+        {% else %}
+        <a href='{{ url_for('auth.login') }}'>Log in</a> or <a href='{{ url_for('auth.register') }}'>Sign up!</a>
+        {% endif %}
+      </span>
+
+     {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class=flash>
+          {% for message in messages %}
+          <span class=message>{{ message }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+      {% endwith %}
+
       {% block content %}
       {% endblock %}
     </div>
