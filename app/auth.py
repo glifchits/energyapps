@@ -4,11 +4,16 @@ from flask import Blueprint, current_app as app
 
 from functools import wraps
 
-from schema import *
+from __init__ import db
+import schema
 from constants import *
 
 auth = Blueprint('auth', __name__)
 
+
+db.create_all()
+connection = db.session()
+connection.rollback()
 
 def login_required(f):
     @wraps(f)
@@ -39,10 +44,12 @@ def register():
         password = request.form.get('password')
 
         try:
-            user = User()
+            user = schema.User()
             user.name = name
             user.email = email
             user.set_password(password)
+            connection.add(user)
+            connection.commit()
             flash((CSS_SUCC, 'Success!'))
         except Exception as e:
             flash((CSS_ERR, str(e)))
