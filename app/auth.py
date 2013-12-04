@@ -21,16 +21,6 @@ connection.rollback()
 def load_user(id):
     return schema.User.query.get(int(id))
 
-'''
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if session.get('user') is None:
-            flash((CSS_ERR, "You must login before you can do that!"))
-            return redirect(url_for('auth.login', next=request.url))
-        return f(*args, **kwargs)
-    return decorated_function
-'''
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
