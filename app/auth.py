@@ -1,11 +1,11 @@
 
-from flask import redirect, url_for, render_template, session, request, flash,\
-        g
+from flask import redirect, url_for, render_template, session, request, flash, g
 from flask import Blueprint, current_app as app
+from flask.ext.login import login_user, logout_user, login_required
 
 from functools import wraps
 
-from __init__ import db
+from app import db, lm
 import schema
 from constants import *
 
@@ -16,6 +16,12 @@ db.create_all()
 connection = db.session()
 connection.rollback()
 
+
+@lm.user_loader
+def load_user(id):
+    return schema.User.query.get(int(id))
+
+'''
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -24,26 +30,32 @@ def login_required(f):
             return redirect(url_for('auth.login', next=request.url))
         return f(*args, **kwargs)
     return decorated_function
-
+'''
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
+        remember_me = True
 
         user = schema.User.query.filter_by(email=email).first()
-        if user.check_password(password):
+        if user and user.check_password(password):
             app.logger.debug("logging in as %s" % user)
-            g.user = user
-            app.logger.debug('g.user is %s' % g.user)
+            login_user(user, remember = remember_me)
             flash((CSS_SUCC, "Success!"))
-            return redirect(url_for('home'))
+            return redirect(request.args.get('next') or url_for('home'))
 
         flash((CSS_ERR, "Username or password incorrect"))
-        return redirect(url_for('home'))
+        return redirect(url_for('.login'))
 
     return render_template('login.html')
+
+
+@auth.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
 
 
 @auth.route('/register', methods=['GET', 'POST'])
