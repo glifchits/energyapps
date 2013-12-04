@@ -3,6 +3,8 @@
   <head>
     <title>GeorgeEnergyApp</title>
     <link href='/static/css/styles.css' rel=stylesheet type=text/css>
+    {% block head %}
+    {% endblock %}
   </head>
   <body>
     <div class=login>
@@ -29,5 +31,7 @@
       {% block content %}
       {% endblock %}
     </div>
+      {% block beforeend %}
+      {% endblock %}
   </body>
 </html>
