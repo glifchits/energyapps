@@ -27,6 +27,11 @@ def bearer(access_code):
     }
 
 
+@api.route('/to_data_custodian')
+def to_data_custodian():
+    return redirect(config.AUTH_URL)
+
+
 @api.route('/auth')
 def auth():
     app.logger.debug( '/auth GET %s' % request.args )
