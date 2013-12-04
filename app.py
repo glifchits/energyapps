@@ -8,6 +8,10 @@ from app.api import api
 app.register_blueprint(api)
 from app.auth import auth
 app.register_blueprint(auth)
+from app.data import data
+app.register_blueprint(data)
+from app.charts import charts
+app.register_blueprint(charts)
 
 
 @app.before_request
