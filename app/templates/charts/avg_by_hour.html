@@ -2,28 +2,22 @@
 
 {% block head %}
 <style>
-
   body {
     font: 10px sans-serif;
   }
 
-  .axis path,
   .axis line {
+    stroke: #000;
+  }
+
+  .axis path {
     fill: none;
     stroke: #000;
-    shape-rendering: crispEdges;
   }
 
-  .x.axis path {
+  .axis + .axis g text {
     display: none;
   }
-
-  .line {
-    fill: none;
-    stroke: steelblue;
-    stroke-width: 1.5px;
-  }
-
 </style>
 {% endblock %}
 
@@ -32,5 +26,5 @@
 
 {% block beforeend %}
 <script src="http://d3js.org/d3.v3.js" charset="utf-8"></script>
-<script src="/static/js/charts/hour_of_day.js"></script>
+<script src="/static/js/charts/avg_by_hour.js"></script>
 {% endblock %}

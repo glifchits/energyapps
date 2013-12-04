@@ -16,12 +16,14 @@
 
 <ul>
   <li><a href='{{ url_for('data.get_readings') }}'>Get Readings</a>
+  <li><a href='{{ url_for('data.by_hour') }}'>By hour</a></li>
 </ul>
 
 <h2>Charts</h2>
 
 <ul>
   <li><a href='{{ url_for('charts.over_time') }}'>Over time</a></li>
+  <li><a href='{{ url_for('charts.avg_by_hour') }}'>By hour</a></li>
 </ul>
 
 {% endblock %}
