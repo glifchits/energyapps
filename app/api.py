@@ -1,5 +1,5 @@
 
-from flask import redirect, url_for, render_template, session, request
+from flask import redirect, url_for, render_template, session, request, abort
 from flask import Blueprint, current_app as app
 from flask.ext.login import login_required
 
@@ -9,7 +9,6 @@ import time
 from base64 import b64encode
 
 import parsedata as data
-from auth import login_required
 import config
 import api_points as apipt
 
@@ -71,6 +70,8 @@ def read_service_status():
 def read_auth_status():
     r = requests.get(apipt.AUTH_STATUS,
             headers=bearer(session.get('access_token')), verify=False)
+    if r.status_code != 200:
+        abort(r.status_code)
     return r.text
 
 
