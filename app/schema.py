@@ -54,6 +54,9 @@ class User(db.Model):
     name = db.Column(db.String)
     email = db.Column(db.String, unique=True)
     password = db.Column(db.String)
+    # children (many)
+    readings = db.relationship("Reading", backref='user_readings',
+            lazy='dynamic')
 
     def __repr__(self):
         return "<User %s>" % self.name
@@ -64,7 +67,16 @@ class User(db.Model):
     def check_password(self, pw):
         return self.password == pw
 
-    # children (many)
-    readings = db.relationship("Reading",
-        backref='user_readings', lazy='dynamic')
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return unicode(self.id)
+
 
