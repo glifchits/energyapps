@@ -2,6 +2,8 @@
 from flask import Blueprint, current_app
 from flask.ext.sqlalchemy import SQLAlchemy
 
+import datetime
+
 from __init__ import db
 
 
@@ -21,10 +23,12 @@ class Reading(db.Model):
     uom = db.Column(db.Integer)
     # from ServiceCategory
     service_kind = db.Column(db.Integer)
-
     # children (many)
     intervals = db.relationship("Interval", backref='intervals',
             lazy='dynamic')
+
+    def __repr__(self):
+        return "<Reading %s>" % self.id
 
 
 class Interval(db.Model):
@@ -32,10 +36,13 @@ class Interval(db.Model):
     duration = db.Column(db.Integer)
     start = db.Column(db.DateTime)
     reading_id = db.Column(db.Integer, db.ForeignKey('reading.id'))
-
     # children (many)
     readings = db.relationship("IntervalReading",
         backref='interval_readings', lazy='dynamic')
+
+    def __repr__(self):
+        delta = datetime.timedelta(seconds = self.duration)
+        return "<Interval %s-%s>" % (self.start, self.start + delta)
 
 
 class IntervalReading(db.Model):
@@ -45,6 +52,10 @@ class IntervalReading(db.Model):
     duration = db.Column(db.Integer)
     cost = db.Column(db.Integer)
     value = db.Column(db.Integer)
+
+    def __repr__(self):
+        delta = datetime.timedelta(seconds = self.duration)
+        return "<IntervalReading %s-%s>" % (self.start, self.start + delta)
 
 
 class User(db.Model):
