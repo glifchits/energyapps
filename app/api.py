@@ -1,6 +1,7 @@
 
 from flask import redirect, url_for, render_template, session, request
 from flask import Blueprint, current_app as app
+from flask.ext.login import login_required
 
 import requests
 import urllib
@@ -28,6 +29,7 @@ def bearer(access_code):
 
 
 @api.route('/to_data_custodian')
+@login_required
 def to_data_custodian():
     return redirect(config.AUTH_URL)
 
@@ -54,7 +56,7 @@ def auth():
 
     app.logger.debug(access_token)
     session['access_token'] = request_data.get('access_token')
-    return redirect(url_for('index'))
+    return redirect(url_for('home'))
 
 
 @api.route('/read/service_status')
