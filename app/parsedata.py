@@ -70,6 +70,10 @@ def process_data(xml_string):
     )
     session.add(reading)
 
+    user = schema.User.query.first()
+    if user:
+        user.readings.append(reading)
+
     for block in interval_blocks:
         children = block.getchildren()
         duration, start = children[0].getchildren()
