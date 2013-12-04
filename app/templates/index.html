@@ -2,11 +2,26 @@
 
 {% block content %}
 
+<h2>Base Functionality</h2>
+
 <ul>
   <li><a href='{{ url_for('api.to_data_custodian') }}'>Authorize</a></li>
   <li><a href='{{ url_for('api.read_service_status') }}'>Service status</a></li>
   <li><a href='{{ url_for('api.read_auth_status') }}'>Auth status</a></li>
   <li><a href='{{ url_for('api.get_eui') }}'>Get EUI</a></li>
+</ul>
+
+
+<h2>APIs</h2>
+
+<ul>
+  <li><a href='{{ url_for('data.get_readings') }}'>Get Readings</a>
+</ul>
+
+<h2>Charts</h2>
+
+<ul>
+  <li><a href='{{ url_for('charts.over_time') }}'>Over time</a></li>
 </ul>
 
 {% endblock %}
