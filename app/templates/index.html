@@ -3,10 +3,10 @@
 {% block content %}
 
 <ul>
-  <li><a href="{{ auth_url }}">Authorize</a></li>
-  <li><a href="/read/service_status">Service status</a></li>
-  <li><a href='/read/auth_status'>Auth status</a></li>
-  <li><a href='/eui'>Get EUI</a></li>
+  <li><a href='{{ url_for('api.to_data_custodian') }}'>Authorize</a></li>
+  <li><a href='{{ url_for('api.read_service_status') }}'>Service status</a></li>
+  <li><a href='{{ url_for('api.read_auth_status') }}'>Auth status</a></li>
+  <li><a href='{{ url_for('api.get_eui') }}'>Get EUI</a></li>
 </ul>
 
 {% endblock %}
