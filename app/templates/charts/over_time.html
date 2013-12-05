@@ -1,36 +1,15 @@
 {% extends "layout.html" %}
 
 {% block head %}
-<style>
-
-  body {
-    font: 10px sans-serif;
-  }
-
-  .axis path,
-  .axis line {
-    fill: none;
-    stroke: #000;
-    shape-rendering: crispEdges;
-  }
-
-  .x.axis path {
-    display: none;
-  }
-
-  .line {
-    fill: none;
-    stroke: steelblue;
-    stroke-width: 1.5px;
-  }
-
-</style>
 {% endblock %}
 
 {% block content %}
+
+<canvas id='chart' width=640 height=500></canvas>
+
 {% endblock %}
 
 {% block beforeend %}
-<script src="http://d3js.org/d3.v3.js" charset="utf-8"></script>
+<script src="/static/js/Chart.js/Chart.js"></script>
 <script src="/static/js/charts/over_time.js"></script>
 {% endblock %}
