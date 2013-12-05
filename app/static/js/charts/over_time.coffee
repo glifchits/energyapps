@@ -7,6 +7,7 @@ $.getJSON '/data/readings', (response) =>
       pointColor : "rgba(220,220,220,1)"
       pointStrokeColor : "#fff"
       data: (d.cost for d in response by 24)
+    ]
 
   console.log data
 
