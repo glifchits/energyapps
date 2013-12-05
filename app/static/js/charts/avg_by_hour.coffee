@@ -22,23 +22,21 @@ $.getJSON '/data/hour', (response) ->
     rs = (response[i] for i in [0..23])
     rs.map (r) -> (d[key] for d in r)
 
+  normalizedDataset = (key) ->
+    allData = readings(key)
+    (average(dataset) / max(dataset)) for dataset in allData)
+
   data =
     labels: ("#{hr}:00" for hr in [0..23])
     datasets:
       [
         {
           fillColor: randomRGB(0.5)
-          data: 
-            readings.map (r) -> 
-              dataset = (d.cost for d in r)
-              average(dataset)#/ max(dataset)
+          data: normalizedDataset('cost')
         }
         {
           fillColor: randomRGB(0.5)
-          data:
-            readings.map (r) ->
-              dataset = (d.value for d in r)
-              average(dataset)# / max(dataset)
+          data: normalizedDataset('value')
         }
       ]
 
