@@ -4,6 +4,11 @@
 {% endblock %}
 
 {% block content %}
+<form id=chartKeys>
+  <input type=checkbox name=cost value=cost checked>Cost
+  <input type=checkbox name=value value=value>Value
+</form>
+
 <canvas id=chart width=640 height=500></canvas>
 {% endblock %}
 

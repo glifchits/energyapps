@@ -19,26 +19,28 @@ ctx = document.getElementById('chart').getContext('2d')
 
 drawChart = (key = 'cost') ->
   $.getJSON '/data/hour', (response) ->
-    console.log response
-
     readings = (key) ->
       rs = (response[i] for i in [0..23])
       rs.map (r) -> (d[key] for d in r)
 
     normalizedDataset = (key) ->
       allData = readings(key)
-      (average(dataset) / max(dataset) for dataset in allData)
+      (average(dataset) for dataset in allData)
+
+    selectedKeys = () ->
+      (x.name for x in $('#chartKeys > input') when x.checked)
+
+    getDataset = (key) -> {
+        fillColor: randomRGB(0.5)
+        data: normalizedDataset(key)
+      }
 
     data =
       labels: ("#{hr}:00" for hr in [0..23])
-      datasets: [
-          fillColor: randomRGB(0.5)
-          data: normalizedDataset(key)
-        ]
-
-    console.log data
+      datasets: (getDataset(key) for key in selectedKeys())
 
     chart = new Chart(ctx).Radar(data)
 
 
 drawChart()
+$('#chartKeys > input').click(drawChart)
