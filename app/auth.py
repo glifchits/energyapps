@@ -47,6 +47,7 @@ def logout():
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
+        db.create_all()
         name = request.form.get('name')
         email = request.form.get('email')
         password = request.form.get('password')
