@@ -12,10 +12,6 @@ from constants import *
 auth = Blueprint('auth', __name__)
 
 
-db.create_all()
-connection = db.session()
-connection.rollback()
-
 
 @lm.user_loader
 def load_user(id):
@@ -60,8 +56,8 @@ def register():
             user.name = name
             user.email = email
             user.set_password(password)
-            connection.add(user)
-            connection.commit()
+            db.session.add(user)
+            db.session.commit()
             flash((CSS_SUCC, 'Success!'))
         except Exception as e:
             flash((CSS_ERR, str(e)))
