@@ -84,6 +84,7 @@ def get_eui():
     }
     url = apipt.GET_EUI + '?' + urllib.urlencode(params)
     app.logger.debug('getting url %s' % url)
+
     r = requests.get(url, headers=bearer(session.get('access_token')),
             verify=False)
 
@@ -92,6 +93,8 @@ def get_eui():
 
     if r.text:
         data.process_data(r.text)
+    else:
+        return 'not logged in with greenbutton'
     return r.text
 
 
