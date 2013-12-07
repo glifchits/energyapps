@@ -41,7 +41,7 @@ class Interval(db.Model):
         backref='interval_readings', lazy='dynamic')
 
     def __repr__(self):
-        delta = datetime.timedelta(seconds = self.duration)
+        delta = datetime.timedelta(seconds = int(self.duration))
         return "<Interval %s-%s>" % (self.start, self.start + delta)
 
 
@@ -54,7 +54,7 @@ class IntervalReading(db.Model):
     value = db.Column(db.Integer)
 
     def __repr__(self):
-        delta = datetime.timedelta(seconds = self.duration)
+        delta = datetime.timedelta(seconds = int(self.duration))
         return "<IntervalReading %s-%s>" % (self.start, self.start + delta)
 
 
