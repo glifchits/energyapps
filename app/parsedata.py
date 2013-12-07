@@ -1,4 +1,19 @@
 
+try:
+    from flask import g
+    from flask import current_app as app
+except:
+    import logging
+    class DecoyApp:
+        class Logger:
+            logger = logging.Logger()
+            def debug(self, msg):
+                logger.debug(msg)
+            def info(self, msg):
+                logger.info(msg)
+        logger = Logger()
+    app = DecoyApp()
+
 import sys
 import os
 import xml.etree.ElementTree as ET
@@ -8,10 +23,6 @@ import schema
 
 from __init__ import db
 import config
-
-db.create_all()
-
-session = db.session()
 
 ENTRY = '{http://www.w3.org/2005/Atom}entry'
 CONTENT = '{http://www.w3.org/2005/Atom}content'
@@ -32,6 +43,8 @@ def from_timestamp(timestamp):
 
 
 def process_data(xml_string):
+
+    app.logger.debug('current user is %s' % g.user)
 
     root = ET.fromstring(xml_string)
 
@@ -68,11 +81,12 @@ def process_data(xml_string):
         uom = uom.text,
         service_kind = kind.text
     )
-    session.add(reading)
 
-    user = schema.User.query.first()
+    user = g.user
     if user:
         user.readings.append(reading)
+
+    db.session.add(reading)
 
     for block in interval_blocks:
         children = block.getchildren()
@@ -85,7 +99,6 @@ def process_data(xml_string):
         )
         interval_block.reading = reading
         reading.intervals.append(interval_block)
-        session.add(interval_block)
 
         for i_reading in interval_readings:
             cost, time_period, value = i_reading.getchildren()
@@ -98,9 +111,10 @@ def process_data(xml_string):
                 value = value.text
             )
             interval_block.readings.append(interval_reading)
-            session.add(interval_reading)
 
-    session.commit()
+    app.logger.debug('committing. dirty: %s, new: %s' % \
+            (db.session.dirty, db.session.new))
+    db.session.commit()
     return True
 
 
