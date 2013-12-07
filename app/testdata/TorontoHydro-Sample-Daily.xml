@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xml:lang="en-us" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:schemaLocation="http://naesb.org/copyright/espi.xsd" xmlns="http://www.w3.org/2005/Atom">
+	<title type="text">tou.test.torontohydro.com Green Button Batch feed</title>
+	<subtitle type="text"/>
+	<id>tou.test.torontohydro.com</id>
+	<updated>2013-05-10T00:07:30Z</updated>
+	<entry>
+		<id>tou.test.torontohydro.com</id>
+		<title type="text">Account:0156010000 Meter:0156010186 Daily Usage</title>
+		<published>2013-05-10T00:07:29Z</published>
+		<updated>2013-05-10T00:07:29Z</updated>
+		<link rel="self" href="/RetailCustomer/0156010000/UsagePoint/0156010186"/>
+		<link rel="up" href="/RetailCustomer/0156010000/UsagePoint"/>
+		<link rel="related" href="/RetailCustomer/0156010000/UsagePoint/0156010186/MeterReading"/>
+		<link rel="related" href="/LocalTimeParameters/01"/>
+		<content type="text/xml">
+			<UsagePoint xmlns="http://naesb.org/espi">
+				<ServiceCategory>
+					<kind>0</kind>
+				</ServiceCategory>
+			</UsagePoint>
+		</content>
+	</entry>
+	<entry>
+		<id>tou.test.torontohydro.com</id>
+		<title type="text">DST For North America</title>
+		<published>2013-05-10T00:07:29Z</published>
+		<updated>2013-05-10T00:07:29Z</updated>
+		<link rel="self" href="/LocalTimeParameters/01"/>
+		<link rel="up" href="/LocalTimeParameters"/>
+		<content type="text/xml">
+			<LocalTimeParameters xmlns="http://naesb.org/espi">
+				<dstEndRule>B40E200</dstEndRule>
+				<dstOffset>3600</dstOffset>
+				<dstStartRule>360E2000</dstStartRule>
+				<tzOffset>-18000</tzOffset>
+			</LocalTimeParameters>
+		</content>
+	</entry>
+	<entry>
+		<id>tou.test.torontohydro.com</id>
+		<title type="text">Energy Delivered (kwh)</title>
+		<published>2013-05-10T00:07:29Z</published>
+		<updated>2013-05-10T00:07:29Z</updated>
+		<link rel="self" href="/ReadingType/3"/>
+		<link rel="up" href="/ReadingType"/>
+		<content type="text/xml">
+			<ReadingType xmlns="http://naesb.org/espi">
+				<commodity>1</commodity>
+				<currency>124</currency>
+				<flowDirection>1</flowDirection>
+				<intervalLength>3600</intervalLength>
+				<powerOfTenMultiplier>0</powerOfTenMultiplier>
+				<tou>3</tou>
+				<kind>12</kind>
+				<uom>72</uom>
+			</ReadingType>
+		</content>
+	</entry>
+	<entry>
+		<id>tou.test.torontohydro.com</id>
+		<title type="text">Daily Electricity Consumption</title>
+		<published>2013-05-10T00:07:29Z</published>
+		<updated>2013-05-10T00:07:29Z</updated>
+		<link rel="self" href="/RetailCustomer/0156010000/UsagePoint/0156010186/MeterReading/3"/>
+		<link rel="up" href="/RetailCustomer/0156010000/UsagePoint/0156010186/MeterReading"/>
+		<link rel="related" href="/RetailCustomer/0156010000/UsagePoint/0156010186/MeterReading/3/IntervalBlock"/>
+		<link rel="related" href="/ReadingType/3"/>
+		<content type="text/xml">
+			<MeterReading xmlns="http://naesb.org/espi"/>
+		</content>
+	</entry>
+	<entry>
+		<id>tou.test.torontohydro.com</id>
+		<title type="text"/>
+		<published>2013-05-10T00:07:29Z</published>
+		<updated>2013-05-10T00:07:29Z</updated>
+		<link rel="self" href="/RetailCustomer/0156010000/UsagePoint/0156010186/MeterReading/3/IntervalBlock/3"/>
+		<link rel="up" href="/RetailCustomer/0156010000/UsagePoint/0156010186/MeterReading/3/IntervalBlock"/>
+		<content>
+			<IntervalBlock xmlns="http://naesb.org/espi">
+				<interval>
+					<duration>86400</duration>
+					<start>1358226000</start>
+				</interval>
+				<IntervalReading>
+					<cost>54243</cost>
+					<timePeriod>
+						<duration>86400</duration>
+						<start>1358226000</start>
+					</timePeriod>
+					<value>8610</value>
+				</IntervalReading>
+			</IntervalBlock>
+		</content>
+	</entry>
+	<entry>
+		<id>tou.test.torontohydro.com</id>
+		<title type="text">Energy Delivered (kwh)</title>
+		<published>2013-05-10T00:07:29Z</published>
+		<updated>2013-05-10T00:07:29Z</updated>
+		<link rel="self" href="/ReadingType/1"/>
+		<link rel="up" href="/ReadingType"/>
+		<content type="text/xml">
+			<ReadingType xmlns="http://naesb.org/espi">
+				<commodity>1</commodity>
+				<currency>124</currency>
+				<flowDirection>1</flowDirection>
+				<intervalLength>3600</intervalLength>
+				<powerOfTenMultiplier>0</powerOfTenMultiplier>
+				<tou>1</tou>
+				<kind>12</kind>
+				<uom>72</uom>
+			</ReadingType>
+		</content>
+	</entry>
+	<entry>
+		<id>tou.test.torontohydro.com</id>
+		<title type="text">Daily Electricity Consumption</title>
+		<published>2013-05-10T00:07:29Z</published>
+		<updated>2013-05-10T00:07:29Z</updated>
+		<link rel="self" href="/RetailCustomer/0156010000/UsagePoint/0156010186/MeterReading/1"/>
+		<link rel="up" href="/RetailCustomer/0156010000/UsagePoint/0156010186/MeterReading"/>
+		<link rel="related" href="/RetailCustomer/0156010000/UsagePoint/0156010186/MeterReading/1/IntervalBlock"/>
+		<link rel="related" href="/ReadingType/1"/>
+		<content type="text/xml">
+			<MeterReading xmlns="http://naesb.org/espi"/>
+		</content>
+	</entry>
+	<entry>
+		<id>tou.test.torontohydro.com</id>
+		<title type="text"/>
+		<published>2013-05-10T00:07:29Z</published>
+		<updated>2013-05-10T00:07:29Z</updated>
+		<link rel="self" href="/RetailCustomer/0156010000/UsagePoint/0156010186/MeterReading/1/IntervalBlock/1"/>
+		<link rel="up" href="/RetailCustomer/0156010000/UsagePoint/0156010186/MeterReading/1/IntervalBlock"/>
+		<content>
+			<IntervalBlock xmlns="http://naesb.org/espi">
+				<interval>
+					<duration>86400</duration>
+					<start>1358226000</start>
+				</interval>
+				<IntervalReading>
+					<cost>52156</cost>
+					<timePeriod>
+						<duration>86400</duration>
+						<start>1358226000</start>
+					</timePeriod>
+					<value>4420</value>
+				</IntervalReading>
+			</IntervalBlock>
+		</content>
+	</entry>
+	<entry>
+		<id>tou.test.torontohydro.com</id>
+		<title type="text">Energy Delivered (kwh)</title>
+		<published>2013-05-10T00:07:29Z</published>
+		<updated>2013-05-10T00:07:29Z</updated>
+		<link rel="self" href="/ReadingType/2"/>
+		<link rel="up" href="/ReadingType"/>
+		<content type="text/xml">
+			<ReadingType xmlns="http://naesb.org/espi">
+				<commodity>1</commodity>
+				<currency>124</currency>
+				<flowDirection>1</flowDirection>
+				<intervalLength>3600</intervalLength>
+				<powerOfTenMultiplier>0</powerOfTenMultiplier>
+				<tou>2</tou>
+				<kind>12</kind>
+				<uom>72</uom>
+			</ReadingType>
+		</content>
+	</entry>
+	<entry>
+		<id>tou.test.torontohydro.com</id>
+		<title type="text">Daily Electricity Consumption</title>
+		<published>2013-05-10T00:07:29Z</published>
+		<updated>2013-05-10T00:07:29Z</updated>
+		<link rel="self" href="/RetailCustomer/0156010000/UsagePoint/0156010186/MeterReading/2"/>
+		<link rel="up" href="/RetailCustomer/0156010000/UsagePoint/0156010186/MeterReading"/>
+		<link rel="related" href="/RetailCustomer/0156010000/UsagePoint/0156010186/MeterReading/2/IntervalBlock"/>
+		<link rel="related" href="/ReadingType/2"/>
+		<content type="text/xml">
+			<MeterReading xmlns="http://naesb.org/espi"/>
+		</content>
+	</entry>
+	<entry>
+		<id>tou.test.torontohydro.com</id>
+		<title type="text"/>
+		<published>2013-05-10T00:07:29Z</published>
+		<updated>2013-05-10T00:07:29Z</updated>
+		<link rel="self" href="/RetailCustomer/0156010000/UsagePoint/0156010186/MeterReading/2/IntervalBlock/2"/>
+		<link rel="up" href="/RetailCustomer/0156010000/UsagePoint/0156010186/MeterReading/2/IntervalBlock"/>
+		<content>
+			<IntervalBlock xmlns="http://naesb.org/espi">
+				<interval>
+					<duration>86400</duration>
+					<start>1358226000</start>
+				</interval>
+				<IntervalReading>
+					<cost>44352</cost>
+					<timePeriod>
+						<duration>86400</duration>
+						<start>1358226000</start>
+					</timePeriod>
+					<value>4480</value>
+				</IntervalReading>
+			</IntervalBlock>
+		</content>
+	</entry>
+	<entry>
+		<id>tou.test.torontohydro.com</id>
+		<title type="text">Weather (kelvin)</title>
+		<published>2013-05-10T00:07:29Z</published>
+		<updated>2013-05-10T00:07:29Z</updated>
+		<link rel="self" href="/ReadingType/07"/>
+		<link rel="up" href="/ReadingType"/>
+		<content type="text/xml">
+			<ReadingType xmlns="http://naesb.org/espi">
+				<intervalLength>3600</intervalLength>
+				<powerOfTenMultiplier>-3</powerOfTenMultiplier>
+				<kind>46</kind>
+				<uom>3</uom>
+			</ReadingType>
+		</content>
+	</entry>
+	<entry>
+		<id>tou.test.torontohydro.com</id>
+		<title type="text">Daily Electricity Consumption</title>
+		<published>2013-05-10T00:07:29Z</published>
+		<updated>2013-05-10T00:07:29Z</updated>
+		<link rel="self" href="/RetailCustomer/0156010000/UsagePoint/0156010186/MeterReading/07"/>
+		<link rel="up" href="/RetailCustomer/0156010000/UsagePoint/0156010186/MeterReading"/>
+		<link rel="related" href="/RetailCustomer/0156010000/UsagePoint/0156010186/MeterReading/07/IntervalBlock"/>
+		<link rel="related" href="/ReadingType/07"/>
+		<content type="text/xml">
+			<MeterReading xmlns="http://naesb.org/espi"/>
+		</content>
+	</entry>
+	<entry>
+		<id>tou.test.torontohydro.com</id>
+		<title type="text"/>
+		<published>2013-05-10T00:07:30Z</published>
+		<updated>2013-05-10T00:07:30Z</updated>
+		<link rel="self" href="/RetailCustomer/0156010000/UsagePoint/0156010186/MeterReading/07/IntervalBlock/07"/>
+		<link rel="up" href="/RetailCustomer/0156010000/UsagePoint/0156010186/MeterReading/07/IntervalBlock"/>
+		<content>
+			<IntervalBlock xmlns="http://naesb.org/espi">
+				<interval>
+					<duration>86400</duration>
+					<start>1358226000</start>
+				</interval>
+				<IntervalReading>
+					<timePeriod>
+						<duration>3600</duration>
+						<start>-62135596800</start>
+					</timePeriod>
+					<value>271050.00</value>
+				</IntervalReading>
+			</IntervalBlock>
+		</content>
+	</entry>
+</feed>
