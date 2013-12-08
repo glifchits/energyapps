@@ -3,3 +3,4 @@ env
 *.css
 **/.sass-cache
 **/charts/*.js
+**/config.py

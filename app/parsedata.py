@@ -43,8 +43,7 @@ def from_timestamp(timestamp):
 
 
 def process_data(xml_string):
-
-    app.logger.debug('current user is %s' % g.user)
+    db.create_all()
 
     root = ET.fromstring(xml_string)
 
@@ -90,29 +89,21 @@ def process_data(xml_string):
 
     for block in interval_blocks:
         children = block.getchildren()
-        duration, start = children[0].getchildren()
         interval_readings = children[1:]
-
-        interval_block = schema.Interval(
-            duration = duration.text,
-            start = from_timestamp(start.text)
-        )
-        interval_block.reading = reading
-        reading.intervals.append(interval_block)
 
         for i_reading in interval_readings:
             cost, time_period, value = i_reading.getchildren()
             duration, start = time_period.getchildren()
 
-            interval_reading = schema.IntervalReading(
+            interval_reading = schema.Interval(
                 start = from_timestamp(start.text),
                 duration = duration.text,
                 cost = cost.text,
                 value = value.text
             )
-            interval_block.readings.append(interval_reading)
+            reading.intervals.append(interval_reading)
 
-    app.logger.debug('committing. dirty: %s, new: %s' % \
+    app.logger.debug('committing.\ndirty: %s\nnew: %s' % \
             (db.session.dirty, db.session.new))
     db.session.commit()
     return True

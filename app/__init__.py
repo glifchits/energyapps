@@ -5,13 +5,10 @@ from flask.ext.login import LoginManager
 import os
 import schema
 import constants
-
-
+import config
 
 app = Flask(__name__)
-app.debug = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost'
-app.secret_key = os.urandom(24)
+app.config.from_object(config.LocalConfig)
 
 db = SQLAlchemy(app)
 db.create_all()

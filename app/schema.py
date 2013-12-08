@@ -24,7 +24,7 @@ class Reading(db.Model):
     # from ServiceCategory
     service_kind = db.Column(db.Integer)
     # children (many)
-    intervals = db.relationship("Interval", backref='intervals',
+    intervals = db.relationship("Interval", backref='reading_intervals',
             lazy='dynamic')
 
     def __repr__(self):
@@ -33,21 +33,7 @@ class Reading(db.Model):
 
 class Interval(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    duration = db.Column(db.Integer)
-    start = db.Column(db.DateTime)
     reading_id = db.Column(db.Integer, db.ForeignKey('reading.id'))
-    # children (many)
-    readings = db.relationship("IntervalReading",
-        backref='interval_readings', lazy='dynamic')
-
-    def __repr__(self):
-        delta = datetime.timedelta(seconds = int(self.duration))
-        return "<Interval %s-%s>" % (self.start, self.start + delta)
-
-
-class IntervalReading(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    interval_id = db.Column(db.Integer, db.ForeignKey('interval.id'))
     start = db.Column(db.DateTime)
     duration = db.Column(db.Integer)
     cost = db.Column(db.Integer)
@@ -55,7 +41,7 @@ class IntervalReading(db.Model):
 
     def __repr__(self):
         delta = datetime.timedelta(seconds = int(self.duration))
-        return "<IntervalReading %s-%s>" % (self.start, self.start + delta)
+        return "<Interval %s-%s>" % (self.start, self.start + delta)
 
 
 class User(db.Model):
