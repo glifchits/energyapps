@@ -13,8 +13,8 @@ import schema
 data = Blueprint('data', __name__, url_prefix='/data')
 
 
-def interval_readings(reading_id=None):
-    """Gets the <IntervalReading> objects for this user.
+def intervals(reading_id=None):
+    """Gets the <Interval> objects for this user.
     If `reading_id` is specified, gets from <Reading `id`>, otherwise
     gets from the first <Reading>.
     """
