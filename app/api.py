@@ -37,7 +37,7 @@ def to_data_custodian():
 def auth():
     app.logger.debug( '/auth GET %s' % request.args )
     params = {
-        'grant_type': 'authorization_code', #request.args.get('code'),
+        'grant_type': 'authorization_code',
         'code': request.args.get('code'),
         'redirect_uri': config.REDIRECT_URI
     }
@@ -56,6 +56,21 @@ def auth():
     app.logger.debug(access_token)
     session['access_token'] = request_data.get('access_token')
     return redirect(url_for('home'))
+
+
+@api.route('/subscribe')
+def create_subscription():
+    params = {
+        'frequency': 'daily',
+        'type': 'data'
+    }
+    r = requests.post(apipt.CREATE_SUBSCRIPTION,
+            params=params,
+            headers=bearer(session.get('access_token')),
+            verify=False)
+    if r.status_code != 200:
+        abort(r.status_code)
+    return r.text
 
 
 @api.route('/read/service_status')
