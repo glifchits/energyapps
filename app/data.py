@@ -13,36 +13,18 @@ import schema
 data = Blueprint('data', __name__, url_prefix='/data')
 
 
-def intervals(reading_id=None):
-    """Gets the <Interval> objects for this user.
-    If `reading_id` is specified, gets from <Reading `id`>, otherwise
-    gets from the first <Reading>.
-    """
-    u_readings = g.user.readings
-    if not reading_id:
-        reading = u_readings.first()
-    else:
-        reading = u_readings.filter(schema.Reading.id == reading_id).first()
-    intervals = reading.intervals.all()
-    readings = [i.readings.all() for i in intervals]
-    readings = reduce(lambda x, y: x + y, readings)
-    return readings
-
-
 @data.route('/readings')
-@data.route('/readings/<id>')
 @login_required
 def get_readings(id=None):
     start = request.args.get('start')
     end = request.args.get('end')
 
-    readings = interval_readings(id)
+    readings = schema.Reading.query.all()
+    app.logger.debug('readings: %s ' % readings)
 
     my_json = [{
-            'start': str(reading.start),
-            'duration': reading.duration,
-            'cost': reading.cost,
-            'value': reading.value
+            'id': reading.id,
+            'title': reading.title
         } for reading in readings]
     return json.dumps(my_json, indent=4)
 
