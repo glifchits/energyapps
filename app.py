@@ -1,4 +1,4 @@
-from flask import render_template, g
+from flask import render_template, g, session
 from flask.ext.login import current_user
 
 from app import app
@@ -17,6 +17,12 @@ app.register_blueprint(charts)
 @app.before_request
 def before_request():
     g.user = current_user
+
+    if g.user.is_authenticated() and 'access_token' not in session:
+        access_token = g.user.access_token
+        if access_token:
+            session['access_token'] = access_token
+        app.logger.info('added access token (user %s)' % g.user)
 
 
 @app.route('/')

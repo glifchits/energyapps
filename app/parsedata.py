@@ -43,8 +43,6 @@ def from_timestamp(timestamp):
 
 
 def process_data(xml_string):
-    db.create_all()
-
     root = ET.fromstring(xml_string)
 
     kind = root.findall(ENTRY)[0] \

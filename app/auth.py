@@ -12,7 +12,6 @@ from constants import *
 auth = Blueprint('auth', __name__)
 
 
-
 @lm.user_loader
 def load_user(id):
     return schema.User.query.get(int(id))
