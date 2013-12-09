@@ -29,6 +29,9 @@ def login():
         if user and user.check_password(password):
             app.logger.debug("logging in as %s" % user)
             login_user(user, remember = remember_me)
+            access_token = user.access_token
+            if access_token:
+                session['access_token'] = access_token
             flash((CSS_SUCC, "Success!"))
             return redirect(request.args.get('next') or url_for('home'))
 
