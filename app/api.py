@@ -77,6 +77,7 @@ def create_subscription():
             verify=False)
     print r.text
     if r.status_code != 200:
+        app.logger.debug("failed to create subscription")
         abort(r.status_code)
     return r.text
 
@@ -94,6 +95,7 @@ def read_auth_status():
     r = requests.get(apipt.AUTH_STATUS,
             headers=bearer(session.get('access_token')), verify=False)
     if r.status_code != 200:
+        app.logger.debug("failed to read auth status")
         abort(r.status_code)
     return r.text
 
@@ -106,6 +108,7 @@ def get_eui():
             headers = bearer(session.get('access_token')),
             verify=False)
     if r.status_code != 200:
+        app.logger.debug("failed to read auth status before getting EUI")
         abort(r.status_code)
 
     root = ElementTree.fromstring(r.text)
@@ -118,8 +121,10 @@ def get_eui():
     auth_params = dict([param.split('=') for param in scopedata[1:]])
     app.logger.debug(auth_params)
 
-    start = request.args.get('start') or int(time.time())
     history_seconds = int(auth_params['HistoryLength']) * 60 * 60 * 24
+    start_time = int(time.time()) - history_seconds - 60 # 1 min offset
+
+    start = request.args.get('start') or start_time
     duration = request.args.get('duration') or history_seconds
 
     app.logger.debug("%s %s" % (start, duration))
@@ -131,13 +136,17 @@ def get_eui():
     url = apipt.GET_EUI + '?' + urllib.urlencode(params)
     app.logger.debug('getting url %s' % url)
 
-    r = requests.get(url, headers=bearer(session.get('access_token')),
+    r = requests.get(url,
+            headers=bearer(session.get('access_token')),
             verify=False)
 
     if r.status_code != 200:
+        app.logger.debug("failed to get EUI from url\n%s\n%s\n%s\n%s" % \
+                (r, r.url, r.text, r.headers))
         abort(r.status_code)
 
     if r.text:
+        app.logger.debug('processing EUI data now')
         data.process_data(r.text)
     else:
         return 'not logged in with greenbutton'
