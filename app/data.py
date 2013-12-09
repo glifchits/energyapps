@@ -45,8 +45,13 @@ def all():
     return serialize_query(sql, datum_fac)
 
 
-@data.route('/group/<string:aggregator>/<string:grouping>')
-def group(aggregator, grouping):
+@data.route('/group')
+def group():
+    aggregator = request.args.get('agg')
+    grouping = request.args.get('grp')
+    if not aggregator or not grouping:
+        app.logger.debug("invalid params")
+        abort(404)
     validate_params(aggregator, grouping)
     sql = '''
     select min(id) as minid,
@@ -68,8 +73,13 @@ def group(aggregator, grouping):
     return serialize_query(sql, datum_factory)
 
 
-@data.route('/aggregate/<string:aggregator>/<string:grouping>')
-def aggregate(aggregator, grouping='hour'):
+@data.route('/aggregate')
+def aggregate():
+    aggregator = request.args.get('agg')
+    grouping = request.args.get('grp')
+    if not aggregator or not grouping:
+        app.logger.debug("invalid params")
+        abort(404)
     validate_params(aggregator, grouping)
 
     groups = ['year', 'month', 'day', 'hour']
