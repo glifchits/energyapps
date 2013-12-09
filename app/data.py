@@ -8,46 +8,60 @@ import datetime
 import json
 
 import schema
+db = schema.db
 
 
 data = Blueprint('data', __name__, url_prefix='/data')
 
 
-@data.route('/readings')
-@login_required
-def get_readings(id=None):
-    start = request.args.get('start')
-    end = request.args.get('end')
-
-    readings = schema.Reading.query.all()
-    app.logger.debug('readings: %s ' % readings)
-
-    my_json = [{
-            'id': reading.id,
-            'title': reading.title
-        } for reading in readings]
-    return json.dumps(my_json, indent=4)
+def serialize_query(sql, datum_factory):
+    queryset = db.engine.execute(sql)
+    results = []
+    for row in queryset:
+        datum = datum_factory(row)
+        results.append(datum)
+    return json.dumps(results, indent=4)
 
 
-@data.route('/hour')
-@data.route('/hour/<id>')
-@login_required
-def by_hour(id=None):
-    readings = interval_readings(id)
+@data.route('/')
+def all():
+    sql = '''
+    select id, start, cost, value from interval;
+    '''
+    def datum_fac(row):
+        return { 'id': row[0],
+            'start': str(row[1]),
+            'cost': row[2],
+            'value': row[3] }
+    return serialize_query(sql, datum_fac)
 
-    data = dict([(h,[]) for h in range(0, 24)])
 
-    for reading in readings:
-        hour = reading.start.hour
-        data[hour].append(reading)
+@data.route('/group/<string:aggregator>/<string:grouping>')
+def group(aggregator, grouping):
+    if aggregator not in ['avg', 'sum', 'min']:
+        app.logger.debug('can\'t aggregate by %s' % aggregator)
+        abort(404)
+    if grouping not in ['hour', 'day', 'month', 'year']:
+        app.logger.debug('can\'t group by %s' % grouping)
+        abort(404)
 
-    for hour in data.keys():
-        data[hour] = [{
-                'start' : str(reading.start),
-                'cost' : reading.cost,
-                'value' : reading.value
-            } for reading in data[hour]]
+    sql = '''
+    select min(id) as minid,
+        min(start) as minstart,
+        {aggregator}(cost) as cost,
+        {aggregator}(value) as value,
+        date_part('{grouping}', start) as {grouping}
+    from interval
+    group by {grouping}
+    '''.format( aggregator = aggregator, grouping = grouping )
+    app.logger.debug('executing sql\n%s' % sql)
 
-    return json.dumps(data, indent=4)
+    def datum_factory(row):
+        return {
+            'id': row[0],
+            'cost': row[2],
+            'value': row[3],
+            grouping: row[4] }
+    return serialize_query(sql, datum_factory)
 
 
