@@ -51,6 +51,9 @@ class User(db.Model):
     name = db.Column(db.String)
     email = db.Column(db.String, unique=True)
     password = db.Column(db.String)
+    token_retrieved = db.Column(db.DateTime)
+    access_token = db.Column(db.String)
+    refresh_token = db.Column(db.String)
     # children (many)
     readings = db.relationship("Reading", backref='user_readings',
             lazy='dynamic')
@@ -76,4 +79,7 @@ class User(db.Model):
     def get_id(self):
         return unicode(self.id)
 
+    def update_access_token(self, token):
+        self.access_token = token
+        self.token_retrieved = datetime.datetime.now()
 
