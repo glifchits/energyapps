@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/xsl" href="GreenButtonDataStyleSheet.xslt"?>
+<!--<?xml-stylesheet type="text/xsl" href="GreenButtonDataStyleSheet.xslt"?>-->
 <feed schemaLocation="http://naesb.org/espi espiDerived.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.w3.org/2005/Atom">
   <id>urn:uuid:bc846af0-6505-42c8-8c38-d2cbc535342d</id>
   <title>Hourly Data</title>
