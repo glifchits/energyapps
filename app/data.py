@@ -14,7 +14,7 @@ db = schema.db
 data = Blueprint('data', __name__, url_prefix='/data')
 
 
-def serialize_query(sql, datum_factory):
+def json_serialize_query(sql, datum_factory):
     queryset = db.engine.execute(sql)
     results = []
     for row in queryset:
@@ -56,7 +56,11 @@ def all(ext=None):
             'cost': round(row[2], 2),
             'value': round(row[3], 2) }
 
-    return serialize_query(sql, datum_fac)
+    if not ext or ext == 'json':
+        return json_serialize_query(sql, datum_fac)
+    else:
+        app.logger.info("extension '%s' not supported")
+        abort(404)
 
 
 @data.route('/group')
@@ -100,7 +104,12 @@ def group(ext=None):
             'cost': round(row[2], 2),
             'value': round(row[3], 2),
             grouping: int(row[4]) }
-    return serialize_query(sql, datum_factory)
+
+    if not ext or ext == 'json':
+        return json_serialize_query(sql, datum_factory)
+    else:
+        app.logger.info("extension '%s' not supported")
+        abort(404)
 
 
 @data.route('/aggregate')
@@ -166,4 +175,8 @@ def aggregate(ext=None):
 
     app.logger.debug('executing sql \n%s' % sql)
 
-    return serialize_query(sql, datum_factory)
+    if not ext or ext == 'json':
+        return json_serialize_query(sql, datum_factory)
+    else:
+        app.logger.info("extension '%s' not supported")
+        abort(404)
