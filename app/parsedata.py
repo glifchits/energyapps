@@ -1,16 +1,17 @@
 
 try:
-    from flask import g
-    from flask import current_app as app
+#    from flask import g
+#    from flask import current_app as app
+    assert True == False
 except:
     import logging
     class DecoyApp:
         class Logger:
-            logger = logging.Logger()
+            logger = logging.Logger("parse data")
             def debug(self, msg):
-                logger.debug(msg)
+                self.logger.debug(msg)
             def info(self, msg):
-                logger.info(msg)
+                self.logger.info(msg)
         logger = Logger()
     app = DecoyApp()
 
@@ -21,7 +22,19 @@ import datetime
 
 import schema
 
-from __init__ import db
+#from __init__ import db
+
+class DecoyDB:
+    class Session:
+        def __getattr__(self, key):
+            pass
+        def add(*args):
+            pass
+        def commit(*args):
+            pass
+    session = Session()
+db = DecoyDB()
+
 import config
 
 ENTRY = '{http://www.w3.org/2005/Atom}entry'
@@ -34,7 +47,7 @@ LOCAL_TIME = '{http://naesb.org/espi}LocalTimeParameters'
 METER_READING = '{http://naesb.org/espi}MeterReading'
 INTERVAL_BLOCK = '{http://naesb.org/espi}IntervalBlock'
 READING_TYPE = '{http://naesb.org/espi}ReadingType'
-
+TITLE = '{http://www.w3.org/2005/Atom}title'
 
 def from_timestamp(timestamp):
     if type(timestamp) == str:
@@ -50,16 +63,23 @@ def process_data(xml_string):
             .find(USAGE_POINT) \
             .find(SERVICE_CATEGORY) \
             .find(KIND)
+
     dst_end, dst_offset, dst_start, tz_offset = root.findall(ENTRY)[1]\
             .find(CONTENT) \
             .find(LOCAL_TIME) \
             .getchildren()
+
+    data_type = root.findall(ENTRY)[2].find(TITLE).text
+
     interval_blocks = root.findall(ENTRY)[3] \
             .find(CONTENT) \
             .findall(INTERVAL_BLOCK)
+
     reading_type = root.findall(ENTRY)[4] \
             .find(CONTENT) \
             .find(READING_TYPE)
+
+    print data_type
 
     accumulation_behaviour, commodity, currency, data_qualifier, flow_direction, \
     interval_length, kind, phase, multiplier, time_attribute, uom \
@@ -79,9 +99,12 @@ def process_data(xml_string):
         service_kind = kind.text
     )
 
-    user = g.user
-    if user:
-        user.readings.append(reading)
+    try:
+        user = g.user
+        if user:
+            user.readings.append(reading)
+    except NameError:
+        pass
 
     db.session.add(reading)
 
