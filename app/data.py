@@ -129,6 +129,8 @@ def group(ext=None):
 
     if not ext or ext == 'json':
         return json_serialize_query(sql, datum_factory)
+    elif ext == 'csv':
+        return csv_serialize_query(sql, datum_factory)
     else:
         app.logger.info("extension '%s' not supported")
         abort(404)
@@ -199,6 +201,8 @@ def aggregate(ext=None):
 
     if not ext or ext == 'json':
         return json_serialize_query(sql, datum_factory)
+    elif ext == 'csv':
+        return csv_serialize_query(sql, datum_factory)
     else:
         app.logger.info("extension '%s' not supported")
         abort(404)
