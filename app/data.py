@@ -32,27 +32,46 @@ def validate_params(aggregator, grouping):
         abort(404)
 
 
-@data.route('/')
-def all():
-    sql = '''
-    select id, start, cost, value from interval;
-    '''
+@data.route('/all')
+@data.route('/all.<string:ext>')
+def all(ext=None):
+    app.logger.debug("/all route with extension %s" % ext)
+    start = request.args.get('start')
+    end = request.args.get('end')
+
+    sql = "select id, start, cost, value from interval"
+    if start or end:
+        sql += " where "
+    if start:
+        sql += " start >= '%s'::date " % start
+    if start and end:
+        sql += " and "
+    if end:
+        sql += " start < '%s'::date " % end
+    sql += "\norder by id"
+
     def datum_fac(row):
         return { 'id': row[0],
             'start': str(row[1]),
             'cost': round(row[2], 2),
             'value': round(row[3], 2) }
+
     return serialize_query(sql, datum_fac)
 
 
 @data.route('/group')
-def group():
+@data.route('/group.<string:ext>')
+def group(ext=None):
     aggregator = request.args.get('agg')
     grouping = request.args.get('grp')
     if not aggregator or not grouping:
         app.logger.debug("invalid params")
         abort(404)
     validate_params(aggregator, grouping)
+
+    start = request.args.get('start')
+    end = request.args.get('end')
+
     sql = '''
     select min(id) as minid,
         min(start) as minstart,
@@ -60,8 +79,19 @@ def group():
         {aggregator}(value) as value,
         date_part('{grouping}', start) as {grouping}
     from interval
-    group by {grouping}
-    '''.format( aggregator = aggregator, grouping = grouping )
+    '''
+
+    if start or end:
+        sql += " where "
+    if start:
+        sql += " start >= '%s'::date " % start
+    if start and end:
+        sql += " and "
+    if end:
+        sql += " start < '%s'::date " % end
+    sql += "\ngroup by {grouping}\norder by minid"
+
+    sql = sql.format( aggregator = aggregator, grouping = grouping )
     app.logger.debug('executing sql\n%s' % sql)
 
     def datum_factory(row):
@@ -69,18 +99,22 @@ def group():
             'id': row[0],
             'cost': round(row[2], 2),
             'value': round(row[3], 2),
-            grouping: row[4] }
+            grouping: int(row[4]) }
     return serialize_query(sql, datum_factory)
 
 
 @data.route('/aggregate')
-def aggregate():
+@data.route('/aggregate.<string:ext>')
+def aggregate(ext=None):
     aggregator = request.args.get('agg')
     grouping = request.args.get('grp')
     if not aggregator or not grouping:
         app.logger.debug("invalid params")
         abort(404)
     validate_params(aggregator, grouping)
+
+    start = request.args.get('start')
+    end = request.args.get('end')
 
     groups = ['year', 'month', 'day', 'hour']
     def lte(g1, g2):
@@ -100,9 +134,20 @@ def aggregate():
         sql += ", date_part('day', start) as day\n"
     if lte(grouping, 'hour'):
         sql += ", date_part('hour', start) as hour\n"
+    sql += "from interval "
 
-    sql += "from interval\ngroup by "
+    if start or end:
+        sql += "\nwhere "
+    if start:
+        sql += " start >= '%s'::date " % start
+    if start and end:
+        sql += " and "
+    if end:
+        sql += " start < '%s'::date " % end
+
+    sql += "\ngroup by "
     sql += ', '.join(groups[:groups.index(grouping) + 1])
+    sql += "\norder by minid"
 
     def datum_factory(row):
         d = [
