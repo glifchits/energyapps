@@ -6,6 +6,8 @@ from flask.ext.login import login_required
 
 import datetime
 import json
+import csv
+import cStringIO
 
 import schema
 db = schema.db
@@ -21,6 +23,24 @@ def json_serialize_query(sql, datum_factory):
         datum = datum_factory(row)
         results.append(datum)
     return json.dumps(results, indent=4)
+
+def csv_serialize_query(sql, datum_factory):
+    queryset = db.engine.execute(sql)
+
+    out = cStringIO.StringIO()
+    writer = csv.writer(out)
+
+    headers = False
+    for row in queryset:
+        datum = datum_factory(row)
+        if not headers:
+            writer.writerow(datum.keys())
+            headers = True
+        writer.writerow(datum.values())
+
+    val = out.getvalue()
+    out.close()
+    return val
 
 
 def validate_params(aggregator, grouping):
@@ -58,6 +78,8 @@ def all(ext=None):
 
     if not ext or ext == 'json':
         return json_serialize_query(sql, datum_fac)
+    elif ext == 'csv':
+        return csv_serialize_query(sql, datum_fac)
     else:
         app.logger.info("extension '%s' not supported")
         abort(404)
