@@ -1,16 +1,26 @@
-$.getJSON '/data/readings', (response) =>
-  data = 
-    labels: (d.start for d in response by 24)
-    datasets: [
-      fillColor : "rgba(220,220,220,0.5)"
-      strokeColor : "rgba(220,220,220,1)"
-      pointColor : "rgba(220,220,220,1)"
-      pointStrokeColor : "#fff"
-      data: (d.cost for d in response by 24)
-    ]
+ctx = document.getElementById('chart').getContext('2d')
 
-  console.log data
+drawChart = (cost, value) ->
+  agg = utils.urlParameters 'agg'
+  grp = utils.urlParameters 'grp'
+  url = "/data/aggregate.json?agg=#{agg}&grp=#{grp}"
 
-  ctx = document.getElementById('chart').getContext('2d')
-  chart = new Chart(ctx).Line(data)
-  null
+  $.getJSON url, (response) ->
+    labels = response.map (grpData) -> grpData[grp]
+    datasets = []
+    if cost
+      datasets.push
+        fillColor: utils.randomRGB(0.5)
+        data: response.map (grpData) -> grpData.cost
+    if value
+      datasets.push
+        fillColor: utils.randomRGB(0.5)
+        data: response.map (grpData) -> grpData.value
+
+    chart = new Chart(ctx).Line({
+      labels: labels
+      datasets: datasets
+    })
+
+drawChart(true, true)
+
