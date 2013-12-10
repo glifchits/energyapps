@@ -92,6 +92,12 @@ def all(ext=None):
 def group(ext=None):
     aggregator = request.args.get('agg')
     grouping = request.args.get('grp')
+
+    # defaults for chart render
+    if not ext:
+        aggregator = aggregator or 'sum'
+        grouping = grouping or 'month'
+
     if not aggregator or not grouping:
         app.logger.debug("invalid params")
         abort(404)
@@ -130,7 +136,9 @@ def group(ext=None):
             (grouping, int(row[4]))
         )
 
-    if not ext or ext == 'json':
+    if not ext:
+        return render_template('charts/grouped.html')
+    elif ext == 'json':
         return json_serialize_query(sql, datum_factory)
     elif ext == 'csv':
         return csv_serialize_query(sql, datum_factory)
