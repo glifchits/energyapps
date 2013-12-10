@@ -21,7 +21,7 @@ def json_serialize_query(sql, datum_factory):
     results = []
     for row in queryset:
         datum = datum_factory(row)
-        results.append(datum)
+        results.append(dict(datum))
     return json.dumps(results, indent=4)
 
 def csv_serialize_query(sql, datum_factory):
@@ -34,9 +34,9 @@ def csv_serialize_query(sql, datum_factory):
     for row in queryset:
         datum = datum_factory(row)
         if not headers:
-            writer.writerow(datum.keys())
+            writer.writerow([val[0] for val in datum])
             headers = True
-        writer.writerow(datum.values())
+        writer.writerow([val[1] for val in datum])
 
     val = out.getvalue()
     out.close()
@@ -71,10 +71,12 @@ def all(ext=None):
     sql += "\norder by id"
 
     def datum_fac(row):
-        return { 'id': row[0],
-            'start': str(row[1]),
-            'cost': round(row[2], 2),
-            'value': round(row[3], 2) }
+        return (
+            ('id', row[0]),
+            ('start', str(row[1])),
+            ('cost', round(row[2], 2)),
+            ('value', round(row[3], 2))
+        )
 
     if not ext or ext == 'json':
         return json_serialize_query(sql, datum_fac)
@@ -121,11 +123,12 @@ def group(ext=None):
     app.logger.debug('executing sql\n%s' % sql)
 
     def datum_factory(row):
-        return {
-            'id': row[0],
-            'cost': round(row[2], 2),
-            'value': round(row[3], 2),
-            grouping: int(row[4]) }
+        return (
+            ('id', row[0]),
+            ('cost', round(row[2], 2)),
+            ('value', round(row[3], 2)),
+            (grouping, int(row[4]))
+        )
 
     if not ext or ext == 'json':
         return json_serialize_query(sql, datum_factory)
@@ -184,18 +187,19 @@ def aggregate(ext=None):
 
     def datum_factory(row):
         d = [
-            ['id', row[0]],
-            ['cost', round(row[1], 2)],
-            ['value', round(row[2])],
-            ['year', int(row[3])]
+            ('id', row[0]),
+            ('cost', round(row[1], 2)),
+            ('value', round(row[2], 2)),
+            ('year', int(row[3]))
         ]
         if lte(grouping, 'month'):
-            d.append( ['month', int(row[4])] )
+            d.append( ('month', int(row[4])) )
         if lte(grouping, 'day'):
-            d.append( ['day', int(row[5])] )
+            d.append( ('day', int(row[5])) )
         if lte(grouping, 'hour'):
-            d.append( ['hour', int(row[6])] )
-        return dict(d)
+            d.append( ('hour', int(row[6])) )
+        app.logger.debug('datum fac is %s' % d)
+        return d
 
     app.logger.debug('executing sql \n%s' % sql)
 
