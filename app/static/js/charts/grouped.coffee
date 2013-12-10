@@ -17,6 +17,7 @@ drawChart = (cost, value) ->
       datasets.push
         fillColor: utils.randomRGB(0.3)
         data: response.map (grpData) -> grpData.value
+
     chart = new Chart(ctx).Radar({
       labels: labels
       datasets: datasets
