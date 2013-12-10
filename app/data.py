@@ -210,7 +210,9 @@ def aggregate(ext=None):
 
     app.logger.debug('executing sql \n%s' % sql)
 
-    if not ext or ext == 'json':
+    if not ext:
+        return render_template('charts/aggregate.html')
+    elif ext == 'json':
         return json_serialize_query(sql, datum_factory)
     elif ext == 'csv':
         return csv_serialize_query(sql, datum_factory)
