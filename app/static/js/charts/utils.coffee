@@ -19,3 +19,10 @@ utils.randomRGB = (alpha = 1) ->
   g = parseInt Math.random() * 255
   b = parseInt Math.random() * 255
   "rgba(#{r},#{g},#{b},#{alpha})"
+
+utils.urlParameters = () ->
+  url = window.location.search
+  params = url.substring(1, url.length).split('&')
+  params.map (param) ->
+    param.split('=')
+
