@@ -198,7 +198,6 @@ def aggregate(ext=None):
             d.append( ('day', int(row[5])) )
         if lte(grouping, 'hour'):
             d.append( ('hour', int(row[6])) )
-        app.logger.debug('datum fac is %s' % d)
         return d
 
     app.logger.debug('executing sql \n%s' % sql)
