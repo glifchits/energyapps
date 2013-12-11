@@ -70,6 +70,7 @@ class UsagePoint(Entry):
     NODE_TAG = USAGE_POINT
 
     meter_readings = []
+    local_time = None
 
     @property
     def kind(self):
@@ -82,11 +83,11 @@ class UsagePoint(Entry):
 class MeterReading(Entry):
     NODE_TAG = METER_READING
 
-    interval_blocks = []
+    interval_block = None
     reading_type = None
 
     def add_interval_block(self, interval_block):
-        self.interval_blocks.append(interval_block)
+        self.interval_block = interval_block
 
     def add_reading_type(self, reading_type):
         self.reading_type = reading_type
@@ -217,12 +218,15 @@ class GreenButtonData(object):
         assert len(usage_point) == 1
         usage_point = usage_point[0]
 
+        local_time = [e for e in self.entries if e.NODE_TAG == LOCAL_TIME]
+        assert len(local_time) == 1
+        usage_point.local_time = local_time[0]
+
         meter_readings = [e for e in self.entries
                 if e.NODE_TAG == METER_READING]
 
         for reading in meter_readings:
             interval_block, reading_type = eui.related(reading)
-            print interval_block, reading_type
             if interval_block.NODE_TAG == READING_TYPE:
                 interval_block, reading_type = reading_type, interval_block
             reading.add_interval_block(interval_block)
@@ -253,11 +257,11 @@ if __name__ == '__main__':
 
         usage_point = eui.form_tree()
         print 'usage point:', usage_point
+        print ' local time:', usage_point.local_time
         for reading in usage_point.meter_readings:
             print '   meter reading:', reading
             print '     reading type:', reading.reading_type
-            for block in reading.interval_blocks:
-                print '     interval block:', block
+            print '     interval block:', reading.interval_block
 
 
 
