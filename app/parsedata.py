@@ -1,4 +1,3 @@
-
 try:
 #    from flask import g
 #    from flask import current_app as app
@@ -26,12 +25,9 @@ import schema
 
 class DecoyDB:
     class Session:
-        def __getattr__(self, key):
-            pass
-        def add(*args):
-            pass
-        def commit(*args):
-            pass
+        def __getattr__(self, key): pass
+        def add(*args): pass
+        def commit(*args): pass
     session = Session()
 db = DecoyDB()
 
@@ -39,6 +35,8 @@ import config
 
 ENTRY = '{http://www.w3.org/2005/Atom}entry'
 CONTENT = '{http://www.w3.org/2005/Atom}content'
+TITLE = '{http://www.w3.org/2005/Atom}title'
+ID = '{http://www.w3.org/2005/Atom}id'
 
 USAGE_POINT = '{http://naesb.org/espi}UsagePoint'
 SERVICE_CATEGORY = '{http://naesb.org/espi}ServiceCategory'
@@ -47,7 +45,67 @@ LOCAL_TIME = '{http://naesb.org/espi}LocalTimeParameters'
 METER_READING = '{http://naesb.org/espi}MeterReading'
 INTERVAL_BLOCK = '{http://naesb.org/espi}IntervalBlock'
 READING_TYPE = '{http://naesb.org/espi}ReadingType'
-TITLE = '{http://www.w3.org/2005/Atom}title'
+
+
+class Entry(object):
+
+    def __init__(self, root):
+        self.root = root
+
+    @property
+    def id(self):
+        return self.root.find(ID).text
+
+    @property
+    def title(self):
+        return self.root.find(TITLE).text
+
+
+class UsagePoint(Entry):
+    pass
+
+class MeterReading(Entry):
+    pass
+
+class ReadingType(Entry):
+    pass
+
+class IntervalBlock(Entry):
+    pass
+
+class ElectricPowerUsageSummary(Entry):
+    pass
+
+class LocalTimeParameters(Entry):
+    pass
+
+
+class GreenButtonData(object):
+
+    def __init__(self, xml_string):
+        self.root = ET.fromstring(xml_string)
+
+    def _cast_entry(self, entry):
+        if entry.find(INTERVAL_BLOCK):
+            return IntervalBlock(entry)
+        elif entry.find(LOCAL_TIME):
+            return LocalTimeParameters(entry)
+        elif entry.find(METER_READING):
+            return MeterReading(entry)
+        elif entry.find(SERVICE_CATEGORY):
+            return UsagePoint(entry)
+        elif entry.find(READING_TYPE):
+            return ReadingType(entry)
+        else:
+            raise ValueError("encountered an undefined entry: %s" % entry)
+
+    @property
+    def entries(self):
+        es = self.root.findall(ENTRY)
+        return map(self._cast_entry, es)
+
+
+
 
 def from_timestamp(timestamp):
     if type(timestamp) == str:
@@ -78,8 +136,6 @@ def process_data(xml_string):
     reading_type = root.findall(ENTRY)[4] \
             .find(CONTENT) \
             .find(READING_TYPE)
-
-    print data_type
 
     accumulation_behaviour, commodity, currency, data_qualifier, flow_direction, \
     interval_length, kind, phase, multiplier, time_attribute, uom \
