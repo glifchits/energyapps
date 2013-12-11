@@ -5,6 +5,7 @@ ENTRY = '{http://www.w3.org/2005/Atom}entry'
 CONTENT = '{http://www.w3.org/2005/Atom}content'
 TITLE = '{http://www.w3.org/2005/Atom}title'
 ID = '{http://www.w3.org/2005/Atom}id'
+LINK = '{http://www.w3.org/2005/Atom}link'
 
 USAGE_POINT = '{http://naesb.org/espi}UsagePoint'
 SERVICE_CATEGORY = '{http://naesb.org/espi}ServiceCategory'
@@ -22,6 +23,30 @@ class Entry(object):
 
     def __init__(self, root):
         self.root = root
+        self.links = [link.attrib for link in root.findall(LINK)]
+
+    @property
+    def self_path(self):
+        for link in self.links:
+            rel = link['rel']
+            if rel == 'self':
+                return link['href']
+
+    @property
+    def related(self):
+        rels = []
+        for link in self.links:
+            rel = link['rel']
+            if rel == 'related':
+                rels.push(link['href'])
+        return rels
+
+    @property
+    def parent_path(self):
+        for link in self.links:
+            rel = link['rel']
+            if rel == 'up':
+                return link['href']
 
     @property
     def id(self):
@@ -104,16 +129,16 @@ class GreenButtonData(object):
         self.root = ET.fromstring(xml_string)
 
     def _cast_entry(self, entry):
-        entry = Entry(entry).content
-        if entry.find(INTERVAL_BLOCK) is not None:
+        content = Entry(entry).content
+        if content.find(INTERVAL_BLOCK) is not None:
             return IntervalBlock(entry)
-        elif entry.find(LOCAL_TIME) is not None:
+        elif content.find(LOCAL_TIME) is not None:
             return LocalTimeParameters(entry)
-        elif entry.find(METER_READING) is not None:
+        elif content.find(METER_READING) is not None:
             return MeterReading(entry)
-        elif entry.find(USAGE_POINT) is not None:
+        elif content.find(USAGE_POINT) is not None:
             return UsagePoint(entry)
-        elif entry.find(READING_TYPE) is not None:
+        elif content.find(READING_TYPE) is not None:
             return ReadingType(entry)
         else:
             raise ValueError("encountered an undefined entry: %s" % entry)
@@ -127,8 +152,12 @@ class GreenButtonData(object):
 if __name__ == '__main__':
     import sys
     with open(sys.argv[1]) as f:
+        ns = '{http://www.w3.org/2005/Atom}'
         xml = f.read()
         eui = GreenButtonData(xml)
-        print eui
-        print eui.entries
+
+        for entry in eui.entries:
+            print entry.self_path
+
+
 
