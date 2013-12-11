@@ -11,6 +11,7 @@ SERVICE_CATEGORY = '{http://naesb.org/espi}ServiceCategory'
 KIND = '{http://naesb.org/espi}kind'
 LOCAL_TIME = '{http://naesb.org/espi}LocalTimeParameters'
 METER_READING = '{http://naesb.org/espi}MeterReading'
+USAGE_POINT = '{http://naesb.org/espi}UsagePoint'
 INTERVAL_BLOCK = '{http://naesb.org/espi}IntervalBlock'
 READING_TYPE = '{http://naesb.org/espi}ReadingType'
 
@@ -47,12 +48,14 @@ class UsagePoint(Entry):
     def kind(self):
         return self.node.find(SERVICE_CATEGORY).find(KIND)
 
+
 class MeterReading(Entry):
     NODE_TAG = METER_READING
 
+
 class ReadingType(Entry):
     NODE_TAG = READING_TYPE
-
+    '''
     def __init__(self):
         self.accumulation_behaviour, \
         self.commodity, \
@@ -66,6 +69,7 @@ class ReadingType(Entry):
         self.time_attribute, \
         self.uom \
             = self.node.getchildren()
+    '''
 
 
 class IntervalBlock(Entry):
@@ -82,16 +86,17 @@ class IntervalBlock(Entry):
 class ElectricPowerUsageSummary(Entry):
     pass
 
+
 class LocalTimeParameters(Entry):
     NODE_TAG = LOCAL_TIME
 
-    def __init__(self):
+    '''def __init__(self):
         self.dst_end, \
         self.dst_offset, \
         self.dst_start, \
         self.tz_offset \
             = self.node.getchildren()
-
+    '''
 
 class GreenButtonData(object):
 
@@ -99,15 +104,16 @@ class GreenButtonData(object):
         self.root = ET.fromstring(xml_string)
 
     def _cast_entry(self, entry):
-        if entry.find(INTERVAL_BLOCK):
+        entry = Entry(entry).content
+        if entry.find(INTERVAL_BLOCK) is not None:
             return IntervalBlock(entry)
-        elif entry.find(LOCAL_TIME):
+        elif entry.find(LOCAL_TIME) is not None:
             return LocalTimeParameters(entry)
-        elif entry.find(METER_READING):
+        elif entry.find(METER_READING) is not None:
             return MeterReading(entry)
-        elif entry.find(SERVICE_CATEGORY):
+        elif entry.find(USAGE_POINT) is not None:
             return UsagePoint(entry)
-        elif entry.find(READING_TYPE):
+        elif entry.find(READING_TYPE) is not None:
             return ReadingType(entry)
         else:
             raise ValueError("encountered an undefined entry: %s" % entry)
@@ -124,4 +130,5 @@ if __name__ == '__main__':
         xml = f.read()
         eui = GreenButtonData(xml)
         print eui
+        print eui.entries
 
