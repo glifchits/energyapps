@@ -1,4 +1,5 @@
 import xml.etree.ElementTree as ET
+import warnings
 
 
 ENTRY = '{http://www.w3.org/2005/Atom}entry'
@@ -38,7 +39,7 @@ class Entry(object):
         for link in self.links:
             rel = link['rel']
             if rel == 'related':
-                rels.push(link['href'])
+                rels.append(link['href'])
         return rels
 
     @property
@@ -128,6 +129,18 @@ class GreenButtonData(object):
     def __init__(self, xml_string):
         self.root = ET.fromstring(xml_string)
 
+    def related(self, entry):
+        rels = entry.related
+        rel_entries = []
+        for rel_link in rels:
+            for entry in self.entries:
+                if entry.self_path == rel_link or \
+                    entry.parent_path == rel_link:
+                    rel_entries.append(entry)
+                    break
+        assert len(rel_entries) == len(rels)
+        return rel_entries
+
     def _cast_entry(self, entry):
         content = Entry(entry).content
         if content.find(INTERVAL_BLOCK) is not None:
@@ -157,7 +170,8 @@ if __name__ == '__main__':
         eui = GreenButtonData(xml)
 
         for entry in eui.entries:
-            print entry.self_path
-
+            print '\nself:      ', entry.self_path
+            print '  related:', entry.related
+            print '  rel obs:', eui.related(entry)
 
 
