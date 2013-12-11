@@ -49,35 +49,80 @@ READING_TYPE = '{http://naesb.org/espi}ReadingType'
 
 class Entry(object):
 
+    NODE_TAG = None
+
     def __init__(self, root):
         self.root = root
 
     @property
     def id(self):
-        return self.root.find(ID).text
+        return self.root.find(ID)
 
     @property
     def title(self):
-        return self.root.find(TITLE).text
+        return self.root.find(TITLE)
+
+    @property
+    def content(self):
+        return self.root.find(CONTENT)
+
+    @property
+    def node(self):
+        assert self.NODE_TAG is not None
+        return self.content.find(self.NODE_TAG)
 
 
 class UsagePoint(Entry):
-    pass
+    NODE_TAG = USAGE_POINT
+
+    @property
+    def kind(self):
+        return self.node.find(SERVICE_CATEGORY).find(KIND)
 
 class MeterReading(Entry):
-    pass
+    NODE_TAG = METER_READING
 
 class ReadingType(Entry):
-    pass
+    NODE_TAG = READING_TYPE
+
+    def __init__(self):
+        self.accumulation_behaviour, \
+        self.commodity, \
+        self.currency, \
+        self.data_qualifier, \
+        self.flow_direction, \
+        self.interval_length, \
+        self.kind, \
+        self.phase, \
+        self.multiplier, \
+        self.time_attribute, \
+        self.uom \
+            = self.node.getchildren()
+
 
 class IntervalBlock(Entry):
-    pass
+
+    @property
+    def interval_blocks(self):
+        return self.content.findall(INTERVAL_BLOCK)
+
+    @property
+    def interval_readings(self):
+        return self.content.findall(INTERVAL_READING)
+
 
 class ElectricPowerUsageSummary(Entry):
     pass
 
 class LocalTimeParameters(Entry):
-    pass
+    NODE_TAG = LOCAL_TIME
+
+    def __init__(self):
+        self.dst_end, \
+        self.dst_offset, \
+        self.dst_start, \
+        self.tz_offset \
+            = self.node.getchildren()
 
 
 class GreenButtonData(object):
@@ -106,7 +151,6 @@ class GreenButtonData(object):
 
 
 
-
 def from_timestamp(timestamp):
     if type(timestamp) == str:
         timestamp = int(timestamp)
@@ -115,31 +159,6 @@ def from_timestamp(timestamp):
 
 def process_data(xml_string):
     root = ET.fromstring(xml_string)
-
-    kind = root.findall(ENTRY)[0] \
-            .find(CONTENT) \
-            .find(USAGE_POINT) \
-            .find(SERVICE_CATEGORY) \
-            .find(KIND)
-
-    dst_end, dst_offset, dst_start, tz_offset = root.findall(ENTRY)[1]\
-            .find(CONTENT) \
-            .find(LOCAL_TIME) \
-            .getchildren()
-
-    data_type = root.findall(ENTRY)[2].find(TITLE).text
-
-    interval_blocks = root.findall(ENTRY)[3] \
-            .find(CONTENT) \
-            .findall(INTERVAL_BLOCK)
-
-    reading_type = root.findall(ENTRY)[4] \
-            .find(CONTENT) \
-            .find(READING_TYPE)
-
-    accumulation_behaviour, commodity, currency, data_qualifier, flow_direction, \
-    interval_length, kind, phase, multiplier, time_attribute, uom \
-        = reading_type.getchildren()
 
     reading = schema.Reading(
         title = "mydata",
