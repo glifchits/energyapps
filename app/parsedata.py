@@ -16,12 +16,11 @@ except:
 
 import sys
 import os
-import xml.etree.ElementTree as ET
 import datetime
 
 import schema
-
-#from __init__ import db
+import config
+from eui_object import GreenButtonData
 
 class DecoyDB:
     class Session:
@@ -31,7 +30,7 @@ class DecoyDB:
     session = Session()
 db = DecoyDB()
 
-import config
+#from __init__ import db
 
 def from_timestamp(timestamp):
     if type(timestamp) == str:
@@ -40,7 +39,7 @@ def from_timestamp(timestamp):
 
 
 def process_data(xml_string):
-    root = ET.fromstring(xml_string)
+    data = GreenButtonData(xml_string)
 
     reading = schema.Reading(
         title = "mydata",
