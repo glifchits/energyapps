@@ -6190,26 +6190,26 @@
         </IntervalReading>
       </IntervalBlock>
     </content>
-    <entry>
-      <id>urn:uuid:240d31c6-afb1-4dc5-afd4-54d82c3e4c50</id>
-      <link rel="self" href="ReadingType/07" />
-      <link rel="up" href="ReadingType" />
-      <title>Energy Delivered (kWh)</title>
-      <content>
-        <ReadingType xmlns="http://naesb.org/espi">
-          <accumulationBehaviour>4</accumulationBehaviour>
-          <commodity>1</commodity>
-          <currency>124</currency>
-          <dataQualifier>12</dataQualifier>
-          <flowDirection>1</flowDirection>
-          <intervalLength>3600</intervalLength>
-          <kind>12</kind>
-          <phase>769</phase>
-          <powerOfTenMultiplier>0</powerOfTenMultiplier>
-          <timeAttribute>0</timeAttribute>
-          <uom>72</uom>
-        </ReadingType>
-      </content>
-    </entry>
+  </entry>
+  <entry>
+    <id>urn:uuid:240d31c6-afb1-4dc5-afd4-54d82c3e4c50</id>
+    <link rel="self" href="ReadingType/07" />
+    <link rel="up" href="ReadingType" />
+    <title>Energy Delivered (kWh)</title>
+    <content>
+      <ReadingType xmlns="http://naesb.org/espi">
+        <accumulationBehaviour>4</accumulationBehaviour>
+        <commodity>1</commodity>
+        <currency>124</currency>
+        <dataQualifier>12</dataQualifier>
+        <flowDirection>1</flowDirection>
+        <intervalLength>3600</intervalLength>
+        <kind>12</kind>
+        <phase>769</phase>
+        <powerOfTenMultiplier>0</powerOfTenMultiplier>
+        <timeAttribute>0</timeAttribute>
+        <uom>72</uom>
+      </ReadingType>
+    </content>
   </entry>
 </feed>
