@@ -7,9 +7,25 @@ import datetime
 from __init__ import db
 
 
+class EnergyUsageInformation(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    # user owning EUI
+    owner = db.Column(db.Integer, db.ForeignKey('users.id'))
+    # from ServiceCategory
+    service_kind = db.Column(db.Integer)
+    # timezone info
+    dst_start_rule = db.Column(db.String)
+    dst_end_rule = db.Column(db.String)
+    dst_offset = db.Column(db.Integer)
+    tz_offset = db.Column(db.Integer)
+    # readings, many children (corresponds with MeterReadings)
+    meter_readings = db.relationship("Reading", backref='eui_readings',
+            lazy='dynamic')
+
+
+
 class Reading(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    owner = db.Column(db.Integer, db.ForeignKey('users.id'))
     title = db.Column(db.String)
     # from ReadingType
     accumulation_behaviour = db.Column(db.Integer)
@@ -21,8 +37,6 @@ class Reading(db.Model):
     kind = db.Column(db.Integer)
     multiplier = db.Column(db.Integer)
     uom = db.Column(db.Integer)
-    # from ServiceCategory
-    service_kind = db.Column(db.Integer)
     # children (many)
     intervals = db.relationship("Interval", backref='reading_intervals',
             lazy='dynamic')
