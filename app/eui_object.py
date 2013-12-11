@@ -81,21 +81,50 @@ class MeterReading(Entry):
 
 class ReadingType(Entry):
     NODE_TAG = READING_TYPE
-    '''
-    def __init__(self):
-        self.accumulation_behaviour, \
-        self.commodity, \
-        self.currency, \
-        self.data_qualifier, \
-        self.flow_direction, \
-        self.interval_length, \
-        self.kind, \
-        self.phase, \
-        self.multiplier, \
-        self.time_attribute, \
-        self.uom \
-            = self.node.getchildren()
-    '''
+
+    @property
+    def accumulation_behaviour(self):
+        return self.node.getchildren()[0]
+
+    @property
+    def commodity(self):
+        return self.node.getchildren()[1]
+
+    @property
+    def currency(self):
+        return self.node.getchildren()[2]
+
+    @property
+    def data_qualifier(self):
+        return self.node.getchildren()[3]
+
+    @property
+    def flow_direction(self):
+        return self.node.getchildren()[4]
+
+    @property
+    def interval_length(self):
+        return self.node.getchildren()[5]
+
+    @property
+    def kind(self):
+        return self.node.getchildren()[6]
+
+    @property
+    def phase(self):
+        return self.node.getchildren()[7]
+
+    @property
+    def multiplier(self):
+        return self.node.getchildren()[8]
+
+    @property
+    def time_attribute(self):
+        return self.node.getchildren()[9]
+
+    @property
+    def uom(self):
+        return self.node.getchildren()[10]
 
 
 class IntervalBlock(Entry):
@@ -116,13 +145,22 @@ class ElectricPowerUsageSummary(Entry):
 class LocalTimeParameters(Entry):
     NODE_TAG = LOCAL_TIME
 
-    '''def __init__(self):
-        self.dst_end, \
-        self.dst_offset, \
-        self.dst_start, \
-        self.tz_offset \
-            = self.node.getchildren()
-    '''
+    @property
+    def dst_end(self):
+        return self.node.getchildren()[0]
+
+    @property
+    def dst_offset(self):
+        return self.node.getchildren()[1]
+
+    @property
+    def dst_start(self):
+        return self.node.getchildren()[2]
+
+    @property
+    def tz_offset(self):
+        return self.node.getchildren()[3]
+
 
 class GreenButtonData(object):
 
@@ -170,8 +208,8 @@ if __name__ == '__main__':
         eui = GreenButtonData(xml)
 
         for entry in eui.entries:
-            print '\nself:      ', entry.self_path
-            print '  related:', entry.related
-            print '  rel obs:', eui.related(entry)
+            print '\nself:     ', entry.self_path
+            for rel in entry.related:
+                print '  related:', rel
 
 
