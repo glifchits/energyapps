@@ -13,7 +13,6 @@ SERVICE_CATEGORY = '{http://naesb.org/espi}ServiceCategory'
 KIND = '{http://naesb.org/espi}kind'
 LOCAL_TIME = '{http://naesb.org/espi}LocalTimeParameters'
 METER_READING = '{http://naesb.org/espi}MeterReading'
-USAGE_POINT = '{http://naesb.org/espi}UsagePoint'
 INTERVAL_BLOCK = '{http://naesb.org/espi}IntervalBlock'
 READING_TYPE = '{http://naesb.org/espi}ReadingType'
 
@@ -70,13 +69,27 @@ class Entry(object):
 class UsagePoint(Entry):
     NODE_TAG = USAGE_POINT
 
+    meter_readings = []
+
     @property
     def kind(self):
         return self.node.find(SERVICE_CATEGORY).find(KIND)
 
+    def add_meter_reading(self, reading):
+        self.meter_readings.append(reading)
+
 
 class MeterReading(Entry):
     NODE_TAG = METER_READING
+
+    interval_blocks = []
+    reading_type = None
+
+    def add_interval_block(self, interval_block):
+        self.interval_blocks.append(interval_block)
+
+    def add_reading_type(self, reading_type):
+        self.reading_type = reading_type
 
 
 class ReadingType(Entry):
@@ -167,18 +180,6 @@ class GreenButtonData(object):
     def __init__(self, xml_string):
         self.root = ET.fromstring(xml_string)
 
-    def related(self, entry):
-        rels = entry.related
-        rel_entries = []
-        for rel_link in rels:
-            for entry in self.entries:
-                if entry.self_path == rel_link or \
-                    entry.parent_path == rel_link:
-                    rel_entries.append(entry)
-                    break
-        assert len(rel_entries) == len(rels)
-        return rel_entries
-
     def _cast_entry(self, entry):
         content = Entry(entry).content
         if content.find(INTERVAL_BLOCK) is not None:
@@ -199,6 +200,45 @@ class GreenButtonData(object):
         es = self.root.findall(ENTRY)
         return map(self._cast_entry, es)
 
+    def related(self, entry):
+        rels = entry.related
+        rel_entries = []
+        for rel_link in rels:
+            for entry in self.entries:
+                if entry.self_path == rel_link or \
+                    entry.parent_path == rel_link:
+                    rel_entries.append(entry)
+                    break
+        assert len(rel_entries) == len(rels)
+        return rel_entries
+
+    def form_tree(self):
+        usage_point = [e for e in self.entries if e.NODE_TAG == USAGE_POINT]
+        assert len(usage_point) == 1
+        usage_point = usage_point[0]
+
+        meter_readings = [e for e in self.entries
+                if e.NODE_TAG == METER_READING]
+
+        for reading in meter_readings:
+            interval_block, reading_type = eui.related(reading)
+            print interval_block, reading_type
+            if interval_block.NODE_TAG == READING_TYPE:
+                interval_block, reading_type = reading_type, interval_block
+            reading.add_interval_block(interval_block)
+            reading.add_reading_type(reading_type)
+            usage_point.add_meter_reading(reading)
+
+        return usage_point
+
+
+def traverse_eui(eui, level, entry):
+    pad = '  ' * level
+    print "%s %s" % (pad, entry)
+    related = eui.related(entry)
+    for relative in related:
+        traverse_eui(eui, level+1, relative)
+
 
 if __name__ == '__main__':
     import sys
@@ -208,8 +248,16 @@ if __name__ == '__main__':
         eui = GreenButtonData(xml)
 
         for entry in eui.entries:
-            print '\nself:     ', entry.self_path
-            for rel in entry.related:
-                print '  related:', rel
+            print 'entry:', entry
+        print ''
+
+        usage_point = eui.form_tree()
+        print 'usage point:', usage_point
+        for reading in usage_point.meter_readings:
+            print '   meter reading:', reading
+            print '     reading type:', reading.reading_type
+            for block in reading.interval_blocks:
+                print '     interval block:', block
+
 
 
