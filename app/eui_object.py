@@ -8,13 +8,20 @@ TITLE = '{http://www.w3.org/2005/Atom}title'
 ID = '{http://www.w3.org/2005/Atom}id'
 LINK = '{http://www.w3.org/2005/Atom}link'
 
-USAGE_POINT = '{http://naesb.org/espi}UsagePoint'
-SERVICE_CATEGORY = '{http://naesb.org/espi}ServiceCategory'
-KIND = '{http://naesb.org/espi}kind'
-LOCAL_TIME = '{http://naesb.org/espi}LocalTimeParameters'
-METER_READING = '{http://naesb.org/espi}MeterReading'
-INTERVAL_BLOCK = '{http://naesb.org/espi}IntervalBlock'
-READING_TYPE = '{http://naesb.org/espi}ReadingType'
+ns2 = '{http://naesb.org/espi}'
+
+USAGE_POINT = '%sUsagePoint' % ns2
+SERVICE_CATEGORY = '%sServiceCategory' % ns2
+KIND = '%skind' % ns2
+LOCAL_TIME = '%sLocalTimeParameters' % ns2
+METER_READING = '%sMeterReading' % ns2
+INTERVAL_BLOCK = '%sIntervalBlock' % ns2
+READING_TYPE = '%sReadingType' % ns2
+INTERVAL_READING = '%sIntervalReading' % ns2
+COST = '%scost' % ns2
+DURATION = '%sduration' % ns2
+VALUE = '%svalue' % ns2
+TIME_PERIOD = '%stimePeriod' % ns2
 
 
 class Entry(object):
@@ -73,7 +80,7 @@ class UsagePoint(Entry):
     local_time = None
 
     @property
-    def kind(self):
+    def service_kind(self):
         return self.node.find(SERVICE_CATEGORY).find(KIND)
 
     def add_meter_reading(self, reading):
@@ -96,49 +103,34 @@ class MeterReading(Entry):
 class ReadingType(Entry):
     NODE_TAG = READING_TYPE
 
-    @property
-    def accumulation_behaviour(self):
-        return self.node.getchildren()[0]
+    def __getattr__(self, key):
+        children = self.node.getchildren()
+        for child in children:
+            if child.tag.endswith(key):
+                return child
+        return None
+
+
+class Interval(object):
+
+    def __init__(self, node):
+        self.node = node
 
     @property
-    def commodity(self):
-        return self.node.getchildren()[1]
+    def start(self):
+        return self.node.find(TIME_PERIOD).find(START).text
 
     @property
-    def currency(self):
-        return self.node.getchildren()[2]
+    def duration(self):
+        return self.node.find(TIME_PERIOD).find(DURATION).text
 
     @property
-    def data_qualifier(self):
-        return self.node.getchildren()[3]
+    def cost(self):
+        return self.node.find(COST).text
 
     @property
-    def flow_direction(self):
-        return self.node.getchildren()[4]
-
-    @property
-    def interval_length(self):
-        return self.node.getchildren()[5]
-
-    @property
-    def kind(self):
-        return self.node.getchildren()[6]
-
-    @property
-    def phase(self):
-        return self.node.getchildren()[7]
-
-    @property
-    def multiplier(self):
-        return self.node.getchildren()[8]
-
-    @property
-    def time_attribute(self):
-        return self.node.getchildren()[9]
-
-    @property
-    def uom(self):
-        return self.node.getchildren()[10]
+    def value(self):
+        return self.node.find(VALUE).text
 
 
 class IntervalBlock(Entry):
@@ -149,7 +141,7 @@ class IntervalBlock(Entry):
 
     @property
     def interval_readings(self):
-        return self.content.findall(INTERVAL_READING)
+        return [Interval(r) for r in self.content.findall(INTERVAL_READING)]
 
 
 class ElectricPowerUsageSummary(Entry):
@@ -160,7 +152,7 @@ class LocalTimeParameters(Entry):
     NODE_TAG = LOCAL_TIME
 
     @property
-    def dst_end(self):
+    def dst_end_rule(self):
         return self.node.getchildren()[0]
 
     @property
@@ -168,7 +160,7 @@ class LocalTimeParameters(Entry):
         return self.node.getchildren()[1]
 
     @property
-    def dst_start(self):
+    def dst_start_rule(self):
         return self.node.getchildren()[2]
 
     @property
@@ -226,7 +218,7 @@ class GreenButtonData(object):
                 if e.NODE_TAG == METER_READING]
 
         for reading in meter_readings:
-            interval_block, reading_type = eui.related(reading)
+            interval_block, reading_type = self.related(reading)
             if interval_block.NODE_TAG == READING_TYPE:
                 interval_block, reading_type = reading_type, interval_block
             reading.add_interval_block(interval_block)
