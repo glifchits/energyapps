@@ -1,7 +1,6 @@
 try:
-#    from flask import g
-#    from flask import current_app as app
-    assert True == False
+    from flask import g
+    from flask import current_app as app
 except:
     import logging
     class DecoyApp:
@@ -21,7 +20,7 @@ import datetime
 import schema
 import config
 from eui_object import GreenButtonData
-
+'''
 class DecoyDB:
     class Session:
         def __getattr__(self, key): pass
@@ -29,8 +28,8 @@ class DecoyDB:
         def commit(*args): pass
     session = Session()
 db = DecoyDB()
-
-#from __init__ import db
+'''
+from __init__ import db
 
 def from_timestamp(timestamp):
     if type(timestamp) == str:
@@ -38,16 +37,45 @@ def from_timestamp(timestamp):
     return datetime.datetime.fromtimestamp(timestamp)
 
 
+def construct_eui(data):
+    eui = schema.EnergyUsageInformation(
+        title = data.title,
+        service_kind = data.service_kind,
+        dst_start_rule = data.local_time.dst_start_rule,
+        dst_end_rule = data.local_time.dst_end_rule,
+        dst_offset = data.local_time.dst_offset,
+        tz_offset = data.local_time.tz_offset
+    )
+    return eui
+
+def construct_meter_reading(reading_type):
+    reading = schema.MeterReading(
+        accumulation_behaviour = reading_type.accumulation_behaviour,
+        commodity = reading_type.commodity,
+        currency = reading_type.currency,
+        data_qualifier = reading_type.data_qualifier,
+        flow_direction = reading_type.flow_direction,
+        interval_length = reading_type.interval_length,
+        kind = reading_type.kind,
+        multiplier = reading_type.multiplier,
+        uom = reading_type.uom
+    )
+    return reading
+
+def construct_interval_reading(interval_reading):
+    interval = schema.Interval(
+        start = from_timestamp(interval_reading.start),
+        duration = interval_reading.duration,
+        cost = interval_reading.cost,
+        value = interval_reading.value
+    )
+    return interval
+
+
 def process_data(xml_string):
     data = GreenButtonData(xml_string).form_tree()
 
-    eui = schema.EnergyUsageInformation()
-    eui.title = data.title
-    eui.service_kind = data.service_kind
-    eui.dst_start_rule = data.local_time.dst_start_rule
-    eui.dst_end_rule = data.local_time.dst_end_rule
-    eui.dst_offset = data.local_time.dst_offset
-    eui.tz_offset = data.local_time.tz_offset
+    eui = construct_eui(data)
 
     try:
         user = g.user
@@ -59,24 +87,14 @@ def process_data(xml_string):
         interval_block = meter_reading.interval_block
         reading_type = meter_reading.reading_type
 
-        reading = schema.MeterReading()
-        reading.accumulation_behaviour = reading_type.accumulation_behaviour
-        reading.commodity = reading_type.commodity
-        reading.currency = reading_type.currency
-        reading.data_qualifier = reading_type.data_qualifier
-        reading.flow_direction = reading_type.flow_direction
-        reading.interval_length = reading_type.interval_length
-        reading.kind = reading_type.kind
-        reading.multiplier = reading_type.multiplier
-        reading.uom = reading_type.uom
+        reading = construct_meter_reading(reading_type)
+
+        db.session.add(reading)
 
         for interval_reading in interval_block.interval_readings:
-            interval = schema.Interval()
-            interval.start = interval_reading.start
-            interval.duration = interval_reading.duration
-            interval.cost = interval_reading.cost
-            interval.value = interval_reading.value
+            interval = construct_interval_reading(interval_reading)
             reading.intervals.append(interval)
+            db.session.add(interval)
 
 
     app.logger.debug('committing.\ndirty: %s\nnew: %s' % \
