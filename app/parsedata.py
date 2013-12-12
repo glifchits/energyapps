@@ -39,46 +39,45 @@ def from_timestamp(timestamp):
 
 
 def process_data(xml_string):
-    data = GreenButtonData(xml_string)
+    data = GreenButtonData(xml_string).form_tree()
 
-    reading = schema.Reading(
-        title = "mydata",
-        accumulation_behaviour = accumulation_behaviour.text,
-        commodity = commodity.text,
-        currency = currency.text,
-        data_qualifier = data_qualifier.text,
-        flow_direction = flow_direction.text,
-        interval_length = interval_length.text,
-        kind = kind.text,
-        multiplier = multiplier.text,
-        uom = uom.text,
-        service_kind = kind.text
-    )
+    eui = schema.EnergyUsageInformation()
+    eui.title = data.title
+    eui.service_kind = data.service_kind
+    eui.dst_start_rule = data.local_time.dst_start_rule
+    eui.dst_end_rule = data.local_time.dst_end_rule
+    eui.dst_offset = data.local_time.dst_offset
+    eui.tz_offset = data.local_time.tz_offset
 
     try:
         user = g.user
-        if user:
-            user.readings.append(reading)
+        user.eui.append(eui)
     except NameError:
-        pass
+        db.session.add(eui)
 
-    db.session.add(reading)
+    for meter_reading in data.meter_readings:
+        interval_block = meter_reading.interval_block
+        reading_type = meter_reading.reading_type
 
-    for block in interval_blocks:
-        children = block.getchildren()
-        interval_readings = children[1:]
+        reading = schema.MeterReading()
+        reading.accumulation_behaviour = reading_type.accumulation_behaviour
+        reading.commodity = reading_type.commodity
+        reading.currency = reading_type.currency
+        reading.data_qualifier = reading_type.data_qualifier
+        reading.flow_direction = reading_type.flow_direction
+        reading.interval_length = reading_type.interval_length
+        reading.kind = reading_type.kind
+        reading.multiplier = reading_type.multiplier
+        reading.uom = reading_type.uom
 
-        for i_reading in interval_readings:
-            cost, time_period, value = i_reading.getchildren()
-            duration, start = time_period.getchildren()
+        for interval_reading in interval_block.interval_readings:
+            interval = schema.Interval()
+            interval.start = interval_reading.start
+            interval.duration = interval_reading.duration
+            interval.cost = interval_reading.cost
+            interval.value = interval_reading.value
+            reading.intervals.append(interval)
 
-            interval_reading = schema.Interval(
-                start = from_timestamp(start.text),
-                duration = duration.text,
-                cost = cost.text,
-                value = value.text
-            )
-            reading.intervals.append(interval_reading)
 
     app.logger.debug('committing.\ndirty: %s\nnew: %s' % \
             (db.session.dirty, db.session.new))
