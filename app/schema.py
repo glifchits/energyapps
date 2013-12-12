@@ -25,7 +25,6 @@ class EnergyUsageInformation(db.Model):
             lazy='dynamic')
 
 
-
 class MeterReading(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     # eui owning this meter reading
