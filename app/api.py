@@ -110,7 +110,8 @@ def get_eui():
     if r.status_code != 200:
         app.logger.debug("failed to read auth status before getting EUI")
         abort(r.status_code)
-
+    if not r.text:
+        abort(401)
     root = ElementTree.fromstring(r.text)
     current_status, expiry, scope = root.getchildren()
     app.logger.debug(scope.text)
@@ -149,8 +150,7 @@ def get_eui():
         app.logger.debug('processing EUI data now')
         data.process_data(r.text)
     else:
-        return 'not logged in with greenbutton'
-
+        abort(401)
     return 'success'
 
 
