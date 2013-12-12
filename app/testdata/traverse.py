@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 def traverse(node, level):
     print '   ' * level,
     text = node.text if node.text else ''
-    name = node.tag[node.tag.find('}')+1:]
+    name = node.tag#[node.tag.find('}')+1:]
     attrib = ''
     for key, val in node.attrib.items():
         attrib += ' %s=%s' % (key, val)
