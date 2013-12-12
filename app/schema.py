@@ -8,7 +8,9 @@ from __init__ import db
 
 
 class EnergyUsageInformation(db.Model):
+    __tablename__ = 'eui'
     id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String)
     # user owning EUI
     owner = db.Column(db.Integer, db.ForeignKey('users.id'))
     # from ServiceCategory
@@ -19,14 +21,15 @@ class EnergyUsageInformation(db.Model):
     dst_offset = db.Column(db.Integer)
     tz_offset = db.Column(db.Integer)
     # readings, many children (corresponds with MeterReadings)
-    meter_readings = db.relationship("Reading", backref='eui_readings',
+    meter_readings = db.relationship("MeterReading", backref='eui_readings',
             lazy='dynamic')
 
 
 
-class Reading(db.Model):
+class MeterReading(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String)
+    # eui owning this meter reading
+    eui = db.Column(db.Integer, db.ForeignKey('eui.id'))
     # from ReadingType
     accumulation_behaviour = db.Column(db.Integer)
     commodity = db.Column(db.Integer)
@@ -42,12 +45,12 @@ class Reading(db.Model):
             lazy='dynamic')
 
     def __repr__(self):
-        return "<Reading %s>" % self.id
+        return "<MeterReading %s>" % self.id
 
 
 class Interval(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    reading_id = db.Column(db.Integer, db.ForeignKey('reading.id'))
+    reading_id = db.Column(db.Integer, db.ForeignKey('meter_reading.id'))
     start = db.Column(db.DateTime)
     duration = db.Column(db.Integer)
     cost = db.Column(db.Integer)
@@ -69,7 +72,7 @@ class User(db.Model):
     access_token = db.Column(db.String)
     refresh_token = db.Column(db.String)
     # children (many)
-    readings = db.relationship("Reading", backref='user_readings',
+    eui = db.relationship("EnergyUsageInformation", backref='user_eui',
             lazy='dynamic')
 
     def __repr__(self):
