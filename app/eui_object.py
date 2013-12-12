@@ -19,6 +19,7 @@ INTERVAL_BLOCK = '%sIntervalBlock' % ns2
 READING_TYPE = '%sReadingType' % ns2
 INTERVAL_READING = '%sIntervalReading' % ns2
 COST = '%scost' % ns2
+START = '%sstart' % ns2
 DURATION = '%sduration' % ns2
 VALUE = '%svalue' % ns2
 TIME_PERIOD = '%stimePeriod' % ns2
@@ -57,11 +58,11 @@ class Entry(object):
 
     @property
     def id(self):
-        return self.root.find(ID)
+        return self.root.find(ID).text
 
     @property
     def title(self):
-        return self.root.find(TITLE)
+        return self.root.find(TITLE).text
 
     @property
     def content(self):
@@ -81,7 +82,7 @@ class UsagePoint(Entry):
 
     @property
     def service_kind(self):
-        return self.node.find(SERVICE_CATEGORY).find(KIND)
+        return self.node.find(SERVICE_CATEGORY).find(KIND).text
 
     def add_meter_reading(self, reading):
         self.meter_readings.append(reading)
@@ -100,14 +101,25 @@ class MeterReading(Entry):
         self.reading_type = reading_type
 
 
+def uncamel_case(string):
+    s = ''
+    for ch in string:
+        if 65 <= ord(ch) <= 90:
+            s += '_' + ch.lower()
+        else:
+            s += ch
+    return s
+
+
 class ReadingType(Entry):
     NODE_TAG = READING_TYPE
 
     def __getattr__(self, key):
+        key = uncamel_case(key)
         children = self.node.getchildren()
         for child in children:
             if child.tag.endswith(key):
-                return child
+                return child.text
         return None
 
 
@@ -141,7 +153,11 @@ class IntervalBlock(Entry):
 
     @property
     def interval_readings(self):
-        return [Interval(r) for r in self.content.findall(INTERVAL_READING)]
+        readings = []
+        for block in self.interval_blocks:
+            for reading in block.findall(INTERVAL_READING):
+                readings.append(Interval(reading))
+        return readings
 
 
 class ElectricPowerUsageSummary(Entry):
@@ -153,19 +169,19 @@ class LocalTimeParameters(Entry):
 
     @property
     def dst_end_rule(self):
-        return self.node.getchildren()[0]
+        return self.node.getchildren()[0].text
 
     @property
     def dst_offset(self):
-        return self.node.getchildren()[1]
+        return self.node.getchildren()[1].text
 
     @property
     def dst_start_rule(self):
-        return self.node.getchildren()[2]
+        return self.node.getchildren()[2].text
 
     @property
     def tz_offset(self):
-        return self.node.getchildren()[3]
+        return self.node.getchildren()[3].text
 
 
 class GreenButtonData(object):
