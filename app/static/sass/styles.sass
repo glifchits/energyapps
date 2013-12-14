@@ -1,8 +1,9 @@
+@import 'colours'
 // colours
-$background_colour: #252b2f
-$text_colour: #3498db
-$header_bg_colour: #171b1f
-$header_link_colour: darken($text_colour, 20%)
+$bg: $grey 
+$text: $brightblue
+$bg_dark: $darkgrey
+$text_dark: $darkblue
 // media query screen sizes
 $screen_mobile: 640px
 $screen_small: 860px
@@ -12,8 +13,8 @@ $screen_large: 1700px
 body
   margin: 0 auto
   font-family: 'Lato', sans-serif
-  background-color: $background_colour
-  color: $text_colour
+  background-color: $bg
+  color: $text
 
   
 div.login
@@ -25,15 +26,19 @@ a
   text-decoration: none
 
 header
-  background-color: $header_bg_colour
+  background-color: $bg_dark
   font-size: 16px
+  color: $text
   padding: 15px
+  a
+    color: $text_dark
+
   .header
     font-weight: bold
     font-style: italic
     font-size: 24px
-  a
-    color: $header_link_colour
+    a
+      color: $text
 
 .content
   @media screen and (max-width: $screen_mobile)
@@ -61,9 +66,9 @@ div.flash
   color: white
   padding: 10px
   &.error
-    background-color: red
+    background-color: $red
   &.success
-    background-color: green
+    background-color: $green
 
 
 form
@@ -78,12 +83,12 @@ form
     font-size: 20px
     font-family: 'Lato', sans-serif
     &:focus
-      border: 1px solid $text_colour
-    color: $text_colour
+      border: 1px solid $text
+    color: $text
 
   input
-    background-color: $header_bg_colour
+    background-color: $bg_dark
   
   button
-    background-color: $text_colour
-    color: $header_bg_colour
+    background-color: $text
+    color: $darkgrey
