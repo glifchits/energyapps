@@ -5,16 +5,21 @@
 <h1>User Agreement</h1>
 
 <p>
-  Before you can start using EnergyApps, we'll need to you agree for us to download
-  and retain your energy consumption data. EnergyApps will use your data to provide
-  you with meaningful information about your energy usage.
+Before you can start using EnergyApps, we'll need you to agree for us to download
+and retain your energy consumption data. EnergyApps will use your data to provide
+you with meaningful information about your energy usage.
 </p>
 <p>
-  If you ever want to stop using EnergyApps, you can delete your account and we will
-  anonymize and deassociate your data from you. 
+If you ever want to stop using EnergyApps, you can delete your account and we will
+anonymize and deassociate your data from you. 
 </p>
 <p>
-  We promise to never share any of your data or in any way make it public.
+We promise to never share any of your data or in any way make it public.
 </p>
+
+<form id=eui-agreement method=POST action='{{ url_for('auth.eui_agreement') }}'>
+  <button name=agree value=agree>I agree</button>
+  <button name=disagree value=disagree>No thanks</button>
+</form>
 
 {% endblock %}
