@@ -54,20 +54,20 @@ def validate_params(aggregator, grouping):
 
 @data.route('/all')
 @data.route('/all.<string:ext>')
+@login_required
 def all(ext=None):
     app.logger.debug("/all route with extension %s" % ext)
     start = request.args.get('start')
     end = request.args.get('end')
 
-    sql = "select id, start, cost, value from interval"
-    if start or end:
-        sql += " where "
+    owner_id = g.user.get_id()
+
+    sql = """select id, start, cost, value from data_view
+    where owner = {owner_id}""".format(owner_id = owner_id)
     if start:
-        sql += " start >= '%s'::date " % start
-    if start and end:
-        sql += " and "
+        sql += " and start >= '%s'::date " % start
     if end:
-        sql += " start < '%s'::date " % end
+        sql += " and start < '%s'::date " % end
     sql += "\norder by id"
 
     def datum_fac(row):
