@@ -34,7 +34,7 @@ def login():
         flash((CSS_ERR, "Username or password incorrect"))
         return redirect(url_for('.login'))
 
-    return render_template('login.html')
+    return render_template('auth/login.html')
 
 
 @auth.route('/logout')
@@ -64,4 +64,4 @@ def register():
 
         return redirect(url_for('home'))
 
-    return render_template('register.html')
+    return render_template('auth/register.html')
