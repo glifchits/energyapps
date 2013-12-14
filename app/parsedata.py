@@ -88,6 +88,7 @@ def process_data(xml_string):
         reading_type = meter_reading.reading_type
 
         reading = construct_meter_reading(reading_type)
+        eui.meter_readings.append(reading)
 
         db.session.add(reading)
 
