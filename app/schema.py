@@ -99,3 +99,6 @@ class User(db.Model):
         self.access_token = token
         self.token_retrieved = datetime.datetime.now()
 
+    def has_eui(self):
+        return self.eui.count() > 0
+
