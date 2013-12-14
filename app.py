@@ -27,7 +27,7 @@ def before_request():
 @app.route('/')
 def home():
     if g.user.get_id():
-        if g.user.has_eui():
+        if g.user.eui_agreed:
             app.logger.debug('user is active, showing dashboard')
             return render_template('dashboard.html')
         app.logger.debug('user is logged in but inactive, go to get eui')
