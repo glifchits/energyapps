@@ -89,6 +89,7 @@ def all(ext=None):
 
 @data.route('/group')
 @data.route('/group.<string:ext>')
+@login_required
 def group(ext=None):
     aggregator = request.args.get('agg')
     grouping = request.args.get('grp')
@@ -106,26 +107,25 @@ def group(ext=None):
     start = request.args.get('start')
     end = request.args.get('end')
 
+    owner_id = g.user.get_id()
+
     sql = '''
     select min(id) as minid,
         min(start) as minstart,
         {aggregator}(cost) as cost,
         {aggregator}(value) as value,
-        date_part('{grouping}', start) as {grouping}
-    from interval
+        {grouping}
+    from data_view
+    where owner = {owner_id}
     '''
-
-    if start or end:
-        sql += " where "
     if start:
-        sql += " start >= '%s'::date " % start
-    if start and end:
-        sql += " and "
+        sql += " and start >= '%s'::date " % start
     if end:
-        sql += " start < '%s'::date " % end
+        sql += " and start < '%s'::date " % end
     sql += "\ngroup by {grouping}\norder by minid"
 
-    sql = sql.format( aggregator = aggregator, grouping = grouping )
+    sql = sql.format( aggregator = aggregator, grouping = grouping,
+            owner_id = owner_id)
     app.logger.debug('executing sql\n%s' % sql)
 
     def datum_factory(row):
