@@ -1,4 +1,4 @@
-from flask import render_template, g, session
+from flask import render_template, g, session, redirect, url_for
 from flask.ext.login import current_user
 
 from app import app
@@ -31,7 +31,7 @@ def home():
             app.logger.debug('user is active, showing dashboard')
             return render_template('dashboard.html')
         app.logger.debug('user is logged in but inactive, go to get eui')
-        return render_template('agree_eui.html')
+        return redirect(url_for('auth.eui_agreement'))
     app.logger.debug('not logged in')
     return render_template('landing.html')
 
