@@ -2,6 +2,9 @@
 from flask import redirect, url_for, render_template, session, request, flash, g
 from flask import Blueprint, current_app as app
 from flask.ext.login import login_user, logout_user, login_required
+from flask_wtf import Form
+from wtforms import TextField, PasswordField
+from wtforms.validators import DataRequired
 
 from functools import wraps
 
@@ -19,6 +22,11 @@ def load_user(id):
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
+    class LoginForm(Form):
+        email = TextField('email', validators=[DataRequired()])
+        password = PasswordField('password')
+
+    form = LoginForm()
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
@@ -34,13 +42,25 @@ def login():
         flash((CSS_ERR, "Username or password incorrect"))
         return redirect(url_for('.login'))
 
-    return render_template('auth/login.html')
+    return render_template('auth/login.html', form=form)
 
 
 @auth.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('home'))
+
+
+@auth.route('/agreement', methods=['GET', 'POST'])
+def eui_agreement():
+    if request.method == 'POST':
+        print request.form
+        agree = request.form.get('agree')
+        if agree:
+            return redirect(url_for('api.to_data_custodian'))
+        flash((CSS_ERR, 'You chose not to agree'))
+        return redirect(url_for('auth.logout'))
+    return render_template('auth/agree_eui.html')
 
 
 @auth.route('/register', methods=['GET', 'POST'])
