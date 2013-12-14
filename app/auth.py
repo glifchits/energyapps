@@ -57,7 +57,11 @@ def eui_agreement():
         print request.form
         agree = request.form.get('agree')
         if agree:
+            g.user.eui_agreed = True
+            db.session.commit()
             return redirect(url_for('api.to_data_custodian'))
+        g.user.eui_agreed = False
+        db.session.commit()
         flash((CSS_ERR, 'You chose not to agree'))
         return redirect(url_for('auth.logout'))
     return render_template('auth/agree_eui.html')

@@ -70,6 +70,7 @@ class User(db.Model):
     token_retrieved = db.Column(db.DateTime)
     access_token = db.Column(db.String)
     refresh_token = db.Column(db.String)
+    eui_agreed = db.Column(db.Boolean)
     # children (many)
     eui = db.relationship("EnergyUsageInformation", backref='user_eui',
             lazy='dynamic')
@@ -98,6 +99,9 @@ class User(db.Model):
     def update_access_token(self, token):
         self.access_token = token
         self.token_retrieved = datetime.datetime.now()
+
+    def agreed_to_eui(self):
+        return self.eui_agreed
 
     def has_eui(self):
         return self.eui.count() > 0
