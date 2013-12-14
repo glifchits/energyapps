@@ -22,7 +22,7 @@ jQuery ->
         element.text delta + "% more"
         element.addClass "bad"
       else if delta < 0
-        element.text delta + "% less"
+        element.text Math.abs(delta) + "% less"
         element.addClass "good"
       else
         element.text "no more"
