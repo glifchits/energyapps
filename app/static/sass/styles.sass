@@ -5,7 +5,8 @@ $header_bg_colour: #171b1f
 $header_link_colour: darken($text_colour, 20%)
 // media query screen sizes
 $screen_mobile: 640px
-$screen_medium: 1000px
+$screen_small: 860px
+$screen_medium: 1090px
 $screen_large: 1700px
 
 body
@@ -37,16 +38,23 @@ header
 .content
   @media screen and (max-width: $screen_mobile)
     padding: 10px
+    font-size: 30px
 
-  @media screen and (min-width: $screen_mobile+1) and (max-width: $screen-medium)
-    padding: 10px 60px
+  @media screen and (min-width: $screen_mobile+1) and (max-width: $screen_small)
+    padding: 30px 60px
+    font-size: 26px
+
+  @media screen and (min-width: $screen_small+1) and (max-width: $screen_medium)
+    padding: 30px 70px
+    font-size: 36px
 
   @media screen and (min-width: $screen_medium+1) and (max-width: $screen_large)
     padding: 30px 150px
+    font-size: 40px
 
   @media screen and (min-width: $screen_large+1)
     padding: 50px 300px 
-
+    font-size: 56px
 
 div.flash
   border-radius: 5px
