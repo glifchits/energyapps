@@ -44,6 +44,9 @@ def auth():
     r = requests.post(apipt.TOKEN_URL, data=params, headers=auth_header(),
             verify=False)
     app.logger.debug(r.text)
+    if not r.text:
+        # the user clicked "Cancel" at the data custodian's end
+        abort(401)
     request_data = r.json()
     access_token = request_data.get('access_token')
     token_type = request_data.get('token_type')
