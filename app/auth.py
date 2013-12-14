@@ -59,6 +59,8 @@ def register():
             db.session.add(user)
             db.session.commit()
             flash((CSS_SUCC, 'Success!'))
+            # log in the user
+            login_user(user, remember = True)
         except Exception as e:
             flash((CSS_ERR, str(e)))
 
