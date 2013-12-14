@@ -27,6 +27,8 @@ def before_request():
 
 @app.route('/')
 def home():
+    if g.user.is_authenticated():
+        return render_template('dashboard.html')
     return render_template('index.html')
 
 
