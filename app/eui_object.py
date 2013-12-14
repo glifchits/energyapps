@@ -138,11 +138,13 @@ class Interval(object):
 
     @property
     def cost(self):
-        return self.node.find(COST).text
+        cost_node = self.node.find(COST)
+        if cost_node is not None: return cost_node.text
 
     @property
     def value(self):
-        return self.node.find(VALUE).text
+        value_node = self.node.find(VALUE)
+        if value_node is not None: return value_node.text
 
 
 class IntervalBlock(Entry):
