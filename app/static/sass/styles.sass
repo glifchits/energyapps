@@ -2,6 +2,7 @@
 $background_colour: #252b2f
 $text_colour: #3498db
 $header_bg_colour: #171b1f
+$header_link_colour: darken($text_colour, 20%)
 // media query screen sizes
 $screen_mobile: 640px
 $screen_medium: 1000px
@@ -9,21 +10,29 @@ $screen_large: 1700px
 
 body
   margin: 0 auto
-  font-family: sans-serif
+  font-family: 'Lato', sans-serif
   background-color: $background_colour
   color: $text_colour
 
   
 div.login
-  text-align: right
-  padding-top: 10px
+  height: 30px
+  float: right
+  padding-top: 4px
 
 a
   text-decoration: none
 
 header
-  text-align: center
   background-color: $header_bg_colour
+  font-size: 16px
+  padding: 15px
+  .header
+    font-weight: bold
+    font-style: italic
+    font-size: 24px
+  a
+    color: $header_link_colour
 
 .content
   @media screen and (max-width: $screen_mobile)
