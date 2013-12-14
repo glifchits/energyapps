@@ -149,6 +149,7 @@ def group(ext=None):
 
 @data.route('/aggregate')
 @data.route('/aggregate.<string:ext>')
+@login_required
 def aggregate(ext=None):
     aggregator = request.args.get('agg')
     grouping = request.args.get('grp')
@@ -159,6 +160,7 @@ def aggregate(ext=None):
 
     start = request.args.get('start')
     end = request.args.get('end')
+    owner_id = g.user.get_id()
 
     groups = ['year', 'month', 'day', 'hour']
     def lte(g1, g2):
@@ -167,7 +169,7 @@ def aggregate(ext=None):
         return i1 >= i2
 
     sql = '''
-    select min(id) as minid,
+    select min(interval.id) as minid,
         {aggregator}(cost) as cost,
         {aggregator}(value) as value,
         date_part('year', start) as year
@@ -178,16 +180,18 @@ def aggregate(ext=None):
         sql += ", date_part('day', start) as day\n"
     if lte(grouping, 'hour'):
         sql += ", date_part('hour', start) as hour\n"
-    sql += "from interval "
+    sql += """from interval
+    inner join meter_reading
+        on meter_reading.id = interval.reading_id
+    inner join eui
+        on eui.id = meter_reading.eui
+    where eui.owner = {owner_id}
+    """.format(owner_id = owner_id)
 
-    if start or end:
-        sql += "\nwhere "
     if start:
-        sql += " start >= '%s'::date " % start
-    if start and end:
-        sql += " and "
+        sql += " and start >= '%s'::date " % start
     if end:
-        sql += " start < '%s'::date " % end
+        sql += " and start < '%s'::date " % end
 
     sql += "\ngroup by "
     sql += ', '.join(groups[:groups.index(grouping) + 1])
