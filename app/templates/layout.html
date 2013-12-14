@@ -2,22 +2,22 @@
 <html>
   <head>
     <title>GeorgeEnergyApp</title>
+    <link href='http://fonts.googleapis.com/css?family=Lato:400,700italic' rel='stylesheet' type='text/css'>
     <link href='/static/css/styles.css' rel=stylesheet type=text/css>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     {% block head %}
     {% endblock %}
   </head>
   <body>
-    <div class=login>
-      {% if g.user.is_authenticated() %}
-        {{ g.user.name }} <a href='{{ url_for('auth.logout') }}'>Log out</a>
-      {% else %}
-        <a href='{{ url_for('auth.login') }}'>Log in</a> or <a href='{{ url_for('auth.register') }}'>Sign up!</a>
-      {% endif %}
-    </div>
-
     <header>
-      <h1><a href=/>EnergyApps</a></h1>
+      <span class=header><a href=/>EnergyApps</a></span>
+      <div class=login>
+        {% if g.user.is_authenticated() %}
+          {{ g.user.name }} <a href='{{ url_for('auth.logout') }}'>Log out</a>
+        {% else %}
+          <a href='{{ url_for('auth.login') }}'>Log in</a> or <a href='{{ url_for('auth.register') }}'>Sign up!</a>
+        {% endif %}
+      </div>
     </header>
 
     <div class=content>
