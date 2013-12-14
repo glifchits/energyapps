@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div id=dashboard>
+  <div class=widget>
+    This week you've used <span id=week-usage>N/A</span>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block beforeend %}
+<script src='/static/js/underscore.js'></script>
+<script src='/static/js/backbone.js'></script>
+<script>
+$(function() {
+  
+  var dataModel = new Backbone.Model({ weekUsage: 0 })
+  
+  var DataView = Backbone.View.extend({
+    initialize: function() {
+      this.model.on('change', _.bind(this.render, this))
+    },
+    render: function() {
+      this.$el.empty().append(this.model.get('weekUsage'))
+    }
+  })
+
+  var dataView = new DataView({ model: dataModel })
+
+  dataView.$el.appendTo("#week-usage")
+
+  dataModel.set('weekUsage', 50)
+
+})
+</script>
+
+{% endblock %}
