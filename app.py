@@ -29,7 +29,7 @@ def before_request():
 def home():
     if g.user.is_authenticated():
         return render_template('dashboard.html')
-    return render_template('index.html')
+    return render_template('landing.html')
 
 
 if __name__ == '__main__':
