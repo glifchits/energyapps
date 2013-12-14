@@ -1,8 +1,19 @@
+// colours
+$background_colour: #252b2f
+$text_colour: #3498db
+$header_bg_colour: #171b1f
+// media query screen sizes
+$screen_mobile: 640px
+$screen_medium: 1000px
+$screen_large: 1700px
+
 body
   margin: 0 auto
-  width: 640px
   font-family: sans-serif
+  background-color: $background_colour
+  color: $text_colour
 
+  
 div.login
   text-align: right
   padding-top: 10px
@@ -11,8 +22,22 @@ a
   text-decoration: none
 
 header
-  font-size: 30px
   text-align: center
+  background-color: $header_bg_colour
+
+.content
+  @media screen and (max-width: $screen_mobile)
+    padding: 10px
+
+  @media screen and (min-width: $screen_mobile+1) and (max-width: $screen-medium)
+    padding: 10px 60px
+
+  @media screen and (min-width: $screen_medium+1) and (max-width: $screen_large)
+    padding: 30px 150px
+
+  @media screen and (min-width: $screen_large+1)
+    padding: 50px 300px 
+
 
 div.flash
   border-radius: 5px
