@@ -2,9 +2,6 @@ jQuery ->
 
   class DataView extends Backbone.View
     el: $ "body"
-    yesterday: $ "#yesterday-delta"
-    weekly: $ "#weekly-delta"
-    sleeping: $ "#sleeping-use"
 
     initialize: ->
       _.bindAll @, 'weeklyDelta', 'drawNumber'
@@ -21,7 +18,7 @@ jQuery ->
       else
         multiplier = 1
 
-      number = (number * multiplier).toFixed(decimals)
+      number *= multiplier
       
       # text before the number
       text = ""
@@ -29,7 +26,7 @@ jQuery ->
         text += "$"
 
       # the number
-      text += Math.abs(number)
+      text += Math.abs(number).toFixed(2)
 
       # text after the number, and adding css class
       if type == 'percentage'
@@ -49,9 +46,10 @@ jQuery ->
       dailyAverage = @model.get('dailyAverage')
       weeklyUsage = @model.get('weeklyUsage')
       weeklyAverage = @model.get('weeklyAverage')
-      @drawNumber(@yesterday, (yesterdayUsage - dailyAverage) / dailyAverage)
-      @drawNumber(@weekly, (weeklyUsage - weeklyAverage) / weeklyAverage)
-      @drawNumber(@sleeping, @model.get('sleepingUsage'), 'dollar')
+      @drawNumber($("#today-use"), @model.get('todaySoFar'), "dollar")
+      @drawNumber($("#yesterday-delta"), (yesterdayUsage - dailyAverage) / dailyAverage)
+      @drawNumber($("#weekly-delta"), (weeklyUsage - weeklyAverage) / weeklyAverage)
+      @drawNumber($("#sleeping-use"), @model.get('sleepingUsage'), 'dollar')
 
 
   class DataModel extends Backbone.Model
