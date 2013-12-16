@@ -8,6 +8,7 @@ select
   avg(interval.value) as value,
   date_part('year', start) as year,
   date_part('month', start) as month,
+  date_part('week', start) as week,
   date_part('day', start) as day,
   date_part('hour', start) as hour
 from interval
