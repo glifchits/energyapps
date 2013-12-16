@@ -11,13 +11,18 @@
   <body>
     <header>
       <span class=header><a href=/>EnergyApps</a></span>
-      <div class=login>
-        {% if g.user.is_authenticated() %}
-          {{ g.user.name }} <a href='{{ url_for('auth.logout') }}'>Log out</a>
-        {% else %}
-          <a href='{{ url_for('auth.login') }}'>Log in</a> or <a href='{{ url_for('auth.register') }}'>Sign up!</a>
-        {% endif %}
-      </div>
+      <ul id=menu>
+        <li class=refresh>
+          <a id=refresh-eui href=#>Refresh data</a>
+        </li>
+        <li class=login>
+          {% if g.user.is_authenticated() %}
+            {{ g.user.name }} <a href='{{ url_for('auth.logout') }}'>Log out</a>
+          {% else %}
+            <a href='{{ url_for('auth.login') }}'>Log in</a> or <a href='{{ url_for('auth.register') }}'>Sign up!</a>
+          {% endif %}
+        </li>
+      </ul>
     </header>
 
     <div class=content>
@@ -32,6 +37,7 @@
       {% block content %}
       {% endblock %}
     </div>
+      <script src="/static/js/main.js"></script>
       {% block beforeend %}
       {% endblock %}
   </body>
