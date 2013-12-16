@@ -1,12 +1,11 @@
 create view data_view
 as
-
 select
-  interval.id,
-  eui.owner,
+  min(interval.id) as id,
+  min(eui.owner) as owner,
   interval.start,
-  interval.cost,
-  interval.value,
+  avg(interval.cost) as cost,
+  avg(interval.value) as value,
   date_part('year', start) as year,
   date_part('month', start) as month,
   date_part('day', start) as day,
@@ -17,4 +16,5 @@ inner join meter_reading
 inner join eui
   on eui.id = meter_reading.eui
 where meter_reading.kind = 12
+group by start
 order by start ;
