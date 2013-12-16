@@ -152,6 +152,9 @@ def get_eui():
     if r.text:
         app.logger.debug('processing EUI data now')
         data.process_data(r.text)
+        with open("app/testdata/most_recent_eui.xml", "w") as f:
+            app.logger.debug('saving EUI xml for debug')
+            f.write(r.text)
     else:
         abort(401)
     return 'success'
