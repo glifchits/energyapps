@@ -12,9 +12,11 @@
     <header>
       <span class=header><a href=/>EnergyApps</a></span>
       <ul id=menu>
+        {% if g.user.is_authenticated() %}
         <li class=refresh>
           <a id=refresh-eui href=#>Refresh data</a>
         </li>
+        {% endif %}
         <li class=login>
           {% if g.user.is_authenticated() %}
             {{ g.user.name }} <a href='{{ url_for('auth.logout') }}'>Log out</a>
