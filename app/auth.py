@@ -8,7 +8,8 @@ from wtforms.validators import DataRequired
 
 from functools import wraps
 
-from app import db, lm
+from app import lm
+from __init__ import db
 import schema
 from constants import *
 
@@ -58,9 +59,13 @@ def eui_agreement():
         agree = request.form.get('agree')
         if agree:
             g.user.eui_agreed = True
+            app.logger.debug('agreed to eui, committing')
+            print db.session.new
+            print db.session.dirty
             db.session.commit()
             return redirect(url_for('api.to_data_custodian'))
         g.user.eui_agreed = False
+        app.logger.debug('disagreed to eui, committing')
         db.session.commit()
         flash((CSS_ERR, 'You chose not to agree'))
         return redirect(url_for('auth.logout'))
