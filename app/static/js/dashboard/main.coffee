@@ -35,7 +35,13 @@ jQuery ->
         text += "%"
       if type == 'percentage'
         text += " "
-        element.addClass if number > 0 then "bad" else "good"
+        console.log("number is", number)
+        if number < 0 
+          element.addClass "good"
+          element.removeClass "bad"
+        else
+          element.addClass "bad"
+          element.removeClass "good"
         text += if number > 0 then "more" else "less"
       if type == 'dollar'
         element.addClass 'neutral'
