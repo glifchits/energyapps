@@ -223,3 +223,41 @@ def aggregate(ext=None):
     else:
         app.logger.info("extension '%s' not supported")
         abort(404)
+
+def datetime_string(t):
+    return "%s-%s-%s" % (t.year, t.month, t.day)
+
+
+@data.route('/dashboard')
+@login_required
+def dashboard():
+    dash_data = {}
+    now = datetime.datetime.now()
+    day = datetime.timedelta(days=1)
+    today_midnight = datetime.datetime(now.year, now.month, now.day)
+    yesterday_midnight = today_midnight - day
+
+    # today's usage so far
+    sql_today = """
+    select sum(value), sum(cost)
+    from data_view
+    where owner = {owner_id}
+    and start >= '{start}'::date
+    """.format(
+        owner_id = g.user.get_id(),
+        start = datetime_string(today_midnight)
+    )
+    rows = db.engine.execute(sql_today)
+    print 'executing sql\n%s' % sql_today
+    print 'here are the rows'
+    for r in rows: print r
+
+    dash_data['todaySoFar'] = 1.43
+    dash_data['yesterdayUsage'] = 2325
+    dash_data['dailyAverage'] = 2533
+    dash_data['weeklyUsage'] = 21652
+    dash_data['weeklyAverage'] = 20252
+    dash_data['sleepingUsage'] = 30
+    return json.dumps(dash_data)
+
+
