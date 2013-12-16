@@ -7,11 +7,8 @@ jQuery ->
     sleeping: $ "#sleeping-use"
 
     initialize: ->
-      _.bindAll @, 'yesterdayDelta', 'weeklyDelta', 'drawNumber'
+      _.bindAll @, 'weeklyDelta', 'drawNumber'
       @render()
-
-    yesterdayDelta: ->
-      (@model.get('yesterdayUsage') - @model.get('dailyAverage')) / @model.get('dailyAverage')
 
     weeklyDelta: ->
       (@model.get('weeklyUsage') - @model.get('weeklyAverage')) / @model.get('weeklyAverage')
@@ -47,22 +44,36 @@ jQuery ->
       element.text text
 
     render: =>
-      @drawNumber(@yesterday, @yesterdayDelta())
-      @drawNumber(@weekly, @weeklyDelta())
+      @model.update()
+      yesterdayUsage = @model.get('yesterdayUsage')
+      dailyAverage = @model.get('dailyAverage')
+      weeklyUsage = @model.get('weeklyUsage')
+      weeklyAverage = @model.get('weeklyAverage')
+      @drawNumber(@yesterday, (yesterdayUsage - dailyAverage) / dailyAverage)
+      @drawNumber(@weekly, (weeklyUsage - weeklyAverage) / weeklyAverage)
       @drawNumber(@sleeping, @model.get('sleepingUsage'), 'dollar')
 
 
   class DataModel extends Backbone.Model
 
-    defaults:
+    initialize: ->
+      _.bindAll @, 'update'
+
+    defaults: ->
+      todaySoFar: 3.40
       yesterdayUsage: 20
-      weeklyUsage: 150
       dailyAverage: 19.4
+      weeklyUsage: 150
       weeklyAverage: 152.2
       sleepingUsage: 1.25
 
+    update: ->
+      model = @
+      $.getJSON '/data/dashboard', (data) ->
+        console.log data
+        model.set('todaySoFar', data.todaySoFar)
+        model.set('sleepingUsage', 30)
+
 
   dataView = new DataView model: new DataModel
-
-  console.log dataView
 
