@@ -5,7 +5,9 @@ jQuery ->
 
     initialize: ->
       _.bindAll @, 'weeklyDelta', 'drawNumber'
+      @model.on "change", @render, @
       @render()
+      @model.update()
 
     weeklyDelta: ->
       (@model.get('weeklyUsage') - @model.get('weeklyAverage')) / @model.get('weeklyAverage')
@@ -40,8 +42,7 @@ jQuery ->
 
       element.text text
 
-    render: =>
-      @model.update()
+    render: ->
       yesterdayUsage = @model.get('yesterdayUsage')
       dailyAverage = @model.get('dailyAverage')
       weeklyUsage = @model.get('weeklyUsage')
@@ -58,19 +59,24 @@ jQuery ->
       _.bindAll @, 'update'
 
     defaults: ->
-      todaySoFar: 3.40
-      yesterdayUsage: 20
-      dailyAverage: 19.4
-      weeklyUsage: 150
-      weeklyAverage: 152.2
-      sleepingUsage: 1.25
+      todaySoFar: 0
+      yesterdayUsage: 0
+      dailyAverage: 0
+      weeklyUsage: 0
+      weeklyAverage: 0
+      sleepingUsage: 0
 
     update: ->
       model = @
       $.getJSON '/data/dashboard', (data) ->
+        console.log "update"
         console.log data
         model.set('todaySoFar', data.todaySoFar)
-        model.set('sleepingUsage', 30)
+        model.set('yesterdayUsage', data.yesterdayUsage)
+        model.set('dailyAverage', data.dailyAverage)
+        model.set('weeklyUsage', data.weeklyUsage)
+        model.set('weeklyAverage', data.weeklyAverage)
+        model.set('sleepingUsage', data.sleepingUsage)
 
 
   dataView = new DataView model: new DataModel
