@@ -100,7 +100,7 @@ def series(ext=None):
     # eg. year -> ['year']
     sql += ', '.join(GROUPS[:GROUPS.index(grouping) + 1])
     sql += "\norder by id"
-    if last == 'true':
+    if last == 'true' and not agg2:
         sql += " desc\nlimit 1"
     if agg2:
         sql += "\n) as sub_query"
