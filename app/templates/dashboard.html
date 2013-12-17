@@ -7,29 +7,17 @@
 {% block content %}
 
 <div id=dashboard>
-  <div class=widget>
-    <span class=title>Today,</span>
-    energy use has cost <span class=statistic id=today-use>--</span> so far.
-  </div>
-  <div class=widget>
-    <span class=title>Yesterday,</span> 
-    you used <span class=statistic id=yesterday-delta>--</span> energy than your average.
-  </div>
-  <div class=widget>
-    <span class=title>Last week,</span>
-    you used <span class=statistic id=weekly-delta>--</span> energy than your average.
-  </div>
-  <div class=widget>
-    <span class=title>Last night,</span>
-    energy use cost <span class=statistic id=sleeping-use>--</span> while you slept.
+  <div class=widget data-bind="foreach: widgets">
+    <span class=title data-bind="text: title"></span>
+    <span>Tegfxhfghfgdhdfgh</span>
+    <span class=statistic data-bind="text: displayValue(), css: cssClass()"></span>
+    <span>fdhfhfdghfdgh</span>
   </div>
 </div>
 
 {% endblock %}
 
 {% block beforeend %}
-<script src='/static/js/underscore.js'></script>
-<script src='/static/js/backbone.js'></script>
+<script src='/static/js/knockout-3.0.0.js'></script>
 <script src='/static/js/dashboard/main.js'></script>
-
 {% endblock %}
