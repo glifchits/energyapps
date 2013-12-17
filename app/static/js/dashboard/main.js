@@ -52,12 +52,29 @@ var Widget = function(title, type, measure, params, agg2) {
 };
 
 var AbsWidget = function(title, measure, params) {
-    return new Widget(title, "abs", measure, params);
+    w = new Widget(title, "abs", measure, params);
+    if (measure === "cost") {
+        w.text1 = "your energy use cost";
+        w.text2 = "";
+    }
+    else {
+        w.text1 = "you have used";
+        w.text2 = "of energy";
+    };
+    return w;
 };
 
-var CompWidget = function(title, measure, params, agg2) {
-    agg2 = agg2 || 'avg';
-    return new Widget(title, "comp", measure, params, agg2)
+var CompWidget = function(title, measure, params) {
+    w = new Widget(title, "comp", measure, params, "avg");
+    if (measure === "cost") {
+        w.text1 = "your energy use cost";
+        w.text2 = "than average";
+    }
+    else {
+        w.text1 = "you used";
+        w.text2 = "energy than average"
+    }
+    return w;
 };
 
 var getDateStr = function(date, dayOffset) {
