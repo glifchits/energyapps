@@ -14,7 +14,6 @@ var Widget = function(title, type, measure, params, agg2) {
     self.displayValue = ko.computed(function() {
         num = self.value();
         compValue = self.comp();
-        console.log(num, compValue);
         if (type === "abs") {
             if (measure === "cost")
                 return "$" + num.toFixed(2);
@@ -22,7 +21,11 @@ var Widget = function(title, type, measure, params, agg2) {
                 return num.toFixed(2) + " kWh";
         }
         else {
-            return ((num-compValue)/compValue).toFixed(2) + "%";
+            delta = ((num-compValue)/compValue).toFixed(2);
+            if (delta > 0)
+                return delta + "% more";
+            else
+                return delta + "% less";
         }
     });
 
