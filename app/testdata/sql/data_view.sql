@@ -4,7 +4,7 @@ select
   min(eui.owner) as owner,
   interval.start,
   round(avg(interval.duration)) as duration,
-  round(avg(interval.cost), 1) as cost,
+  round(avg(interval.cost) / 100000, 5) as cost,
   round(avg(interval.value), 1) as value,
   date_part('year', start) as year,
   date_part('month', start) as month,
