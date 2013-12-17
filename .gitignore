@@ -2,4 +2,4 @@ env
 *.pyc
 *.css
 **/.sass-cache
-**/*.js
+**/vendor
