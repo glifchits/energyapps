@@ -14,6 +14,11 @@ var Widget = function(title, text1, text2, params, type) {
             num = num / 100000;
         };
         str += Math.abs(num).toFixed(2);
+        if (self.type === "percentage") {
+            str += "% ";
+            str += num > 0 ? "more" : "less"
+            str += " ";
+        }
         return str
     });
     self.cssClass = ko.computed(function() {
@@ -33,15 +38,22 @@ var Widget = function(title, text1, text2, params, type) {
 
 var WidgetsViewModel = function() {
     var self = this;
+    this.date = new Date();
 
     self.widgets = ko.observableArray([
         new Widget(
-            "Today", 
-            "your energy use has cost",
-            "so far",
-            "grp=day",
-            "dollar"
+            "Today", "your energy use has cost", "so far", 
+            "grp=day", "dollar"
         ),
+        new Widget(
+            "Yesterday", "you used", "energy than average",
+            "grp=day" +
+                "&end=" + 
+                this.date.getFullYear() + "-" +
+                (parseInt(this.date.getMonth()) + 1) + "-" +
+                (parseInt(this.date.getUTCDay()) + 1),
+            "percentage"
+        )
     ]);
 };
 
