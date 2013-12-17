@@ -1,11 +1,11 @@
-create view data_view
-as
+--create view data_view as
 select
   min(interval.id) as id,
   min(eui.owner) as owner,
   interval.start,
-  avg(interval.cost) as cost,
-  avg(interval.value) as value,
+  round(avg(interval.duration)) as duration,
+  round(avg(interval.cost), 1) as cost,
+  round(avg(interval.value), 1) as value,
   date_part('year', start) as year,
   date_part('month', start) as month,
   date_part('week', start) as week,
