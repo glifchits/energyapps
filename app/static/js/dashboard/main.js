@@ -11,29 +11,35 @@ var Widget = function(title, type, measure, params, agg2) {
     self.value = ko.observable(0);
     self.comp = ko.observable(0);
 
-    self.displayValue = ko.computed(function() {
+    self.computedValue = ko.computed(function() {
+        if (!(self.comp()))
+            return self.value();
         num = self.value();
-        compValue = self.comp();
+        comp = self.comp();
+        return (num-comp) / comp;
+    });
+
+    self.displayValue = ko.computed(function() {
+        num = self.computedValue().toFixed(2);
         if (type === "abs") {
             if (measure === "cost")
-                return "$" + num.toFixed(2);
+                return "$" + num;
             else
-                return num.toFixed(2) + " kWh";
+                return (num/1000).toFixed(2) + " kWh";
         }
         else {
-            delta = ((num-compValue)/compValue).toFixed(2);
-            if (delta > 0)
-                return delta + "% more";
+            if (num > 0)
+                return num + "% more";
             else
-                return delta + "% less";
-        }
+                return -num + "% less";
+        };
     });
 
     self.cssClass = ko.computed(function() {
         if (type === "comp")
-            return self.value() > 0 ? "bad" : "good"
+            return self.computedValue() > 0 ? "bad" : "good";
         else
-            return "neutral"
+            return "neutral";
     });
 
     self.update = function() {
@@ -92,7 +98,9 @@ var WidgetsViewModel = function() {
     self.widgets = ko.observableArray([
         new AbsWidget("Today", "cost", "grp=day"),
         new CompWidget("Yesterday", "value", 
-                       "grp=day&end=" + getDateStr(new Date(), 1))
+                       "grp=day&end=" + getDateStr(new Date(), 1)),
+        new CompWidget("Last week", "cost", "grp=week"),
+        new AbsWidget("This month", "value", "grp=month")
     ]);
 };
 
