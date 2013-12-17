@@ -1,7 +1,9 @@
 {% extends "layout.html" %}
 
+{% block head %}
+<link href="/static/css/landing.css" rel=stylesheet type=text/css>
+{% endblock %}
 {% block content %}
-
 <h1>Welcome to EnergyApps!</h1>
 
 <p>
@@ -10,4 +12,8 @@
   consumption.
 </p>
 
+<div class=landing-auth>
+  <a class='button login' href='{{ url_for('auth.login') }}'>Log In</a>
+  <a class='button register' href='{{ url_for('auth.register') }}'>Register</a>
+</div>
 {% endblock %}
