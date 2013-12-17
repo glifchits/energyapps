@@ -68,6 +68,7 @@ def series(ext=None):
         app.logger.debug("can't group by %s" % grouping)
         abort(404)
 
+    last = request.args.get('last') or 'false'
     start = request.args.get('start')
     end = request.args.get('end')
 
@@ -80,18 +81,18 @@ def series(ext=None):
     from data_view
     where owner = {owner_id}
     """.format(owner_id = owner_id, agg = aggregator)
-
     if start:
         sql += " and start >= '%s'::date " % start
     if end:
         sql += " and start < '%s'::date " % end
-
     sql += "\ngroup by "
     # this takes the sublist of `groups` up to the index of `grouping`
     # eg. week -> ['year', 'month', 'week']
     # eg. year -> ['year']
     sql += ', '.join(GROUPS[:GROUPS.index(grouping) + 1])
     sql += "\norder by id"
+    if last == 'true':
+        sql += " desc\nlimit 1"
 
     app.logger.debug('executing sql \n%s' % sql)
 
