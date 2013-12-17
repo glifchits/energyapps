@@ -67,11 +67,21 @@ def series(ext=None):
         app.logger.debug("can't group by %s" % grouping)
         abort(404)
 
+    agg2 = request.args.get('agg2')
     last = request.args.get('last') or 'false'
     start = request.args.get('start')
     end = request.args.get('end')
 
-    sql = """
+    sql = ''
+    if agg2:
+        sql += """
+    select
+        min(id) as id,
+        min(start) as start,
+        {agg}(cost) as cost,
+        {agg}(value) as value
+    from (""".format(agg = agg2)
+    sql += """
     select
         min(id) as id,
         min(start) as start,
@@ -92,6 +102,8 @@ def series(ext=None):
     sql += "\norder by id"
     if last == 'true':
         sql += " desc\nlimit 1"
+    if agg2:
+        sql += "\n) as sub_query"
 
     app.logger.debug('executing sql \n%s' % sql)
 
