@@ -1,39 +1,68 @@
+BASE_URL = "/data/series.json"
 
-var Widget = function(title, text1, text2, params, type) {
+var Widget = function(title, type, measure, params, agg2) {
     var self = this;
-    self.title = title + ",";
-    self.text1 = text1;
-    self.text2 = text2;
-    self.params = params;
+    self.title = title;
     self.type = type;
-    self.value = ko.observable();
+    self.params = params;
+    self.agg2 = agg2;
+    self.text1 = 'text1';
+    self.text2 = 'text2';
+    self.value = ko.observable(0);
+    self.comp = ko.observable(0);
+
     self.displayValue = ko.computed(function() {
-        str = ''; num = self.value();
-        if (self.type === "dollar") {
-            str += "$";
-            num = num / 100000;
-        };
-        str += Math.abs(num).toFixed(2);
-        if (self.type === "percentage") {
-            str += "% ";
-            str += num > 0 ? "more" : "less"
-            str += " ";
+        num = self.value();
+        compValue = self.comp();
+        console.log(num, compValue);
+        if (type === "abs") {
+            if (measure === "cost")
+                return "$" + num.toFixed(2);
+            else
+                return num.toFixed(2) + " kWh";
         }
-        return str
+        else {
+            return ((num-compValue)/compValue).toFixed(2) + "%";
+        }
     });
+
     self.cssClass = ko.computed(function() {
-        return self.value() > 0 ? "bad" : "good"
+        if (type === "comp")
+            return self.value() > 0 ? "bad" : "good"
+        else
+            return "neutral"
     });
+
     self.update = function() {
-        url = "/data/series.json?last=true";
-        if (self.params !== '')
-            url += '&' + self.params;
+        url = BASE_URL + "?last=true&" + params;
         $.getJSON(url, function(data) {
-            self.value(data[0].cost);
-            console.log(data[0].cost);
+            self.value(data[0][measure]);
         });
+        if (type === "comp") {
+            url2 = url + "&agg2=" + agg2;
+            $.getJSON(url2, function(data) {
+                self.comp(data[0][measure])
+            });
+        };
     };
     self.update();
+};
+
+var AbsWidget = function(title, measure, params) {
+    return new Widget(title, "abs", measure, params);
+};
+
+var CompWidget = function(title, measure, params, agg2) {
+    agg2 = agg2 || 'avg';
+    return new Widget(title, "comp", measure, params, agg2)
+};
+
+var getDateStr = function(date, dayOffset) {
+    dayOffset = dayOffset || 0;
+    d = new Date(date - (dayOffset * 24 * 60 * 60 * 1000));
+    return d.getUTCFullYear() + '-' + 
+        d.getUTCMonth() + '-' +
+        d.getUTCDay();
 };
 
 var WidgetsViewModel = function() {
@@ -41,19 +70,9 @@ var WidgetsViewModel = function() {
     this.date = new Date();
 
     self.widgets = ko.observableArray([
-        new Widget(
-            "Today", "your energy use has cost", "so far", 
-            "grp=day", "dollar"
-        ),
-        new Widget(
-            "Yesterday", "you used", "energy than average",
-            "grp=day" +
-                "&end=" + 
-                this.date.getFullYear() + "-" +
-                (parseInt(this.date.getMonth()) + 1) + "-" +
-                (parseInt(this.date.getUTCDay()) + 1),
-            "percentage"
-        )
+        new AbsWidget("Today", "cost", "grp=day"),
+        new CompWidget("Yesterday", "value", 
+                       "grp=day&end=" + getDateStr(new Date(), 1))
     ]);
 };
 
