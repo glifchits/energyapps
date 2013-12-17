@@ -34,17 +34,16 @@ def json_serialize_query(sql, datum_factory):
 
 def csv_serialize_query(sql, datum_factory):
     queryset = db.engine.execute(sql)
-
     out = cStringIO.StringIO()
     writer = csv.writer(out)
-
     headers = False
     for row in queryset:
         datum = datum_factory(row)
+        app.logger.debug('datum is %s' % datum)
         if not headers:
-            writer.writerow([val[0] for val in datum])
+            writer.writerow(datum.keys())
             headers = True
-        writer.writerow([val[1] for val in datum])
+        writer.writerow(datum.values())
 
     val = out.getvalue()
     out.close()
