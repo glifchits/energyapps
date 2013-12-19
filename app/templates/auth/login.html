@@ -1,13 +1,12 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-
 <h1>Log in</h1>
 
 <form action={{ url_for('auth.login') }} method=POST>
-  {{ form.email(size=30, placeholder="email address") }}
-  {{ form.password(placeholder='password') }}
-  <button type=submit>Log in</button>
+  {{ form.email(size=30, placeholder="email address", class='block') }}
+  {{ form.password(placeholder='password', class='block') }}
+  <button class=block type=submit>Log in</button>
 </form>
 
 {% endblock %}

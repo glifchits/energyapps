@@ -5,11 +5,11 @@
 <h1>Register</h1>
 
 <form action={{ url_for('auth.register') }} method=POST>
-  <input name=name type=text placeholder="your full name">
-  <input name=email type=text placeholder="email address">
-  <input name=password type=password placeholder="password">
-  <input name=conf-password type=password placeholder="confirm password">
-  <button type=submit>Register</button>
+  <input class=block name=name type=text placeholder="your full name">
+  <input class=block name=email type=text placeholder="email address">
+  <input class=block name=password type=password placeholder="password">
+  <input class=block name=conf-password type=password placeholder="confirm password">
+  <button class=block type=submit>Register</button>
 </form>
 
 {% endblock %}
