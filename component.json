@@ -1,0 +1,9 @@
+{
+    "name": "EnergyApps",
+    "version": "0.0.1",
+    "dependencies": {
+        "jquery": null,
+        "requirejs": null,
+        "knockout": null
+    }
+}
