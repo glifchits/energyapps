@@ -1,5 +1,5 @@
 define(['knockout', 'dashboard/Widget'], function(ko, Widget) {
-    BASE_URL = "/data/series.json"
+    BASE_URL = "/data/series"
 
     var AbsWidget = function(title, measure, params) {
         w = new Widget(title, "abs", measure, BASE_URL, params);
