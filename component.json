@@ -4,6 +4,7 @@
     "dependencies": {
         "jquery": null,
         "requirejs": null,
-        "knockout": null
+        "knockout": null,
+        "nvd3": null
     }
 }
