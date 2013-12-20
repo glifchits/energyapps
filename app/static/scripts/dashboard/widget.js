@@ -9,13 +9,17 @@ define(['knockout'], function(ko) {
         self.text2 = 'text2';
         self.value = ko.observable(0);
         self.comp = ko.observable(0);
+        self.chart = ko.observable(false);
+        self.fullSeries = ko.observable();
 
         self.computedValue = ko.computed(function() {
-            if (!(self.comp()))
+            if (type === "abs")
                 return self.value();
-            num = self.value();
-            comp = self.comp();
-            return (num-comp) / comp;
+            else {
+                num = self.value();
+                comp = self.comp();
+                return (num-comp) / comp;
+            }
         });
 
         self.displayValue = ko.computed(function() {
@@ -42,7 +46,7 @@ define(['knockout'], function(ko) {
         });
 
         self.update = function() {
-            url = baseurl + "?last=true&" + params;
+            url = baseurl + ".json?last=true&" + params;
             $.getJSON(url, function(data) {
                 self.value(data[0][measure]);
             });
@@ -53,6 +57,30 @@ define(['knockout'], function(ko) {
                 });
             };
         };
+
+        self.toggleChart = function(widget) {
+            if (self.chart()) {
+                self.chart(false);
+            }
+            else {
+                self.chart(true);
+                if (!(self.fullSeries())) {
+                    self.getMoreData();
+                } else {
+                    console.log("already have the data");
+                }
+            }
+        };
+
+        self.getMoreData = function(widget) {
+            console.log("getting more data", widget);
+            url = baseurl + ".csv?" + params;
+            $.get(url, function(data) {
+                console.log('got ' + data.length + ' records');
+                self.fullSeries(data);
+            });
+        };
+        
         self.update();
     };
     return Widget;
