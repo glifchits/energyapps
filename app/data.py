@@ -49,6 +49,23 @@ def csv_serialize_query(sql, datum_factory):
     out.close()
     return val
 
+def date_handler(obj):
+    # `http://blog.codevariety.com/2012/01/06/python-serializing-dates-datetime-datetime-into-json/`
+    return obj.isoformat() if hasattr(obj, 'isoformat') else obj
+
+@data.route('/last_date')
+@login_required
+def last_data_date():
+    owner_id = g.user.get_id()
+    sql = """
+    select start from data_view
+    where owner = {owner_id}
+    order by start desc
+    limit 1
+    """.format(owner_id = owner_id)
+    res = db.engine.execute(sql)
+    return json.dumps(res.first()[0], default=date_handler)
+
 
 @data.route('/series.<string:ext>')
 @login_required
