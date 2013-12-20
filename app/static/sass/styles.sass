@@ -16,57 +16,6 @@ body
   background-color: $bg
   color: $text
 
-::selection
-  background: $text_dark
-
-#spinner
-  position: absolute
-  left: 0
-  right: 0
-  top: 0
-  bottom: 0
-  margin: auto auto
-  width: 100px
-  height: 100px
-  display: block
-  background-color: black
-  background-image: url('/static/img/ajax.gif')
-  background-repeat: no-repeat
-  background-position: center
-  opacity: 0
-  border-radius: 15%
-  transition: opacity 0.1s ease-in-out
-
-
-ul#menu 
-  list-style: none 
-  float: right
-  padding: 6px 0 0 0
-  margin: 0
-  li
-    display: inline
-    padding: 0 10px
-    &:not(:last-child)
-      border-right: 1px solid $text_dark
-
-a
-  text-decoration: none
-
-header
-  background-color: $bg_dark
-  font-size: 16px
-  color: $text
-  padding: 15px
-  a
-    color: $text_dark
-
-  .header
-    font-weight: bold
-    font-style: italic
-    font-size: 24px
-    a
-      color: $text
-
 .content
   @media screen and (max-width: $screen_mobile)
     padding: 10px
@@ -98,6 +47,39 @@ header
     #dashboard
       font-size: 56px
 
+::selection
+  background: $text_dark
+
+a
+  text-decoration: none
+
+header /* header bar positioning */
+  line-height: 24px
+  .header.block
+    width: 25%
+  #menu.block
+    width: 75%
+    text-align: right
+
+ul#menu 
+  margin: 0
+  li
+    display: inline
+
+header /* header bar styles */
+  background-color: $bg_dark
+  font-size: 16px
+  color: $text
+  padding: 15px
+  a
+    color: $text_dark
+  .header
+    font-weight: bold
+    font-style: italic
+    font-size: 24px
+    a
+      color: $text
+
 div.flash
   border-radius: 5px
   color: white
@@ -106,7 +88,6 @@ div.flash
     background-color: $red
   &.success
     background-color: $green
-
 
 form
   *
@@ -125,10 +106,28 @@ form
   input
     background-color: $bg_dark
   
-button, a.button
+button
   transition: 0.1s background-color ease-in-out
   background-color: $text
   color: $darkgrey
   &:focus, &:hover
     background-color: $text_dark
+
+#spinner
+  position: absolute
+  left: 0
+  right: 0
+  top: 0
+  bottom: 0
+  margin: auto auto
+  width: 100px
+  height: 100px
+  display: block
+  background-color: black
+  background-image: url('/static/img/ajax.gif')
+  background-repeat: no-repeat
+  background-position: center
+  opacity: 0
+  border-radius: 15%
+  transition: opacity 0.1s ease-in-out
 
