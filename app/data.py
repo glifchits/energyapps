@@ -2,6 +2,7 @@
 from flask import redirect, url_for, render_template, session, request, \
         abort, g
 from flask import Blueprint, current_app as app
+from flask import Response
 from flask.ext.login import login_required
 
 import datetime
@@ -30,7 +31,9 @@ def json_serialize_query(sql, datum_factory):
     for row in queryset:
         datum = datum_factory(row)
         results.append(dict(datum))
-    return json.dumps(results, indent=4)
+    res = json.dumps(results, indent=4)
+    response = Response(res, status=200, mimetype='application/json')
+    return response
 
 def csv_serialize_query(sql, datum_factory):
     queryset = db.engine.execute(sql)
@@ -47,7 +50,8 @@ def csv_serialize_query(sql, datum_factory):
 
     val = out.getvalue()
     out.close()
-    return val
+    response = Response(val, status=200, mimetype='text/csv')
+    return response
 
 def date_handler(obj):
     # `http://blog.codevariety.com/2012/01/06/python-serializing-dates-datetime-datetime-into-json/`
