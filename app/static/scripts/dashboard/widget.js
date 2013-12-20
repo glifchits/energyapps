@@ -69,17 +69,58 @@ define(['knockout'], function(ko) {
                 } else {
                     console.log("already have the data");
                 }
+                self.drawChart();
             }
         };
 
         self.getMoreData = function(widget) {
             console.log("getting more data", widget);
+            /*
             url = baseurl + ".csv?" + params;
             $.get(url, function(data) {
                 console.log('got ' + data.length + ' records');
                 self.fullSeries(data);
             });
+            */
         };
+
+        self.drawChart = function() {
+            console.log('drawing chart');
+            d3.csv(baseurl + ".csv?" + params, function(data) {
+                console.log("got all this data");
+
+                nv.addGraph(function() {
+                    var chart = nv.models.lineChart();
+
+                    parsedData = [{
+                        "key": 'Cost',
+                        "values": data.map(function(d) { return {
+                            x: new Date(d.start).getTime(),
+                            y: d.cost
+                        }})
+                    }];
+                    console.log (parsedData);
+
+                    chart.xAxis
+                        .axisLabel('Date')
+                        .tickFormat(d3.format(',r'));
+
+                    chart.yAxis
+                        .axisLabel('y Axis')
+                        .tickFormat(d3.format(',r'));
+
+                    d3.select("#chart")
+                        .append("svg")
+                        .datum(parsedData)
+                      .transition().duration(500)
+                        .call(chart);
+
+                    nv.utils.windowResize(function() { d3.select("#chart svg").call(chart) });
+
+                    return chart;
+                });
+            });
+        }
         
         self.update();
     };
