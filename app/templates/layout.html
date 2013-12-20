@@ -10,21 +10,23 @@
   </head>
   <body>
     <header>
-      <span class=header><a href=/>EnergyApps</a></span>
-      <ul id=menu>
-        {% if g.user.is_authenticated() %}
-        <li class=refresh>
+      <div class=block-group>
+        <span class='header block'><a href=/>EnergyApps</a></span>
+        <ul id=menu class=block>
+          {% if g.user.is_authenticated() %}
+          <li class=refresh>
           <a id=refresh-eui href=#>Refresh data</a>
-        </li>
-        {% endif %}
-        <li class=login>
+          </li>
+          {% endif %}
+          <li class=login>
           {% if g.user.is_authenticated() %}
             {{ g.user.name }} <a href='{{ url_for('auth.logout') }}'>Log out</a>
           {% else %}
-            <a href='{{ url_for('auth.login') }}'>Log in</a> or <a href='{{ url_for('auth.register') }}'>Sign up!</a>
+          <a href='{{ url_for('auth.login') }}'>Log in</a> or <a href='{{ url_for('auth.register') }}'>Sign up!</a>
           {% endif %}
-        </li>
-      </ul>
+          </li>
+        </ul>
+      </div>
     </header>
 
     <div id=spinner></div>
