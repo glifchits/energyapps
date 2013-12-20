@@ -13,7 +13,9 @@
     <span class=statistic data-bind="text: displayValue(), css: cssClass()"></span>
     <span data-bind="text: text2"></span>
     <div class=fullchart data-bind="style: { display: chart() ? 'block' : 'none' }">
-      <pre data-bind="text: fullSeries"></pre>
+      <div id=chart>
+        <svg></svg>
+      </div>
     </div>
   </div>
 </div>
