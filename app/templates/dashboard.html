@@ -7,11 +7,14 @@
 {% block content %}
 
 <div id=dashboard data-bind="foreach: widgets">
-  <div class=widget>
+  <div class=widget data-bind="click: toggleChart">
     <span class=title data-bind="text: title"></span>
     <span data-bind="text: text1"></span>
     <span class=statistic data-bind="text: displayValue(), css: cssClass()"></span>
     <span data-bind="text: text2"></span>
+    <div class=fullchart data-bind="style: { display: chart() ? 'block' : 'none' }">
+      <pre data-bind="text: fullSeries"></pre>
+    </div>
   </div>
 </div>
 
