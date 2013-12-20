@@ -61,6 +61,7 @@ define(['knockout'], function(ko) {
         self.toggleChart = function(widget) {
             if (self.chart()) {
                 self.chart(false);
+                $('#'+widget.title+' svg').remove();
             }
             else {
                 self.chart(true);
@@ -96,20 +97,23 @@ define(['knockout'], function(ko) {
                         "key": 'Cost',
                         "values": data.map(function(d) { return {
                             x: new Date(d.start).getTime(),
-                            y: d.cost
+                            y: parseFloat(d.cost)
                         }})
                     }];
                     console.log (parsedData);
 
                     chart.xAxis
                         .axisLabel('Date')
-                        .tickFormat(d3.format(',r'));
+                        .tickFormat(function(d){
+                            var dx = new Date(d);
+                            d3.time.format('%x')(dx);
+                        });
 
                     chart.yAxis
                         .axisLabel('y Axis')
                         .tickFormat(d3.format(',r'));
 
-                    d3.select("#chart")
+                    d3.select('#'+self.title)
                         .append("svg")
                         .datum(parsedData)
                       .transition().duration(500)
