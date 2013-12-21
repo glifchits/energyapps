@@ -42,7 +42,6 @@ def csv_serialize_query(sql, datum_factory):
     headers = False
     for row in queryset:
         datum = datum_factory(row)
-        app.logger.debug('datum is %s' % datum)
         if not headers:
             writer.writerow(datum.keys())
             headers = True
