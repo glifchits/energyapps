@@ -16,7 +16,7 @@ define(['jquery'], function($) {
         var messageChildren = messages.children();
         var height = 60; // px
 
-        if (messageChildren.length > 0) {
+        if (messageChildren.length > 1) {
             var messageIdx = -parseInt(messages.css('margin-top')) / height;
             if (messageIdx === messageChildren.length-1)
                 messages.css('margin-top', 0);
