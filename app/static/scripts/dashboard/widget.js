@@ -62,7 +62,7 @@ define(['knockout'], function(ko) {
         self.toggleChart = function(widget) {
             if (self.chart()) {
                 self.chart(false);
-                $('#'+widget.chartId+' svg').remove();
+                $('#'+widget.chartId).empty();
             }
             else {
                 self.chart(true);
@@ -77,74 +77,29 @@ define(['knockout'], function(ko) {
 
         self.getMoreData = function(widget) {
             console.log("getting more data", widget);
-            /*
-            url = baseurl + ".csv?" + params;
-            $.get(url, function(data) {
-                console.log('got ' + data.length + ' records');
-                self.fullSeries(data);
-            });
-            */
         };
 
         self.drawChart = function() {
             console.log('drawing chart');
 
-            var margin = {top: 20, right: 20, bottom: 30, left: 50},
-                width = 960 - margin.left - margin.right,
-                height = 300 - margin.top - margin.bottom;
-
-            var parseDate = d3.time.format("%Y-%m-%d %X").parse;
-
-            var x = d3.time.scale()
-                .range([0, width]);
-
-            var y = d3.scale.linear()
-                .range([height, 0]);
-
-            var xAxis = d3.svg.axis()
-                .scale(x)
-                .orient("bottom");
-
-            var yAxis = d3.svg.axis()
-                .scale(y)
-                .orient("left");
-
-            var line = d3.svg.line()
-                .x(function(d) { return x(d.start) })
-                .y(function(d) { return y(d.value) });
-
-            var svg = d3.select('#' + self.chartId).append('svg')
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-              .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-            d3.csv(baseurl + ".csv?" + params, function(error, data) {
-
-                console.log(data);
-
-                data.forEach(function(d) {
-                    d.start = parseDate(d.start);
-                    d.value = +d.value
-                });
-
-                x.domain(d3.extent(data, function(d) { return d.start; }));
-                y.domain(d3.extent(data, function(d) { return d.value; }));
-
-                svg.append("g")
-                    .attr("class", "y axis")
-                    .call(yAxis)
-                  .append("text")
-                    .attr("transform", "rotate(-90)")
-                    .attr("y", 6)
-                    .attr("dy", ".71em")
-                    .style("text-anchor", "end")
-                    .text("Value (kWh)")
-
-                svg.append("path")
-                    .datum(data)
-                    .attr("class", "line")
-                    .attr("d", line);
+            var graph = new Rickshaw.Graph.Ajax({
+                element: document.querySelector("#" + self.chartId),
+                width: 960,
+                height: 300,
+                renderer: 'line',
+                dataURL: baseurl + ".json?" + params,
+                onData: function(data) {
+                    var dataTransform = data.map(function(d) {
+                       return { x: new Date(d.start).getTime(), y: d.value };
+                    });
+                    return [{ "color": "steelblue", "name": "Value", "data": dataTransform }];
+                            
+                },
+                onComplete: function(transport) {
+                    var graph = transport.graph;
+                    var detail = new Rickshaw.Graph.HoverDetail({ graph: graph });
+                },
+                series: [{ name: "Value", color: "red" }]
             });
         };
        
