@@ -83,7 +83,7 @@ define(['knockout'], function(ko) {
                 element: document.querySelector("#" + self.chartId),
                 height: 300,
                 renderer: 'line',
-                dataURL: baseurl + ".json?" + params,
+                dataURL: baseurl + ".json?" + params + "&agg=avg",
                 onData: function(data) {
                     var dataTransform = data.map(function(d) {
                         return {
@@ -99,7 +99,7 @@ define(['knockout'], function(ko) {
                     var detail = new Rickshaw.Graph.HoverDetail({
                         graph: graph,
                         xFormatter: function(x) { return new Date(x).toDateString(); },
-                        yFormatter: function(y) { return y + " kWh"; }
+                        yFormatter: function(y) { return y.toFixed(1) + " kWh"; }
                     });
                     var yAxis = new Rickshaw.Graph.Axis.Y({ graph: graph });
                     yAxis.graph.update();
