@@ -11,7 +11,7 @@ define(['knockout'], function(ko) {
         self.value = ko.observable(0);
         self.comp = ko.observable(0);
         self.chart = ko.observable(false);
-        self.fullSeries = ko.observable();
+        self.chartExists = ko.observable(false);
 
         self.computedValue = ko.computed(function() {
             if (type === "abs")
@@ -62,26 +62,28 @@ define(['knockout'], function(ko) {
         self.toggleChart = function(widget) {
             if (self.chart()) {
                 self.chart(false);
-                $('#'+widget.chartId).empty();
             }
             else {
                 self.chart(true);
-                if (!(self.fullSeries())) {
-                    self.getMoreData();
-                } else {
-                    console.log("already have the data");
+                if (!(self.chartExists())) {
+                    self.drawChart();
+                    self.chartExists(true);
                 }
-                self.drawChart();
             }
         };
 
-        self.getMoreData = function(widget) {
+        self.resetChart = function(widget) {
+            if (self.chartExists()) {
+                $(self.chartId()).empty();
+                self.chart(false);
+                self.chartExists(false);
+            }
         };
 
         self.drawChart = function() {
             var graph = new Rickshaw.Graph.Ajax({
                 element: document.querySelector("#" + self.chartId),
-                height: 300,
+                height: 200,
                 renderer: 'line',
                 dataURL: baseurl + ".json?" + params + "&agg=avg",
                 onData: function(data) {

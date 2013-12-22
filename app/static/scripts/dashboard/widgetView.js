@@ -39,6 +39,9 @@ define(['knockout', 'dashboard/Widget'], function(ko, Widget) {
         var self = this;
         this.date = new Date();
 
+        self.windowW = ko.observable();
+        self.windowH = ko.observable();
+
         self.widgets = ko.observableArray([
             new AbsWidget("Today", "cost", "grp=day"),
             new CompWidget("Yesterday", "value", 
@@ -46,6 +49,12 @@ define(['knockout', 'dashboard/Widget'], function(ko, Widget) {
                            new CompWidget("Last week", "cost", "grp=week"),
                            new AbsWidget("This month", "value", "grp=month")
         ]);
+
+        $(window).resize(function() {
+            console.log('widgetView caught the window resize');
+            self.windowW(window.innerWidth);
+            self.windowH(window.innerHeight);
+        });
     };
 
     return WidgetsViewModel;
