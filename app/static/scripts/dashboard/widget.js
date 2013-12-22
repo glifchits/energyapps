@@ -76,42 +76,38 @@ define(['knockout'], function(ko) {
         };
 
         self.getMoreData = function(widget) {
-            console.log("getting more data", widget);
         };
 
         self.drawChart = function() {
-            console.log('drawing chart');
-
             var graph = new Rickshaw.Graph.Ajax({
                 element: document.querySelector("#" + self.chartId),
-                width: 960,
                 height: 300,
                 renderer: 'line',
                 dataURL: baseurl + ".json?" + params,
                 onData: function(data) {
                     var dataTransform = data.map(function(d) {
-                       return { 
-                           x: new Date(d.start).getTime(),
-                           y: d.value 
-                       };
+                        return {
+                            x: new Date(d.start).getTime(),
+                            y: d.value
+                        };
                     });
                     return [{ "color": "steelblue", "name": "Value", "data": dataTransform }];
-                            
+
                 },
                 onComplete: function(transport) {
                     var graph = transport.graph;
-
-                    var xAxis = new Rickshaw.Graph.Axis.Time({
-                        graph: graph
+                    var detail = new Rickshaw.Graph.HoverDetail({
+                        graph: graph,
+                        xFormatter: function(x) { return new Date(x).toDateString(); },
+                        yFormatter: function(y) { return y + " kWh"; }
                     });
-                    xAxis.graph.update();
-
-                    var detail = new Rickshaw.Graph.HoverDetail({ graph: graph });
+                    var yAxis = new Rickshaw.Graph.Axis.Y({ graph: graph });
+                    yAxis.graph.update();
                 },
                 series: [{ name: "Value", color: "red" }]
             });
         };
-       
+
         self.update();
     };
     return Widget;
