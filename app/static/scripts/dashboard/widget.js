@@ -90,13 +90,22 @@ define(['knockout'], function(ko) {
                 dataURL: baseurl + ".json?" + params,
                 onData: function(data) {
                     var dataTransform = data.map(function(d) {
-                       return { x: new Date(d.start).getTime(), y: d.value };
+                       return { 
+                           x: new Date(d.start).getTime(),
+                           y: d.value 
+                       };
                     });
                     return [{ "color": "steelblue", "name": "Value", "data": dataTransform }];
                             
                 },
                 onComplete: function(transport) {
                     var graph = transport.graph;
+
+                    var xAxis = new Rickshaw.Graph.Axis.Time({
+                        graph: graph
+                    });
+                    xAxis.graph.update();
+
                     var detail = new Rickshaw.Graph.HoverDetail({ graph: graph });
                 },
                 series: [{ name: "Value", color: "red" }]
