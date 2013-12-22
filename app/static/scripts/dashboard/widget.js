@@ -2,6 +2,7 @@ define(['knockout'], function(ko) {
     var Widget = function(title, type, measure, baseurl, params, agg2) {
         var self = this;
         self.title = title;
+        self.chartId = self.title.replace(' ', '') + Math.round(Math.random() * 100);
         self.type = type;
         self.params = params;
         self.agg2 = agg2;
@@ -61,7 +62,7 @@ define(['knockout'], function(ko) {
         self.toggleChart = function(widget) {
             if (self.chart()) {
                 self.chart(false);
-                $('#'+widget.title+' svg').remove();
+                $('#'+widget.chartId+' svg').remove();
             }
             else {
                 self.chart(true);
@@ -112,7 +113,7 @@ define(['knockout'], function(ko) {
                 .x(function(d) { return x(d.start) })
                 .y(function(d) { return y(d.value) });
 
-            var svg = d3.select('#' + self.title).append('svg')
+            var svg = d3.select('#' + self.chartId).append('svg')
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
               .append("g")
