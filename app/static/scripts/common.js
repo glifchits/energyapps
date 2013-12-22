@@ -3,8 +3,8 @@ require.config({
     paths: {
         'knockout': '/static/vendor/knockout/knockout',
         'jquery': '/static/vendor/jquery/jquery',
-        'nv': '/static/vendor/nvd3/nv.d3',
-        'd3': '/static/vendor/d3/d3'
+        'd3': '/static/vendor/d3/d3',
+        'rickshaw': '/static/vendor/rickshaw/rickshaw'
     },
 });
 
