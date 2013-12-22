@@ -30,15 +30,15 @@
     </header>
 
     {% with messages = get_flashed_messages() %}
-    {% if messages %}
     <div class=flash>
       <ul>
+    {% if messages %}
     {% for class, message in messages %}
     <li class='{{ class }}'>{{ message }}</li>
     {% endfor %}
+    {% endif %}
       </ul>
     </div>
-    {% endif %}
     {% endwith %}
 
     <div id=spinner></div>
