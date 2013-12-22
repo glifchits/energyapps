@@ -87,45 +87,66 @@ define(['knockout'], function(ko) {
 
         self.drawChart = function() {
             console.log('drawing chart');
-            d3.csv(baseurl + ".csv?" + params, function(data) {
-                console.log("got all this data");
 
-                nv.addGraph(function() {
-                    var chart = nv.models.lineChart();
+            var margin = {top: 20, right: 20, bottom: 30, left: 50},
+                width = 960 - margin.left - margin.right,
+                height = 300 - margin.top - margin.bottom;
 
-                    parsedData = [{
-                        "key": 'Cost',
-                        "values": data.map(function(d) { return {
-                            x: new Date(d.start).getTime(),
-                            y: parseFloat(d.cost)
-                        }})
-                    }];
-                    console.log (parsedData);
+            var parseDate = d3.time.format("%Y-%m-%d %X").parse;
 
-                    chart.xAxis
-                        .axisLabel('Date')
-                        .tickFormat(function(d){
-                            var dx = new Date(d);
-                            d3.time.format('%x')(dx);
-                        });
+            var x = d3.time.scale()
+                .range([0, width]);
 
-                    chart.yAxis
-                        .axisLabel('y Axis')
-                        .tickFormat(d3.format(',r'));
+            var y = d3.scale.linear()
+                .range([height, 0]);
 
-                    d3.select('#'+self.title)
-                        .append("svg")
-                        .datum(parsedData)
-                      .transition().duration(500)
-                        .call(chart);
+            var xAxis = d3.svg.axis()
+                .scale(x)
+                .orient("bottom");
 
-                    nv.utils.windowResize(function() { d3.select("#chart svg").call(chart) });
+            var yAxis = d3.svg.axis()
+                .scale(y)
+                .orient("left");
 
-                    return chart;
+            var line = d3.svg.line()
+                .x(function(d) { return x(d.start) })
+                .y(function(d) { return y(d.value) });
+
+            var svg = d3.select('#' + self.title).append('svg')
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+              .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            d3.csv(baseurl + ".csv?" + params, function(error, data) {
+
+                console.log(data);
+
+                data.forEach(function(d) {
+                    d.start = parseDate(d.start);
+                    d.value = +d.value
                 });
+
+                x.domain(d3.extent(data, function(d) { return d.start; }));
+                y.domain(d3.extent(data, function(d) { return d.value; }));
+
+                svg.append("g")
+                    .attr("class", "y axis")
+                    .call(yAxis)
+                  .append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 6)
+                    .attr("dy", ".71em")
+                    .style("text-anchor", "end")
+                    .text("Value (kWh)")
+
+                svg.append("path")
+                    .datum(data)
+                    .attr("class", "line")
+                    .attr("d", line);
             });
-        }
-        
+        };
+       
         self.update();
     };
     return Widget;
