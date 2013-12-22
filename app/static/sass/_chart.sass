@@ -7,8 +7,13 @@
 .x.axis path
   display: none
 
-.y, .x
-  stroke: $lightgrey
+.y, .x 
+  stroke: $lightgrey !important
+  fill: $lightgrey
+.y_ticks .tick
+  fill: $lightgrey
+.y_grid .tick
+  stroke: darken($lightgrey, 43%) !important
 
 .line
   fill: none
