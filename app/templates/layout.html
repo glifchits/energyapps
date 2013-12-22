@@ -29,17 +29,21 @@
       </div>
     </header>
 
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class=flash>
+      <ul>
+    {% for class, message in messages %}
+    <li class='{{ class }}'>{{ message }}</li>
+    {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+    {% endwith %}
+
     <div id=spinner></div>
 
     <div class=content>
-      {% with messages = get_flashed_messages() %}
-      {% if messages %}
-      {% for class, message in messages %}
-      <div class='flash {{ class }}'>{{ message }}</div>
-      {% endfor %}
-      {% endif %}
-      {% endwith %}
-
       {% block content %}
       {% endblock %}
     </div>

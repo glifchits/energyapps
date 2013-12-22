@@ -1,0 +1,49 @@
+header /* header bar positioning */
+  .header.block
+    width: 25%
+  #menu.block
+    width: 75%
+    text-align: right
+
+ul#menu 
+  margin: 0
+  li
+    display: inline
+
+header /* header bar styles */
+  box-sizing: border-box
+  position: fixed
+  width: 100%
+  background-color: $bg_dark
+  font-size: 16px
+  color: $text
+  padding: 15px
+  a
+    color: $text_dark
+  .header
+    font-weight: bold
+    font-style: italic
+    font-size: 25px
+    a
+      color: $text
+
+div.flash
+  position: fixed
+  overflow: hidden
+  left: 25%
+  height: 60px
+  line-height: 60px
+  color: white
+
+  ul
+    margin: 0
+    padding: 0
+    list-style: none
+    transition: margin 0.2s ease-in-out
+
+    .error
+      color: $red
+    .success
+      color: $green
+
+
