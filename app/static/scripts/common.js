@@ -12,18 +12,20 @@ define(['jquery'], function($) {
     var flashDelay = 3000;
 
     var flashAnimate = function() {
+        console.log('called flashAnimate');
+
         var messages = $('.flash ul');
         var messageChildren = messages.children();
         var height = 60; // px
 
-        if (messageChildren.length > 1) {
+        if (messageChildren.length > 0) {
             var messageIdx = -parseInt(messages.css('margin-top')) / height;
-            if (messageIdx === messageChildren.length-1)
-                messages.css('margin-top', 0);
-            else
+            if (messageIdx < messageChildren.length)
                 messages.css('margin-top', '-=' + height);
-
-            setTimeout(flashAnimate, flashDelay);
+            if (messageIdx < messageChildren.length-1) {
+                console.log("   gonna invoke callback");
+                setTimeout(flashAnimate, flashDelay);
+            }
         };
     };
 
