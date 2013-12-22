@@ -8,13 +8,14 @@ $color_neutral: $lightgrey
 
 .widget
   padding: 10px
-  padding-left: $title_indent + 10
   margin-bottom: 20px
   border: 1px solid transparent
   &:hover
     border: 1px solid rgba(255,255,255,0.05)
     cursor: pointer
 
+  span
+    padding-left: $title_indent + 10
   > span.title
     margin-left: -$title_indent
     display: block
@@ -30,7 +31,8 @@ $color_neutral: $lightgrey
   .neutral
     color: $color_neutral
 
-.fullchart
-  font-size: 12px
+  .fullchart
+    padding: 20px
+    font-size: 12px
 
 @import 'd3'
