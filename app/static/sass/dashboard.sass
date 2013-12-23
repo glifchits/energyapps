@@ -54,11 +54,14 @@ div#goals
     span.title
       width: 35%
     span.meter
-      width: 20%
+      width: 65%
       svg
+        .background
+          fill: black
         .goal
-          fill: red
+          fill: $brightblue
         .value
-          fill: steelblue
-    span.message
-      width: 30%
+          fill: $green
+          opacity: 0.5
+        text
+          fill: $grey
