@@ -30,9 +30,10 @@ define(['knockout', 'dashboard/Widget'], function(ko, Widget) {
     var getDateStr = function(date, dayOffset) {
         dayOffset = dayOffset || 0;
         d = new Date(date - (dayOffset * 24 * 60 * 60 * 1000));
-        return d.getUTCFullYear() + '-' + 
-            d.getUTCMonth() + '-' +
-            d.getUTCDay();
+        year = d.getUTCFullYear();
+        month = d.getUTCMonth();
+        day = d.getUTCDate();
+        return year + '-' + ('0' + month).slice(-2) + '-' + ('0' + day).slice(-2);
     };
 
     var WidgetsViewModel = function() {
@@ -46,8 +47,8 @@ define(['knockout', 'dashboard/Widget'], function(ko, Widget) {
             new AbsWidget("Today", "cost", "grp=day"),
             new CompWidget("Yesterday", "value", 
                            "grp=day&end=" + getDateStr(new Date(), 1)),
-                           new CompWidget("Last week", "cost", "grp=week"),
-                           new AbsWidget("This month", "value", "grp=month")
+            new CompWidget("Last week", "cost", "grp=week"),
+            new AbsWidget("This month", "value", "grp=month")
         ]);
 
         $(window).resize(function() {
