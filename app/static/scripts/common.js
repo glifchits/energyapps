@@ -3,6 +3,7 @@ require.config({
     paths: {
         'knockout': '/static/vendor/knockout/knockout',
         'jquery': '/static/vendor/jquery/jquery',
+        'jquery-ui': '/static/vendor/jqueryui/ui/jquery-ui',
         'd3': '/static/vendor/d3/d3',
         'rickshaw': '/static/vendor/rickshaw/rickshaw'
     },
