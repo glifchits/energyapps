@@ -5,9 +5,7 @@ define(['jquery-ui'], function() {
         var min = parseFloat(this.attributes.min.value);
         var value = parseFloat(this.attributes.value.value);
         var pct = (value - min) / (max - min) * 100;
-        $(this).progressbar({
-            value: pct
-        });
+        $(this).progressbar({ value: pct });
     });
 
 });
