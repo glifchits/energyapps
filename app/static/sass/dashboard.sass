@@ -39,23 +39,18 @@ $color_neutral: $lightgrey
     .x_label
       top: -38px
 
-@import 'chart'
-
 div#goals
   padding: 10px
   > .title
     font-weight: bold
     font-style: italic
-    font-size: 30px
-  ul
+  ul, a
     padding: 10px
     margin: 0
   li
-    span.title
-      width: 35%
     span.meter
-      width: 65%
       svg
+        height: 40px
         .background
           fill: black
         .goal
@@ -65,3 +60,8 @@ div#goals
           opacity: 0.5
         text
           fill: $grey
+  a
+    font-size: 20px
+
+@import 'chart'
+
