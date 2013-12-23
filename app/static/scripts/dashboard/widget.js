@@ -93,8 +93,11 @@ define(['knockout'], function(ko) {
                             y: d.value
                         };
                     });
-                    return [{ "color": "steelblue", "name": "Value", "data": dataTransform }];
-
+                    return [{
+                        "color": "steelblue",
+                        "name": "Value",
+                        "data": dataTransform
+                    }];
                 },
                 onComplete: function(transport) {
                     var graph = transport.graph;
@@ -108,8 +111,20 @@ define(['knockout'], function(ko) {
                 },
                 series: [{ name: "Value", color: "red" }]
             });
-        };
 
+            var resize = function() {
+                var padding = 10;
+                var graphObj = graph.graph; // lol! weird properties I don't understand
+                var el = graphObj.element;
+                graphObj.configure({
+                    width: el.offsetWidth - padding,
+                    height: el.offsetHeight - padding
+                });
+                graphObj.render();
+            };
+
+            window.addEventListener('resize', resize);
+        };
         self.update();
     };
     return Widget;
