@@ -7,6 +7,17 @@
 
 {% block content %}
 
+<div id=goals>
+  <span class=title>Goals</span>
+  <ul>
+    <li class=block-group>
+      <span class='block title'>Monthly consumption</span>
+      <span class='block meter' min=0 max=10 value=7></span>
+    </li>
+  </ul>
+
+</div>
+
 <div id=dashboard data-bind="foreach: widgets">
   <div class=widget data-bind="click: toggleChart">
     <span class=title data-bind="text: title"></span>
