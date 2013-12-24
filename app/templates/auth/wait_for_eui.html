@@ -11,6 +11,10 @@
   usage data from your hydro service provider. In a short time you will see
   your energy consumption dashboard.
 </p>
+
+<form id=eui-continue class=block-group method=GET action='{{ url_for('home') }}'>
+  <button value=continue type=submit class='block continue' disabled>Continue</button>
+</form>
 {% endblock %}
 
 {% block beforeend %}
