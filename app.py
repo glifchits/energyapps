@@ -27,9 +27,14 @@ def before_request():
 @app.route('/')
 def home():
     if g.user.get_id():
-        if g.user.eui_agreed:
-            app.logger.debug('user is active, showing dashboard')
-            return render_template('dashboard.html')
+        if g.user.agreed_to_eui():
+            app.logger.debug('user is active')
+            if g.user.has_eui():
+                app.logger.debug('user has data, showing dashboard')
+                return render_template('dashboard.html')
+            else:
+                app.logger.debug('user has no eui data... going to wait page')
+                return redirect(url_for("auth.get_eui"))
         app.logger.debug('user is logged in but inactive, go to get eui')
         return redirect(url_for('auth.eui_agreement'))
     app.logger.debug('not logged in')
