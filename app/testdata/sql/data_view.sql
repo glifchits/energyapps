@@ -1,4 +1,4 @@
---create view data_view as
+--drop view if exists data_view; create view data_view as
 select
   min(interval.id) as id,
   min(eui.owner) as owner,
@@ -17,5 +17,5 @@ inner join meter_reading
 inner join eui
   on eui.id = meter_reading.eui
 where meter_reading.kind = 12
-group by start
-order by start ;
+group by owner, reading_id, start
+order by owner, reading_id, start 
