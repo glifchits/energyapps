@@ -29,7 +29,6 @@ define(['jquery'], function($) {
     setTimeout(flashAnimate, flashDelay);
 
     window.spinner = function(display) {
-        console.log('called spinner function!');
         var spin = $("#spinner");
         if (display) {
             spin.show();
