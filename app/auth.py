@@ -63,7 +63,7 @@ def eui_agreement():
             print db.session.new
             print db.session.dirty
             db.session.commit()
-            return redirect(url_for('api.to_data_custodian'))
+            return redirect(url_for('home'))
         g.user.eui_agreed = False
         app.logger.debug('disagreed to eui, committing')
         db.session.commit()
