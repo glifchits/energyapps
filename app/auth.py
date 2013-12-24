@@ -99,5 +99,6 @@ def register():
 
 
 @auth.route('/getting_eui')
+@login_required
 def get_eui():
     return render_template('auth/wait_for_eui.html')
