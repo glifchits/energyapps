@@ -28,7 +28,7 @@ def before_request():
 def home():
     if g.user.get_id():
         if g.user.agreed_to_eui():
-            app.logger.debug('user is active')
+            app.logger.debug('user %s is active' % g.user.get_id())
             if g.user.has_eui():
                 app.logger.debug('user has data, showing dashboard')
                 return render_template('dashboard.html')
