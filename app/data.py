@@ -66,8 +66,13 @@ def last_data_date():
     order by start desc
     limit 1
     """.format(owner_id = owner_id)
+    app.logger.debug('executing sql\n%s' % sql)
     res = db.engine.execute(sql)
-    return json.dumps(res.first()[0], default=date_handler)
+    date = res.first()
+    if date:
+        return json.dumps(date[0], default=date_handler)
+    else:
+        return '0'
 
 
 @data.route('/series.<string:ext>')
