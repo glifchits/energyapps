@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block head %}
+{% endblock %}
+{% block content %}
+<h1>Wait while we download your energy usage data...</h1>
+
+<p>
+  It looks like this is your first time ever logging into EnergyApps!
+  Please wait a minute while we retrieve the past two years of your energy
+  usage data from your hydro service provider. In a short time you will see
+  your energy consumption dashboard.
+</p>
+{% endblock %}
+
+{% block beforeend %}
+<script data-main="/static/scripts/getEuiMain.js"
+  src="/static/vendor/requirejs/require.js"></script>
+{% endblock %}
