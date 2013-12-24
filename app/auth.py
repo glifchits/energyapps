@@ -96,3 +96,8 @@ def register():
         return redirect(url_for('home'))
 
     return render_template('auth/register.html')
+
+
+@auth.route('/getting_eui')
+def get_eui():
+    return render_template('auth/wait_for_eui.html')
