@@ -1,0 +1,25 @@
+form
+  *
+    box-sizing: border-box
+    height: 60px
+    border: 1px solid transparent
+    padding: 10px
+    margin: 5px 0
+    outline: none
+    font-size: 20px
+    font-family: 'Lato', sans-serif
+    color: $text
+    transition: 0.1s border-color ease-in-out
+    &:focus:not(button)
+      border: 1px solid $text
+  input
+    background-color: $bg_dark
+  
+button
+  transition: 0.1s background-color ease-in-out
+  background-color: $text
+  color: $darkgrey
+  &:focus, &:hover
+    background-color: $text_dark
+
+
