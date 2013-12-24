@@ -99,6 +99,7 @@ def read_auth_status():
             headers=bearer(session.get('access_token')), verify=False)
     if r.status_code != 200:
         app.logger.debug("failed to read auth status")
+        app.logger.debug("got this request text:\n%s" % r.text)
         abort(r.status_code)
     return r.text
 
@@ -125,13 +126,21 @@ def get_eui():
     auth_params = dict([param.split('=') for param in scopedata[1:]])
     app.logger.debug(auth_params)
 
-    history_seconds = int(auth_params['HistoryLength']) * 60 * 60 * 24
-    start_time = int(time.time()) - history_seconds - 60 # 1 min offset
+    # the maximum possible duration in seconds (2 years for now)
+    max_duration = int(auth_params['HistoryLength']) * 60 * 60 * 24
+    # the default start time (now - max_duration)
+    start_time = int(time.time()) - max_duration - 60 # 1 min offset
 
+    # the start time to use for the request
     start = request.args.get('start') or start_time
-    duration = request.args.get('duration') or history_seconds
 
-    app.logger.debug("%s %s" % (start, duration))
+    # number of seconds between now and the start time
+    diff_duration = int(time.time()) - start_time
+
+    # duration will be specified or the minimum between difference and max
+    duration = request.args.get('duration') or min(diff_duration, max_duration)
+
+    app.logger.debug("start, duration are %s %s" % (start, duration))
 
     params = {
         'start' : start, #1380600000,
