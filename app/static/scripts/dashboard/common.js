@@ -13,8 +13,8 @@ define(['jquery-ui'], function() {
         var messageText = self.attributes.text.value;
         var titleText = self.attributes.title.value;
 
-        var width = self.offsetWidth,
-            height = 36;
+        var height = 26;
+        var msgPadding = 7;
 
         var svg = d3.select(self).append("svg")
           .append('g')
@@ -37,7 +37,6 @@ define(['jquery-ui'], function() {
             .attr('y', 0)
             .attr('height', height)
 
-        msgPadding = 5;
         var message = svg.append("text")
             .text(messageText)
             .attr('y', height - msgPadding)
@@ -53,7 +52,7 @@ define(['jquery-ui'], function() {
             goal.attr('width', goalPct * width);
             value.attr('width', valuePct * width);
             msgWidth = message[0][0].offsetWidth;
-            message.attr('x', width - msgWidth);
+            message.attr('x', width - msgWidth - msgPadding);
         };
 
         $(window).resize(updateChart);
