@@ -3,3 +3,4 @@ env
 *.css
 **/.sass-cache
 **/vendor
+**/most_recent_eui.xml
