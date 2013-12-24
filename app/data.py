@@ -143,3 +143,52 @@ def series(ext=None):
         app.logger.info("extension '%s' not supported")
         abort(404)
 
+
+@data.route('/goals')
+@login_required
+def goals():
+    owner_id = g.user.get_id()
+    now = datetime.datetime.now()
+    month_start = datetime.datetime(now.year, now.month, 1)
+    monthly_usage_sql = """
+    select
+        max(start) as last_start,
+        max(day) as last_day,
+        max(hour) as last_hour,
+        sum(value),
+        date_part('days',
+            date_trunc('month', max(start))
+            + '1 month'::interval
+            - date_trunc('month', max(start))
+        ) as days
+    from data_view
+    where owner = {owner_id}
+    and start >= '{month_start}'::date
+    group by month
+    """.format(
+        owner_id = owner_id,
+        month_start = datetime_string(month_start)
+    )
+    last_start, last_day, last_hour, sum_value, days_in_month = \
+        db.engine.execute(monthly_usage_sql).first()
+
+    app.logger.debug('current is %s' % current)
+
+    average_sql = """
+    select avg(value) from (
+        select sum(value) as value
+        from data_view
+        where owner = {owner_id}
+        group by year, month
+    ) as month_grouped
+    """.format( owner_id = owner_id )
+    average = db.engine.execute(average_sql).first()[0]
+    app.logger.debug('average is %s' % average)
+
+    result = {
+        'goal': average,
+        'current': current
+    }
+    return json.dumps(result)
+
+
