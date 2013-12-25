@@ -8,10 +8,12 @@ require(['./common'], function(common) {
                 console.debug('last update date is', date);
                 var now = new Date();
                 var hoursDiff = (now - date) / (1000 * 60 * 60);
+                console.log('hoursdiff is', hoursDiff);
                 if (hoursDiff > 0) {
-                    url = '/eui?start=' + date.getTime();
+                    url = '/eui?start=' + (date.getTime() / 1000);
                     spinner(true);
                     console.log("getting the EUI");
+                    console.log(url);
                     $.getJSON(url, function(data) {
                         console.log(data);
                     });
