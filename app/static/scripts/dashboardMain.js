@@ -5,17 +5,13 @@ require(['./common'], function(common) {
         var updateEUI = function() {
             $.getJSON('/data/last_date', function(data) {
                 var date = new Date(data);
-                console.debug('last update date is', date);
                 var now = new Date();
                 var hoursDiff = (now - date) / (1000 * 60 * 60);
-                console.log('hoursdiff is', hoursDiff);
-                if (hoursDiff > 0) {
+                if (hoursDiff > 1) {
                     url = '/eui?start=' + (date.getTime() / 1000);
                     spinner(true);
-                    console.log("getting the EUI");
-                    console.log(url);
                     $.getJSON(url, function(data) {
-                        console.log(data);
+                        console.log('received eui', data);
                     });
                     spinner(false);
                 };
