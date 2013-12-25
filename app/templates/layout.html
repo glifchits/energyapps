@@ -13,11 +13,6 @@
       <div class=block-group>
         <span class='header block'><a href=/>EnergyApps</a></span>
         <ul id=menu class=block>
-          {% if g.user.is_authenticated() %}
-          <li class=refresh>
-          <a id=refresh-eui href=#>Refresh data</a>
-          </li>
-          {% endif %}
           <li class=login>
           {% if g.user.is_authenticated() %}
             {{ g.user.name }} <a href='{{ url_for('auth.logout') }}'>Log out</a>
