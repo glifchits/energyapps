@@ -34,7 +34,7 @@ from __init__ import db
 def from_timestamp(timestamp):
     if type(timestamp) == str:
         timestamp = int(timestamp)
-    return datetime.datetime.fromtimestamp(timestamp)
+    return datetime.datetime.utcfromtimestamp(timestamp)
 
 
 def construct_eui(data):
