@@ -60,6 +60,16 @@ class Interval(db.Model):
         return "<Interval %s-%s>" % (self.start, self.start + delta)
 
 
+class Goal(db.Model):
+    __tablename__ = 'goals'
+
+    id = db.Column(db.Integer, primary_key=True)
+    # user owning this goal
+    user = db.Column(db.Integer, db.ForeignKey('users.id'))
+    # attributes
+    target = db.Column(db.Float)
+
+
 class User(db.Model):
     __tablename__ = 'users'
 
