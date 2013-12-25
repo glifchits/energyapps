@@ -1,1 +1,0 @@
-../vendor/novus-nvd3-3dd43d6/nv.d3.js
