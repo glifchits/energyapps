@@ -135,7 +135,7 @@ def get_eui():
     start = request.args.get('start') or start_time
 
     # number of seconds between now and the start time
-    diff_duration = int(time.time()) - start_time
+    diff_duration = int(time.time()) - int(start)
 
     # duration will be specified or the minimum between difference and max
     duration = request.args.get('duration') or min(diff_duration, max_duration)
