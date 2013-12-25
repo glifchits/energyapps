@@ -17,5 +17,5 @@ inner join meter_reading
 inner join eui
   on eui.id = meter_reading.eui
 where meter_reading.kind = 12
-group by owner, reading_id, start
-order by owner, reading_id, start 
+group by owner, start
+order by owner, start
