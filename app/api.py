@@ -107,6 +107,17 @@ def read_auth_status():
 @api.route('/eui')
 @login_required
 def get_eui():
+    '''
+    Route which controls downloading a users energy usage information
+    '''
+    '''
+    # code for getting eui from a file temporarily
+    with open("app/testdata/E1 Small pge_electric_interval_data_2011-04-04_to_2012-05-04 zipcode cost.xml") as f:
+        app.logger.debug('processing file')
+        data.process_data(f.read())
+        app.logger.debug('done')
+        return 'success'
+    '''
     r = requests.get(
             apipt.AUTH_STATUS,
             headers = bearer(session.get('access_token')),
