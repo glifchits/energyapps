@@ -2,6 +2,8 @@ require(['./common'], function(common) {
     require(['knockout', 'd3', 'rickshaw', 'dashboard/common', 'dashboard/widgetView'],
             function(ko, d3, Rickshaw, dashCommon, WidgetsViewModel) {
 
+        ko.applyBindings(new WidgetsViewModel());
+
         var updateEUI = function() {
             $.getJSON('/data/last_date', function(data) {
                 var date = new Date(data);
@@ -19,6 +21,5 @@ require(['./common'], function(common) {
         };
         updateEUI();
 
-        ko.applyBindings(new WidgetsViewModel());
     });
 });
