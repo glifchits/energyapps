@@ -229,8 +229,10 @@ class GreenButtonData(object):
         usage_point = usage_point[0]
 
         local_time = [e for e in self.entries if e.NODE_TAG == LOCAL_TIME]
-        assert len(local_time) == 1
-        usage_point.local_time = local_time[0]
+        if len(local_time) == 1:
+            usage_point.local_time = local_time[0]
+        else:
+            usage_point.local_time = None
 
         meter_readings = [e for e in self.entries
                 if e.NODE_TAG == METER_READING]

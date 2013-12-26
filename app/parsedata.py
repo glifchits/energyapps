@@ -40,12 +40,13 @@ def from_timestamp(timestamp):
 def construct_eui(data):
     eui = schema.EnergyUsageInformation(
         title = data.title,
-        service_kind = data.service_kind,
-        dst_start_rule = data.local_time.dst_start_rule,
-        dst_end_rule = data.local_time.dst_end_rule,
-        dst_offset = data.local_time.dst_offset,
-        tz_offset = data.local_time.tz_offset
+        service_kind = data.service_kind
     )
+    if data.local_time:
+        eui.dst_start_rule = data.local_time.dst_start_rule
+        eui.dst_end_rule = data.local_time.dst_end_rule
+        eui.dst_offset = data.local_time.dst_offset
+        eui.tz_offset = data.local_time.tz_offset
     return eui
 
 def construct_meter_reading(reading_type):
