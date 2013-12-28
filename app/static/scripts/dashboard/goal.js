@@ -5,13 +5,20 @@ define(['knockout'], function(ko) {
         
         self.max = ko.observable(10);
         self.min = ko.observable(0);
-        self.value = ko.observable(5);
+        self.current = ko.observable(5);
         self.goal = ko.observable(6);
-        self.messageText = "message";
-        self.titleText = "title";
+        self.titleText = ko.observable("title");
         // some unlikely to collide, arbitrary value
-        self.goalId = 'goal' + Math.round(Math.random() * 10000);
+        self.goalId = ko.computed(function() {
+            return 'goal' + Math.round(Math.random() * 10000);
+        });
         
+        self.messageText = ko.computed(function() {
+            if (self.goal() > self.current())
+                return "slow down!";
+            else
+                return "on track!";
+        });
     };
 
     window.drawGoals = function(goal) {
@@ -19,12 +26,12 @@ define(['knockout'], function(ko) {
 
         var min = parseInt(self.attributes.min.value);
         var max = parseInt(self.attributes.max.value);
-        var value = parseInt(self.attributes.value.value);
+        var current = parseInt(self.attributes.current.value);
         var goal = parseInt(self.attributes.goal.value);
         var messageText = self.attributes.message.value;
         var titleText = self.attributes.title.value;
 
-        var valuePct = (value - min) / (max - min);
+        var currentPct = (current - min) / (max - min);
         var goalPct = (goal - min) / (max - min);
 
         var height = 26;
@@ -45,8 +52,8 @@ define(['knockout'], function(ko) {
             .attr('y', 0)
             .attr('height', height)
 
-        var value = svg.append("rect")
-            .attr('class', 'value')
+        var current = svg.append("rect")
+            .attr('class', 'current')
             .attr('x', 0)
             .attr('y', 0)
             .attr('height', height)
@@ -64,7 +71,7 @@ define(['knockout'], function(ko) {
             width = self.offsetWidth;
             background.attr('width', width);
             goal.attr('width', goalPct * width);
-            value.attr('width', valuePct * width);
+            current.attr('width', currentPct * width);
             msg = message[0][0];
             msgWidth = msg.offsetWidth;
             message.attr('x', width - msgWidth - msgPadding);

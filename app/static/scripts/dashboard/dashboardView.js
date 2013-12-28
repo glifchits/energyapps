@@ -40,10 +40,25 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
         var self = this;
         this.date = new Date();
 
-        self.goals = ko.observableArray([
-            new Goal(),
-            new Goal()
-        ]);
+        self.goals = ko.observableArray([]);
+
+        self.updateGoals = function() {
+            url = '/data/goals';
+            $.getJSON(url, function(goals) {
+                goals.forEach(function(goal) {
+                    console.log(goal);
+                    var goalObj = new Goal();
+                    goalObj.min(0);
+                    goalObj.max(goal.end);
+                    goalObj.goal((goal.value / goal.target) * goal.end);
+                    goalObj.current(goal.current);
+                    goalObj.titleText(goal.name);
+                    self.goals.push(goalObj);
+                });
+
+            });
+        };
+        self.updateGoals();
 
         self.widgets = ko.observableArray([
             new AbsWidget("Today", "cost", "grp=day"),
