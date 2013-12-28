@@ -11,7 +11,7 @@ define(['knockout', 'dashboard/chart'], function(ko, Chart) {
         self.chartId = self.title.replace(' ', '')+Math.round(Math.random()*100);
 
         self.value = ko.observable(0);
-        self.average = ko.observable(0);
+        self.aggregate = ko.observable(0);
 
         self.text1 = "text1";
         self.text2 = "text2";
@@ -22,8 +22,8 @@ define(['knockout', 'dashboard/chart'], function(ko, Chart) {
             else if (type === 'abs' && measure === 'value')
                 return self.value().toFixed(1) / 1000 + " kWh";
             else if (type === 'comp') {
-                var val = (self.value() - self.average()) / self.average();
-                s = Math.abs(val).toFixed(2);
+                var val = (self.value() - self.aggregate()) / self.aggregate();
+                s = (Math.abs(val) * 100).toFixed(1);
                 s += (val > 0) ? "% more" : "% less";
                 return s;
             }
@@ -31,7 +31,7 @@ define(['knockout', 'dashboard/chart'], function(ko, Chart) {
 
         self.cssClass = ko.computed(function() {
            if (type === 'comp') {
-                var val = (self.value() - self.average()) / self.average();
+                var val = (self.value() - self.aggregate()) / self.aggregate();
                 return (val > 0) ? "bad" : "good";
            }
            else if (type === 'abs')
@@ -40,8 +40,16 @@ define(['knockout', 'dashboard/chart'], function(ko, Chart) {
 
         self.update = function() {
             $.getJSON(url, function(data) {
-                console.log('update', url, data);
-                self.value(data[0][measure]);
+                if (type === 'abs')
+                    self.value(data[0][measure]);
+                else {
+                    var mapData = {};
+                    data.forEach(function(d) {
+                        mapData[d.type] = d;
+                    });
+                    self.value(mapData.value[measure]);
+                    self.aggregate(mapData.aggregate[measure]);
+                }
             });
         };
 
