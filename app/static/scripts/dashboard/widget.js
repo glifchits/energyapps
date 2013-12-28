@@ -1,4 +1,4 @@
-define(['knockout', 'dashboard/chartView'], function(ko, Chart) {
+define(['knockout', 'dashboard/chart'], function(ko, Chart) {
     var Widget = function(title, type, measure, baseurl, params, agg2) {
         var self = this;
         self.title = title;

@@ -1,4 +1,4 @@
-define(['knockout', 'dashboard/Widget'], function(ko, Widget) {
+define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, Goal) {
     BASE_URL = "/data/series"
 
     var AbsWidget = function(title, measure, params) {
@@ -36,9 +36,14 @@ define(['knockout', 'dashboard/Widget'], function(ko, Widget) {
         return year + '-' + ('0' + month).slice(-2) + '-' + ('0' + day).slice(-2);
     };
 
-    var WidgetsViewModel = function() {
+    var DashboardViewModel = function() {
         var self = this;
         this.date = new Date();
+
+        self.goals = ko.observableArray([
+            new Goal(),
+            new Goal()
+        ]);
 
         self.widgets = ko.observableArray([
             new AbsWidget("Today", "cost", "grp=day"),
@@ -49,6 +54,6 @@ define(['knockout', 'dashboard/Widget'], function(ko, Widget) {
         ]);
     };
 
-    return WidgetsViewModel;
+    return DashboardViewModel;
 });
 
