@@ -226,13 +226,6 @@ def goals():
     return json.dumps(goals, indent=4)
 
 
-def basic_datum_factory(row):
-    return {
-        'start': str(row[0]),
-        'cost': float(row[1]),
-        'value': float(row[2])
-    }
-
 @data.route('/today')
 @login_required
 def today():
@@ -269,7 +262,14 @@ def today():
         )
         """.format( owner_id = owner_id )
 
-    return json_serialize_query(sql, basic_datum_factory)
+    def datum_factory(row):
+        return {
+            'start': str(row[0]),
+            'cost': float(row[1]),
+            'value': float(row[2])
+        }
+
+    return json_serialize_query(sql, datum_factory)
 
 
 @data.route('/yesterday')
