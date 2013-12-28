@@ -5,7 +5,7 @@ from flask import Blueprint, current_app as app
 from flask import Response
 from flask.ext.login import login_required
 
-import datetime
+from datetime import datetime, timedelta
 import json
 import csv
 import cStringIO
@@ -153,8 +153,8 @@ def series(ext=None):
 @login_required
 def goals():
     owner_id = g.user.get_id()
-    now = datetime.datetime.now()
-    month_start = datetime.datetime(now.year, now.month, 1)
+    now = datetime.now()
+    month_start = datetime(now.year, now.month, 1)
 
     goals = []
 
@@ -225,4 +225,48 @@ def goals():
 
     return json.dumps(goals, indent=4)
 
+
+@data.route('/today')
+@login_required
+def today():
+    owner_id = g.user.get_id()
+    series = request.args.get('series')
+
+    if series:
+        sql = """
+        -- select last 24 hours
+        select * from (
+            select start, cost, value
+            from data_view
+            where owner = {owner_id}
+            order by start desc
+            limit 24
+        ) as query
+        order by start asc
+        """.format( owner_id = owner_id )
+    else:
+        sql = """
+        -- select sum over things happening today
+        select
+            min(start) as start,
+            sum(cost) as cost,
+            sum(value) as value
+        from data_view
+        where owner = {owner_id}
+        and (year, month, day) = (
+            select year, month, day
+            from data_view
+            where owner = {owner_id}
+            order by start desc
+            limit 1
+        )
+        """.format( owner_id = owner_id )
+
+    def datum_factory(row):
+        return {
+            'start': str(row[0]),
+            'cost': float(row[1]),
+            'value': float(row[2])
+        }
+    return json_serialize_query(sql, datum_factory)
 
