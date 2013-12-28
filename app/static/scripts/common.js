@@ -30,7 +30,7 @@ define(['jquery'], function($) {
 
     window.spinner = function(display, message) {
         var spin = $("#spinner");
-        if (message !=== undefined)
+        if (message !== undefined)
             spin.text(message);
         if (display) {
             spin.show();
