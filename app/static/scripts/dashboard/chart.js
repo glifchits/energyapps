@@ -4,10 +4,11 @@ define(['knockout', 'jquery-ui'], function(ko, jqueryui) {
         var self = this;
 
         self.graph = new Rickshaw.Graph.Ajax({
-            element: document.querySelector("#" + chartId),
+            element: document.querySelector("#chart" + chartId),
+            width: document.querySelector("#chart" + chartId).offsetWidth,
             height: 200,
             renderer: 'line',
-            dataURL: baseurl + ".json?" + params + "&agg=avg",
+            dataURL: baseurl + "?series=true",
             onData: function(data) {
                 var dataTransform = data.map(function(d) {
                     return {
@@ -25,7 +26,7 @@ define(['knockout', 'jquery-ui'], function(ko, jqueryui) {
                 var graph = transport.graph;
                 var detail = new Rickshaw.Graph.HoverDetail({
                     graph: graph,
-                    xFormatter: function(x) { return new Date(x).toDateString(); },
+                    xFormatter: function(x) { return new Date(x).toString(); },
                     yFormatter: function(y) { return y.toFixed(1) + " kWh"; }
                 });
                 var slider = new Rickshaw.Graph.RangeSlider({
@@ -34,6 +35,7 @@ define(['knockout', 'jquery-ui'], function(ko, jqueryui) {
                  });
                 var yAxis = new Rickshaw.Graph.Axis.Y({ graph: graph });
                 yAxis.graph.update();
+                spinner(false);
             },
             series: [{ name: "Value", color: "red" }]
         });

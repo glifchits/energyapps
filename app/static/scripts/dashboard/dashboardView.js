@@ -1,8 +1,8 @@
 define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, Goal) {
     BASE_URL = "/data/series"
 
-    var AbsWidget = function(title, measure, params) {
-        w = new Widget(title, "abs", measure, BASE_URL, params);
+    var AbsWidget = function(title, measure, url) {
+        w = new Widget(title, "abs", measure, url);
         if (measure === "cost") {
             w.text1 = "your energy use cost";
             w.text2 = "";
@@ -15,7 +15,7 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
     };
 
     var CompWidget = function(title, measure, params) {
-        w = new Widget(title, "comp", measure, BASE_URL, params, "avg");
+        w = new Widget(title, "comp", measure, url);
         if (measure === "cost") {
             w.text1 = "your energy use cost";
             w.text2 = "than average";
@@ -61,11 +61,8 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
         self.updateGoals();
 
         self.widgets = ko.observableArray([
-            new AbsWidget("Today", "cost", "grp=day"),
-            new CompWidget("Yesterday", "value", 
-                           "grp=day&end=" + getDateStr(new Date(), 1)),
-            new CompWidget("Last week", "cost", "grp=week"),
-            new AbsWidget("This month", "value", "grp=month")
+            new AbsWidget("Today", "cost", "/data/today"),
+            new AbsWidget("Yesterday", "value", "/data/yesterday"),
         ]);
     };
 
