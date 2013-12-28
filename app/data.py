@@ -226,6 +226,13 @@ def goals():
     return json.dumps(goals, indent=4)
 
 
+def basic_datum_factory(row):
+    return {
+        'start': str(row[0]),
+        'cost': float(row[1]),
+        'value': float(row[2])
+    }
+
 @data.route('/today')
 @login_required
 def today():
@@ -262,11 +269,44 @@ def today():
         )
         """.format( owner_id = owner_id )
 
-    def datum_factory(row):
-        return {
-            'start': str(row[0]),
-            'cost': float(row[1]),
-            'value': float(row[2])
-        }
-    return json_serialize_query(sql, datum_factory)
+    return json_serialize_query(sql, basic_datum_factory)
+
+
+@data.route('/yesterday')
+@login_required
+def yesterday():
+    owner_id = g.user.get_id()
+    series = request.args.get('series')
+
+    if series:
+        sql = """
+        select
+            min(start) as start,
+            sum(cost) as cost,
+            sum(value) as value
+        from data_view
+        where owner = {owner_id}
+        group by year, month, day
+        """.format( owner_id = owner_id )
+
+    else:
+        sql = """
+        -- select sum over things happening yesterday
+        select
+            min(start) as start,
+            sum(cost) as cost,
+            sum(value) as value
+        from data_view
+        where owner = {owner_id}
+        and (year, month, day) = (
+            select year, month, day
+            from data_view
+            where owner = {owner_id}
+            group by year, month, day
+            order by year desc, month desc, day desc
+            limit 1 offset 1
+        )
+        """.format( owner_id = owner_id )
+
+    return json_serialize_query(sql, basic_datum_factory)
 
