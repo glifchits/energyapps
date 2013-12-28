@@ -32,7 +32,7 @@ define(['knockout', 'dashboard/chart'], function(ko, Chart) {
         self.cssClass = ko.computed(function() {
            if (type === 'comp') {
                 var val = (self.value() - self.average()) / self.average();
-                return (val > 0) ? : "bad" : "good";
+                return (val > 0) ? "bad" : "good";
            }
            else if (type === 'abs')
                return "neutral";
