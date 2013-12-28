@@ -22,13 +22,13 @@
 </div>
 
 <div id=dashboard data-bind="foreach: widgets">
-  <div class=widget data-bind="click: toggleChart">
+  <div class=widget data-bind="click: toggleChart, attr: { 'id': chartId }">
     <span class=title data-bind="text: title"></span>
     <span class='pad text' data-bind="text: text1"></span>
     <span class=statistic data-bind="text: displayValue(), css: cssClass()"></span>
     <span class=text data-bind="text: text2"></span>
-    <div class=fullchart data-bind="style: { display: chart() ? 'block' : 'none' }">
-      <div data-bind="attr: { 'id': chartId }"></div>
+    <div class=fullchart>
+      <div data-bind="attr: { 'id': 'chart' + chartId }"></div>
       <div data-bind="attr: { 'id': 'slider' + chartId }"></div>
     </div>
   </div>
