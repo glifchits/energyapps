@@ -282,6 +282,7 @@ def yesterday():
         sql = """
         select
             min(start) as start,
+            'series' as type,
             sum(cost) as cost,
             sum(value) as value
         from data_view
@@ -294,6 +295,7 @@ def yesterday():
         -- select sum over things happening yesterday
         select
             min(start) as start,
+            'value' as type,
             sum(cost) as cost,
             sum(value) as value
         from data_view
@@ -306,7 +308,31 @@ def yesterday():
             order by year desc, month desc, day desc
             limit 1 offset 1
         )
+        UNION
+        -- select daily average
+        select
+            min(start) as start,
+            'aggregate' as type,
+            avg(cost) as cost,
+            avg(value) as value
+        from (
+            select
+            min(start) as start,
+            sum(cost) as cost,
+            sum(value) as value
+            from data_view
+            where owner = {owner_id}
+            group by year, month, day
+        ) as query
         """.format( owner_id = owner_id )
 
-    return json_serialize_query(sql, basic_datum_factory)
+    def datum_factory(row):
+        return {
+            'type': row[1],
+            'start': str(row[0]),
+            'cost': float(row[2]),
+            'value': float(row[3])
+        }
+
+    return json_serialize_query(sql, datum_factory)
 
