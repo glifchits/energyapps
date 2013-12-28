@@ -49,6 +49,7 @@ define(['knockout', 'jquery-ui'], function(ko, jqueryui) {
                 height: el.offsetHeight - padding
             });
             graphObj.render();
+            $("#slider" + chartId).width(el.offsetWidth - padding);
         };
 
         window.addEventListener('resize', resize);
