@@ -155,45 +155,74 @@ def goals():
     owner_id = g.user.get_id()
     now = datetime.datetime.now()
     month_start = datetime.datetime(now.year, now.month, 1)
-    monthly_usage_sql = """
-    select
-        max(start) as last_start,
-        max(day) as last_day,
-        max(hour) as last_hour,
-        sum(value),
+
+    goals = []
+
+    goals_sql = """
+    select * from goals
+    where goals.user = {owner_id}
+    """.format(owner_id = owner_id)
+
+    goals_rows = db.engine.execute(goals_sql)
+
+    for goal_row in goals_rows:
+        id, user, target, name, scope = goal_row
+        goal = {}
+        goal['name'] = name
+        goal['target'] = target
+
+        if scope == 'week':
+            # exclude month from this grouping, or else weeks get chopped
+            grouping = 'year, week'
+        else:
+            # this takes the sublist of `groups` up to the index of `scope`
+            # eg. week -> ['year', 'month', 'week']
+            # eg. year -> ['year']
+            grouping = ', '.join(GROUPS[:GROUPS.index(scope) + 1])
+
+        result_sql = """
+        select
+        max(start) as start,
+        date_part('year', max(start)) as year,
+        date_part('month', max(start)) as month,
+        date_part('week', max(start)) as week,
+        date_part('day', max(start)) as day,
+        date_part('hour', max(start)) as hour,
+        sum(cost) as cost,
+        sum(value) as value,
         date_part('days',
-            date_trunc('month', max(start))
+          date_trunc('month', max( start ))
             + '1 month'::interval
-            - date_trunc('month', max(start))
-        ) as days
-    from data_view
-    where owner = {owner_id}
-    and start >= '{month_start}'::date
-    group by month
-    """.format(
-        owner_id = owner_id,
-        month_start = datetime_string(month_start)
-    )
-    last_start, last_day, last_hour, sum_value, days_in_month = \
-        db.engine.execute(monthly_usage_sql).first()
-
-    app.logger.debug('current is %s' % current)
-
-    average_sql = """
-    select avg(value) from (
-        select sum(value) as value
+            - date_trunc('month', max( start ))
+          ) as days_in_month,
+        extract(dow from max(start)) as day_of_week
         from data_view
         where owner = {owner_id}
-        group by year, month
-    ) as month_grouped
-    """.format( owner_id = owner_id )
-    average = db.engine.execute(average_sql).first()[0]
-    app.logger.debug('average is %s' % average)
+        group by {grouping}
+        order by start desc
+        limit 1
+        """.format(owner_id = owner_id, grouping = grouping)
 
-    result = {
-        'goal': average,
-        'current': current
-    }
-    return json.dumps(result)
+        app.logger.debug('executing result_sql:\n%s' % result_sql)
+        row = db.engine.execute(result_sql).first()
+        # unpack values in row
+        start, year, month, week, day, hour, cost, value, dmonth, dweek = row
+
+        goal['start'] = 1
+        goal['value'] = float(value)
+        goal['cost'] = float(cost)
+
+        if scope == 'week':
+            goal['end'] = 7                 # num days in week
+            goal['current'] = int(dweek)    # current day of the week
+        elif scope == 'month':
+            goal['end'] = int(dmonth)       # num days in month
+            goal['current'] = float(day)    # current day of month
+
+        goal['current'] += hour/24.0 # amount of the day that has passed
+
+        goals.append(goal)
+
+    return json.dumps(goals, indent=4)
 
 
