@@ -28,8 +28,10 @@ define(['jquery'], function($) {
 
     setTimeout(flashAnimate, flashDelay);
 
-    window.spinner = function(display) {
+    window.spinner = function(display, message) {
         var spin = $("#spinner");
+        if (message !=== undefined)
+            spin.text(message);
         if (display) {
             spin.show();
             spin.css('opacity', 0.5);
