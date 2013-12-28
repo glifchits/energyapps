@@ -1,8 +1,8 @@
 require(['./common'], function(common) {
-    require(['knockout', 'd3', 'rickshaw', 'dashboard/common', 'dashboard/widgetView'],
-            function(ko, d3, Rickshaw, dashCommon, WidgetsViewModel) {
+    require(['knockout', 'd3', 'rickshaw', 'dashboard/common', 'dashboard/dashboardView'],
+            function(ko, d3, Rickshaw, dashCommon, DashboardViewModel) {
 
-        ko.applyBindings(new WidgetsViewModel());
+        ko.applyBindings(new DashboardViewModel());
 
         var updateEUI = function() {
             $.getJSON('/data/last_date', function(data) {
@@ -14,8 +14,8 @@ require(['./common'], function(common) {
                     spinner(true);
                     $.getJSON(url, function(data) {
                         console.log('received eui', data);
+                        spinner(false);
                     });
-                    spinner(false);
                 };
             });
         };
