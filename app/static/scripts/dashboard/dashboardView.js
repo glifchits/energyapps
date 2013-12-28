@@ -14,7 +14,7 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
         return w;
     };
 
-    var CompWidget = function(title, measure, params) {
+    var CompWidget = function(title, measure, url) {
         w = new Widget(title, "comp", measure, url);
         if (measure === "cost") {
             w.text1 = "your energy use cost";
@@ -62,7 +62,7 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
 
         self.widgets = ko.observableArray([
             new AbsWidget("Today", "cost", "/data/today"),
-            new AbsWidget("Yesterday", "value", "/data/yesterday"),
+            new CompWidget("Yesterday", "value", "/data/yesterday"),
         ]);
     };
 
