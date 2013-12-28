@@ -11,8 +11,9 @@
   <ul data-bind="foreach: { data: goals, afterRender: drawGoals }">
     <li class='block-group'>
       <span class='block meter' data-bind="attr: {
-        'id': goalId, 'min': min, 'max': max, 'value': value,
-        'goal': goal, 'message': messageText, 'title': titleText
+        'id': goalId, 'min': min, 'max': max,
+        'current': current, 'goal': goal,
+        'message': messageText, 'title': titleText
         }"></span>
       <a href="#" class=block>Edit</a>
     </li>
