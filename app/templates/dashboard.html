@@ -2,6 +2,7 @@
 
 {% block head %}
 <link href='/static/vendor/rickshaw/rickshaw.css' rel=stylesheet type=text/css>
+<link href='/static/vendor/jqueryui/themes/base/jquery-ui.css' rel=stylesheet type=text/css>
 <link href='/static/css/dashboard.css' rel=stylesheet type=text/css>
 {% endblock %}
 
@@ -27,7 +28,8 @@
     <span class=statistic data-bind="text: displayValue(), css: cssClass()"></span>
     <span class=text data-bind="text: text2"></span>
     <div class=fullchart data-bind="style: { display: chart() ? 'block' : 'none' }">
-      <div data-bind="attr: { 'id': chartId }"> </div>
+      <div data-bind="attr: { 'id': chartId }"></div>
+      <div data-bind="attr: { 'id': 'slider' + chartId }"></div>
     </div>
   </div>
 </div>

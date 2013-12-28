@@ -1,4 +1,4 @@
-define(['knockout'], function(ko) {
+define(['knockout', 'jquery-ui'], function(ko, jqueryui) {
 
     var Chart = function(chartId, baseurl, params) {
         var self = this;
@@ -28,6 +28,10 @@ define(['knockout'], function(ko) {
                     xFormatter: function(x) { return new Date(x).toDateString(); },
                     yFormatter: function(y) { return y.toFixed(1) + " kWh"; }
                 });
+                var slider = new Rickshaw.Graph.RangeSlider({
+                    graph: graph,
+                    element: document.querySelector("#slider" + chartId)
+                 });
                 var yAxis = new Rickshaw.Graph.Axis.Y({ graph: graph });
                 yAxis.graph.update();
             },
