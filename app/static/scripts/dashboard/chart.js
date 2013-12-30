@@ -10,17 +10,40 @@ define(['knockout', 'jquery-ui'], function(ko, jqueryui) {
             renderer: 'line',
             dataURL: baseurl + "?series=true",
             onData: function(data) {
-                var dataTransform = data.map(function(d) {
-                    return {
-                        x: new Date(d.start).getTime(),
-                        y: d.value
-                    };
-                });
-                return [{
-                    "color": "steelblue",
-                    "name": "Value",
-                    "data": dataTransform
-                }];
+                var dataFormat = function(data) {
+                    /* consumes a list of data and returns the x, y mapping */
+                    return data.map(function(d) {
+                        return { x: new Date(d.start).getTime(), y: d.value };
+                    })
+                };
+                var dataSplit = function(data) {
+                    /* consumes a JSON array of data with 'type' field
+                     * and splits it into an object with indicies 'type'
+                     * and values being arrays of the data of that type */
+                    var result = {};
+                    data.forEach(function(d) {
+                        key = d.type;
+                        if (key in result)
+                            result[key].push(d);
+                        else
+                            result[key] = [d];
+                    });
+                    return result;
+                };
+                // split the data response into lists of type
+                split = dataSplit(data);
+                // rickshaw format each list, then add it to charting
+                var chartingData = [];
+                for (dataType in split) {
+                    dataSeries = split[dataType];
+                    chartingData.push({
+                        'color': 'steelblue',
+                        'name': dataType,
+                        'data': dataFormat(dataSeries)
+                    });
+                };
+                console.log(chartingData);
+                return chartingData;
             },
             onComplete: function(transport) {
                 var graph = transport.graph;
@@ -36,8 +59,7 @@ define(['knockout', 'jquery-ui'], function(ko, jqueryui) {
                 var yAxis = new Rickshaw.Graph.Axis.Y({ graph: graph });
                 yAxis.graph.update();
                 spinner(false);
-            },
-            series: [{ name: "Value", color: "red" }]
+            }
         });
 
         var resize = function() {
