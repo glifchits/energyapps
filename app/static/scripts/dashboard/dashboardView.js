@@ -72,14 +72,37 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
     var YesterdayWidget = function() {
 
         var chartCallback = function(data) {
-            formatted = data.map(function(d) {
+            split = dataSplit(data);
+            console.log('split data', split);
+
+            formattedSeries = split['value'].map(function(d) {
                 return {x: new Date(d.start).getTime(), y: d.value }
             });
-            return [{
-                "name": "Daily Usage",
-                "color": "steelblue",
-                "data": formatted
+
+            avgVal = split['aggregate'][0]['value'];
+            /*
+            averageLine = [{
+                x: formattedSeries[0].x,
+                y: avgVal
+            }, {
+                x: formattedSeries[formattedSeries.length - 1].x,
+                y: avgVal
             }];
+            */
+            averageLine = formattedSeries.map(function(d) {
+                return { x: d.x, y: avgVal }
+            });
+
+            return [ {
+                    "name": "Average daily usage",
+                    "color": "red",
+                    "data": averageLine
+                }, {
+                    "name": "Daily Usage",
+                    "color": "steelblue",
+                    "data": formattedSeries
+                }
+            ];
         };
 
         widget = new Widget('Yesterday', 'comp', 'value', '/data/yesterday', chartCallback);
