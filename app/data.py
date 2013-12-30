@@ -235,20 +235,37 @@ def today():
     if series:
         sql = """
         -- select last 24 hours
-        select * from (
+        select
+            start,
+            'value' as type,
+            cost,
+            value
+        from (
             select start, cost, value
             from data_view
             where owner = {owner_id}
             order by start desc
             limit 24
         ) as query
-        order by start asc
+        union
+        select
+            min(start) as start,
+            'aggregate' as type,
+            avg(cost) as cost,
+            avg(value) as value
+        from data_view
+        where owner = {owner_id}
+        group by hour
+
+        order by type, start
         """.format( owner_id = owner_id )
+
     else:
         sql = """
         -- select sum over things happening today
         select
             min(start) as start,
+            'value' as type,
             sum(cost) as cost,
             sum(value) as value
         from data_view
@@ -265,8 +282,9 @@ def today():
     def datum_factory(row):
         return {
             'start': str(row[0]),
-            'cost': float(row[1]),
-            'value': float(row[2])
+            'type': str(row[1]),
+            'cost': float(row[2]),
+            'value': float(row[3])
         }
 
     return json_serialize_query(sql, datum_factory)
