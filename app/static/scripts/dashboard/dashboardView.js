@@ -15,8 +15,6 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
     };
 
     var TodayWidget = function() {
-        title = "Today";
-        url = "/data/today";
 
         var chartCallback = function(data) {
             var split = dataSplit(data);
@@ -56,7 +54,6 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
             });
 
             return chartingData;
-
         };
 
         widget = new Widget('Today', 'abs', 'cost', '/data/today', chartCallback);
@@ -73,7 +70,19 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
     };
 
     var YesterdayWidget = function() {
-        widget = new Widget('Yesterday', 'comp', 'value', '/data/yesterday');
+
+        var chartCallback = function(data) {
+            formatted = data.map(function(d) {
+                return {x: new Date(d.start).getTime(), y: d.value }
+            });
+            return [{
+                "name": "Daily Usage",
+                "color": "steelblue",
+                "data": formatted
+            }];
+        };
+
+        widget = new Widget('Yesterday', 'comp', 'value', '/data/yesterday', chartCallback);
         var self = widget;
 
         self.text1 = "you spent";
