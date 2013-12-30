@@ -1,30 +1,94 @@
-define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, Goal) {
-    BASE_URL = "/data/series"
-
-    var AbsWidget = function(title, measure, url) {
-        w = new Widget(title, "abs", measure, url);
-        if (measure === "cost") {
-            w.text1 = "your energy use cost";
-            w.text2 = "";
-        }
-        else {
-            w.text1 = "you have used";
-            w.text2 = "of energy";
-        };
-        return w;
+define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, Goal) { 
+    var dataSplit = function(data) {
+        /* consumes a JSON array of data with 'type' field
+         * and splits it into an object with indicies 'type'
+         * and values being arrays of the data of that type */
+        var result = {};
+        data.forEach(function(d) {
+            key = d.type;
+            if (key in result)
+                result[key].push(d);
+            else
+                result[key] = [d];
+        });
+        return result;
     };
 
-    var CompWidget = function(title, measure, url) {
-        w = new Widget(title, "comp", measure, url);
-        if (measure === "cost") {
-            w.text1 = "your energy use cost";
-            w.text2 = "than average";
-        }
-        else {
-            w.text1 = "you used";
-            w.text2 = "energy than average"
-        }
-        return w;
+    var TodayWidget = function() {
+        title = "Today";
+        url = "/data/today";
+
+        var chartCallback = function(data) {
+            var split = dataSplit(data);
+
+            var valueMapper = function(d) {
+                return { x: new Date(d.start).getTime(), y: d.value }
+            };
+            var aggregateMapper = function(d) {
+                var originalTime = new Date(d.start).getTime();
+                var startTime = new Date(split['value'][0]['start']).getTime();
+                var aggStartTime = new Date(split['aggregate'][0]['start']).getTime();
+                var time = originalTime + (startTime - aggStartTime);
+                return { 
+                    x: time,
+                    y: d.value
+                }
+            };
+            aggregateData = split['aggregate'].map(aggregateMapper);
+            valueData = split['value'].map(valueMapper);
+
+            console.log(aggregateData);
+            console.log(valueData);
+
+            var chartingData = []
+
+            chartingData.push({
+                'color': 'red',
+                'name': 'Average for hour',
+                'data': aggregateData
+            });
+            chartingData.push({
+                'color': 'steelblue',
+                'name': 'Value',
+                'data': valueData
+            });
+
+            console.log('charting', chartingData);
+            return chartingData;
+
+        };
+
+        widget = new Widget('Today', 'abs', 'cost', '/data/today', chartCallback);
+        var self = widget;
+
+        self.text1 = "you have spent";
+        self.text2 = "on power so far";
+
+        self.displayValue = ko.computed(function() {
+            return "$" + self.value().toFixed(2);
+        });
+
+        return widget;
+    };
+
+    var YesterdayWidget = function() {
+        widget = new Widget('Yesterday', 'comp', 'value', '/data/yesterday');
+        var self = widget;
+
+        self.text1 = "you spent";
+        self.text2 = "power than average";
+
+        self.displayValue = ko.computed(function() {
+            val = (self.value() - self.aggregate()) / self.aggregate();
+            return (100 * Math.abs(val)).toFixed(1) + "% " + (val > 0 ? "more" : "less");
+        });
+
+        self.cssClass = ko.computed(function() {
+            val = (self.value() - self.aggregate()) / self.aggregate();
+            return val > 0 ? "bad" : "good";
+        });
+
+        return widget;
     };
 
     var getDateStr = function(date, dayOffset) {
@@ -61,8 +125,8 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
         self.updateGoals();
 
         self.widgets = ko.observableArray([
-            new AbsWidget("Today", "cost", "/data/today"),
-            new CompWidget("Yesterday", "value", "/data/yesterday"),
+            new TodayWidget(),
+            new YesterdayWidget(),
         ]);
     };
 

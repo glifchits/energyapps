@@ -1,5 +1,5 @@
 define(['knockout', 'dashboard/chart'], function(ko, Chart) {
-    var Widget = function(title, type, measure, url) {
+    var Widget = function(title, type, measure, url, chartCallback) {
         /*
          * title: string
          * type: 'abs' or 'comp'
@@ -17,25 +17,11 @@ define(['knockout', 'dashboard/chart'], function(ko, Chart) {
         self.text2 = "text2";
 
         self.displayValue = ko.computed(function() {
-            if (type === 'abs' && measure === 'cost')
-                return "$" + self.value().toFixed(2);
-            else if (type === 'abs' && measure === 'value')
-                return self.value().toFixed(1) / 1000 + " kWh";
-            else if (type === 'comp') {
-                var val = (self.value() - self.aggregate()) / self.aggregate();
-                s = (Math.abs(val) * 100).toFixed(1);
-                s += (val > 0) ? "% more" : "% less";
-                return s;
-            }
+            return self.value().toFixed(2);
         });
 
         self.cssClass = ko.computed(function() {
-           if (type === 'comp') {
-                var val = (self.value() - self.aggregate()) / self.aggregate();
-                return (val > 0) ? "bad" : "good";
-           }
-           else if (type === 'abs')
-               return "neutral";
+           return "neutral";
         });
 
         self.update = function() {
@@ -66,7 +52,7 @@ define(['knockout', 'dashboard/chart'], function(ko, Chart) {
 
         self.drawChart = function() {
             spinner(true, "Loading chart...");
-            self.chart = new Chart(self.chartId, url);
+            self.chart = new Chart( self.chartId, url, chartCallback );
         };
 
         self.update();
