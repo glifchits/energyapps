@@ -24,10 +24,15 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
             var valueMapper = function(d) {
                 return { x: new Date(d.start).getTime(), y: d.value }
             };
+
+            var startTime = new Date(split['value'][0]['start']).getTime();
+            var aggStartTime = new Date(split['aggregate'][0]['start']).getTime();
+
             var aggregateMapper = function(d) {
+                /* need the aggregate x-axis values to align themselves with the
+                 * real axis values. compute the difference and add it as an
+                 * offset */
                 var originalTime = new Date(d.start).getTime();
-                var startTime = new Date(split['value'][0]['start']).getTime();
-                var aggStartTime = new Date(split['aggregate'][0]['start']).getTime();
                 var time = originalTime + (startTime - aggStartTime);
                 return { 
                     x: time,
@@ -36,9 +41,6 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
             };
             aggregateData = split['aggregate'].map(aggregateMapper);
             valueData = split['value'].map(valueMapper);
-
-            console.log(aggregateData);
-            console.log(valueData);
 
             var chartingData = []
 
@@ -53,7 +55,6 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
                 'data': valueData
             });
 
-            console.log('charting', chartingData);
             return chartingData;
 
         };
