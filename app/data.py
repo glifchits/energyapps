@@ -300,12 +300,29 @@ def yesterday():
         sql = """
         select
             min(start) as start,
-            'series' as type,
+            'value' as type,
             sum(cost) as cost,
             sum(value) as value
         from data_view
         where owner = {owner_id}
         group by year, month, day
+
+        UNION
+
+        select
+            min(start) as start,
+            'aggregate' as type,
+            avg(cost) as cost,
+            avg(value) as value
+        from (
+            select
+                min(start) as start,
+                sum(cost) as cost,
+                sum(value) as value
+            from data_view
+            where owner = {owner_id}
+            group by year, month, day
+        ) as query
         """.format( owner_id = owner_id )
 
     else:
