@@ -44,12 +44,12 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
 
             chartingData.push({
                 'color': 'red',
-                'name': 'Average for hour',
+                'name': 'Average at hour',
                 'data': aggregateData
             });
             chartingData.push({
                 'color': 'steelblue',
-                'name': 'Value',
+                'name': 'Usage for hour',
                 'data': valueData
             });
 
@@ -120,7 +120,6 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
             url = '/data/goals';
             $.getJSON(url, function(goals) {
                 goals.forEach(function(goal) {
-                    console.log(goal);
                     var goalObj = new Goal();
                     goalObj.min(0);
                     goalObj.max(goal.end);
