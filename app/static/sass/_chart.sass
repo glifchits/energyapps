@@ -1,5 +1,15 @@
 .fullchart
-  display: none
+  display: none // display none by default
+  margin: 20px
+  font-size: 12px
+  padding-top: 38px
+  svg
+    padding-bottom: 10px
+  .x_label
+    top: -38px
+
+  .ui-slider
+    margin-top: 20px
 
 .axis
   path, line
@@ -13,10 +23,17 @@
 .y, .x 
   stroke: $lightgrey !important
   fill: $lightgrey
-.y_ticks .tick
-  fill: $lightgrey
-.y_grid .tick
-  stroke: darken($lightgrey, 43%) !important
+
+// tick marks, labels
+.y_ticks, .x_ticks_d3
+  .tick
+    fill: $lightgrey
+    z-index: 1
+
+// grid lines
+.y_grid, .x_grid_d3
+  .tick
+    stroke: darken($lightgrey, 43%) !important
 
 .line
   fill: none
