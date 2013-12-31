@@ -34,8 +34,8 @@ define(['knockout'], function(ko) {
         var currentPct = (current - min) / (max - min);
         var goalPct = (goal - min) / (max - min);
 
-        var height = 26;
-        var msgPadding = 7;
+        var height = 30;
+        var msgPadding = (height / 2.8).toFixed(1);
 
         var svg = d3.select(self).append("svg")
           .append('g');
@@ -46,14 +46,14 @@ define(['knockout'], function(ko) {
             .attr('y', 0)
             .attr('height', height)
 
-        var goal = svg.append("rect")
-            .attr('class', 'goal')
+        var current = svg.append("rect")
+            .attr('class', 'current')
             .attr('x', 0)
             .attr('y', 0)
             .attr('height', height)
 
-        var current = svg.append("rect")
-            .attr('class', 'current')
+        var goal = svg.append("rect")
+            .attr('class', 'goal')
             .attr('x', 0)
             .attr('y', 0)
             .attr('height', height)
