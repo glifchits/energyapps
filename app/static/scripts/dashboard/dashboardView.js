@@ -73,7 +73,6 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
 
         var chartCallback = function(data) {
             split = dataSplit(data);
-            console.log('split data', split);
 
             formattedSeries = split['value'].map(function(d) {
                 return {x: new Date(d.start).getTime(), y: d.value }
