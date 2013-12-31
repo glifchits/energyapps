@@ -21,7 +21,14 @@ define(['knockout', 'jquery-ui'], function(ko, jqueryui) {
                 var slider = new Rickshaw.Graph.RangeSlider({
                     graph: graph,
                     element: document.querySelector("#slider" + chartId)
-                 });
+                });
+                var xAxis = new Rickshaw.Graph.Axis.X({
+                    graph: graph,
+                    tickFormat: function(x) {
+                        return new Date(x).toLocaleDateString();
+                    }
+                });
+                xAxis.graph.update();
                 var yAxis = new Rickshaw.Graph.Axis.Y({ graph: graph });
                 yAxis.graph.update();
                 spinner(false);
