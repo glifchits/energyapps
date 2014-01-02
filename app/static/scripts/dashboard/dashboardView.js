@@ -161,7 +161,7 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
         });
 
         self.cssClass = ko.computed(function() {
-            val = (self.value() / self.aggregate()) / self.aggregate();
+            val = (self.value() - self.aggregate()) / self.aggregate();
             return val > 0 ? "bad" : "good";
         });
 
