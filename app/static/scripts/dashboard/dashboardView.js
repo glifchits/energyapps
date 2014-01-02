@@ -123,6 +123,52 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
         return widget;
     };
 
+    var WeeklyWidget = function() {
+
+        var chartCallback = function(data) {
+            split = dataSplit(data);
+
+            formattedSeries = split['value'].map(function(d) {
+                return {x: new Date(d.start).getTime(), y: d.value};
+            });
+
+            avgVal = split['aggregate'][0]['value'];
+
+            averageLine = formattedSeries.map(function(d) {
+                return { x: d.x, y: avgVal };
+            });
+
+            return [ {
+                "name": "Average weekly usage",
+                "color": "red",
+                "data": averageLine
+            }, {
+                "name": "Weekly usage",
+                "color": "steelblue",
+                "data": formattedSeries
+            } ];
+        };
+
+        widget = new Widget("Last 7 days", 'comp', 'value', '/data/week', chartCallback);
+        var self = widget;
+
+        self.text1 = "you spent";
+        self.text2 = "power than average";
+
+        self.displayValue = ko.computed(function() {
+            val = (self.value() - self.aggregate()) / self.aggregate();
+            return (100 * Math.abs(val)).toFixed(1) + "% " + (val > 0 ? "more" : "less");
+        });
+
+        self.cssClass = ko.computed(function() {
+            val = (self.value() / self.aggregate()) / self.aggregate();
+            return val > 0 ? "bad" : "good";
+        });
+
+        return widget;
+    };
+
+
     var getDateStr = function(date, dayOffset) {
         dayOffset = dayOffset || 0;
         d = new Date(date - (dayOffset * 24 * 60 * 60 * 1000));
@@ -158,6 +204,7 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
         self.widgets = ko.observableArray([
             new TodayWidget(),
             new YesterdayWidget(),
+            new WeeklyWidget()
         ]);
     };
 
