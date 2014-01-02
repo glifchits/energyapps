@@ -352,9 +352,9 @@ def yesterday():
             avg(value) as value
         from (
             select
-            min(start) as start,
-            sum(cost) as cost,
-            sum(value) as value
+                min(start) as start,
+                sum(cost) as cost,
+                sum(value) as value
             from data_view
             where owner = {owner_id}
             group by year, month, day
@@ -370,4 +370,87 @@ def yesterday():
         }
 
     return json_serialize_query(sql, datum_factory)
+
+
+@data.route('/week')
+@login_required
+def week():
+    owner_id = g.user.get_id()
+    series = request.args.get('series')
+
+    if series:
+        sql = """
+        select
+            min(start) as start,
+            'value' as type,
+            sum(cost) as cost,
+            sum(value) as value
+        from data_view
+        where owner = {owner_id}
+        group by year, week
+
+        UNION
+
+        select
+            min(start) as start,
+            'aggregate' as type,
+            avg(cost) as cost,
+            avg(value) as value
+        from (
+            select min(start) as start,
+            sum(cost) as cost,
+            sum(value) as value
+            from data_view
+            where owner = {owner_id}
+            group by year, week
+        ) as query
+        """.format( owner_id = owner_id )
+
+    else:
+        sql = """
+        select
+            min(start) as start,
+            'value' as type,
+            sum(cost) as cost,
+            sum(value) as value
+        from data_view
+        where owner = {owner_id}
+        and (year, week) = (
+            select year, week
+            from data_view
+            where owner = {owner_id}
+            group by year, week
+            order by year desc, week desc
+            limit 1
+        )
+
+        UNION
+
+        select
+            min(start) as start,
+            'aggregate' as type,
+            avg(cost) as cost,
+            avg(value) as value
+        from (
+            select
+                min(start) as start,
+                sum(cost) as cost,
+                sum(value) as value
+            from data_view
+            where owner = {owner_id}
+            group by year, week
+        ) as query
+        """.format( owner_id = owner_id )
+
+    def datum_factory(row):
+        return {
+            'start': str(row[0]),
+            'type': row[1],
+            'cost': float(row[2]),
+            'value': float(row[3])
+        }
+
+    return json_serialize_query(sql, datum_factory)
+
+
 
