@@ -8,7 +8,7 @@ define(['knockout', 'dashboard/chart'], function(ko, Chart) {
          */
         var self = this;
         self.title = title;
-        self.chartId = self.title.replace(' ', '')+Math.round(Math.random()*100);
+        self.chartId = self.title.replace(new RegExp(' ', 'g'), '')+Math.round(Math.random()*100);
 
         self.value = ko.observable(0);
         self.aggregate = ko.observable(0);
