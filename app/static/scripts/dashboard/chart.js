@@ -1,4 +1,23 @@
 define(['knockout', 'jquery-ui'], function(ko, jqueryui) {
+
+    var toMonth = function(month) {
+        switch(month + 1) {
+            case 1: return "January";
+            case 2: return "February";
+            case 3: return "March";
+            case 4: return "April";
+            case 5: return "May";
+            case 6: return "June";
+            case 7: return "July";
+            case 8: return "August";
+            case 9: return "September";
+            case 10: return "October";
+            case 11: return "November";
+            case 12: return "December";
+            default: "<Invalid>";
+        };
+    };
+
     var Chart = function(chartId, baseurl, onDataCallback) {
         var self = this;
 
@@ -25,11 +44,17 @@ define(['knockout', 'jquery-ui'], function(ko, jqueryui) {
                 var xAxis = new Rickshaw.Graph.Axis.X({
                     graph: graph,
                     tickFormat: function(x) {
-                        return new Date(x).toLocaleDateString();
+                        var date = new Date(x);
+                        return toMonth(date.getUTCMonth()).substring(0,3) + ' ' + date.getUTCDate();
                     }
                 });
                 xAxis.graph.update();
-                var yAxis = new Rickshaw.Graph.Axis.Y({ graph: graph });
+                var yAxis = new Rickshaw.Graph.Axis.Y({
+                    graph: graph,
+                    tickFormat: function(y) {
+                        return y + " kWh";
+                    }
+                });
                 yAxis.graph.update();
                 spinner(false);
             }
