@@ -22,8 +22,13 @@ AGGREGATORS = ['avg', 'sum', 'min', 'max']
 GROUPS = ['year', 'month', 'week', 'day', 'hour']
 
 
-def datetime_string(t):
-    return "%s-%s-%s" % (t.year, t.month, t.day)
+def to_date_string(t):
+    # returns the "yyyy-mm-dd"
+    return datetime.strftime(s, "%Y-%m-%d")
+
+def from_date_string(s):
+    # using my standard "yyyy-mm-dd"
+    return datetime.strptime(s, "%Y-%m-%d")
 
 def json_serialize_query(sql, datum_factory):
     queryset = db.engine.execute(sql)
