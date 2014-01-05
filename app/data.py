@@ -87,10 +87,10 @@ def series(ext=None):
     grouping = request.args.get('grp') or 'hour'
     if aggregator not in AGGREGATORS:
         app.logger.debug("can't aggregate by %s" % aggregator)
-        abort(404)
+        abort(400)
     if grouping not in GROUPS:
         app.logger.debug("can't group by %s" % grouping)
-        abort(404)
+        abort(400)
 
     agg2 = request.args.get('agg2')
     last = request.args.get('last') or 'false'
@@ -146,7 +146,7 @@ def series(ext=None):
         return csv_serialize_query(sql, datum_factory)
     else:
         app.logger.info("extension '%s' not supported")
-        abort(404)
+        abort(400)
 
 
 @data.route('/goals')
@@ -234,6 +234,7 @@ def today():
     date = request.args.get('date')
 
     if not date:
+        app.logger.debug("no parameter 'date' provided, 400")
         abort(400)
 
     if series:
@@ -302,6 +303,7 @@ def yesterday():
     series = request.args.get('series')
 
     if not date:
+        app.logger.debug("no parameter 'date' provided, 400")
         abort(400)
 
     if series:
@@ -388,6 +390,7 @@ def week():
     series = request.args.get('series')
 
     if not date:
+        app.logger.debug("no parameter 'date' provided, 400")
         abort(400)
 
     if series:
