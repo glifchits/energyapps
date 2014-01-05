@@ -4,9 +4,9 @@
 <h1>Log in</h1>
 
 <form action={{ url_for('auth.login') }} method=POST>
-  {{ form.email(size=30, placeholder="email address", class='block') }}
-  {{ form.password(placeholder='password', class='block') }}
-  <button class=block type=submit>Log in</button>
+  <input class=block type=text id=email name=email placeholder="email address" tabindex=1 autocomplete=off>
+  <input class=block type=password id=password name=password placeholder="password" tabindex=2>
+  <button class=block type=submit tabindex=3>Log in</button>
 </form>
 
 {% endblock %}
