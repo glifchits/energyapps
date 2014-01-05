@@ -231,6 +231,10 @@ def goals():
 def today():
     owner_id = g.user.get_id()
     series = request.args.get('series')
+    date = request.args.get('date')
+
+    if not date:
+        abort(400)
 
     if series:
         sql = """
@@ -294,7 +298,11 @@ def today():
 @login_required
 def yesterday():
     owner_id = g.user.get_id()
+    date = request.args.get('date')
     series = request.args.get('series')
+
+    if not date:
+        abort(400)
 
     if series:
         sql = """
@@ -376,7 +384,11 @@ def yesterday():
 @login_required
 def week():
     owner_id = g.user.get_id()
+    date = request.args.get('date')
     series = request.args.get('series')
+
+    if not date:
+        abort(400)
 
     if series:
         sql = """
