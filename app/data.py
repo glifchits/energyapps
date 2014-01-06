@@ -242,9 +242,11 @@ def today():
         app.logger.debug("no parameter 'date' provided, 400")
         abort(400)
 
+    this_date = from_date_string(date)
+    one_day = timedelta(days=1)
+
     if series:
         sql = """
-        -- select last 24 hours
         select
             start,
             'value' as type,
@@ -254,10 +256,13 @@ def today():
             select start, cost, value
             from data_view
             where owner = {owner_id}
+            and start >= '{date}'::date
             order by start desc
             limit 24
-        ) as query
+        ) as q
+
         union
+
         select
             min(start) as start,
             'aggregate' as type,
@@ -268,7 +273,10 @@ def today():
         group by hour
 
         order by type, start
-        """.format( owner_id = owner_id )
+        """.format(
+            owner_id = owner_id,
+            date = to_date_string(this_date - one_day)
+        )
 
     else:
         sql = """
