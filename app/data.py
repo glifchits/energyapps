@@ -173,8 +173,10 @@ def goals():
     for goal_row in goals_rows:
         id, user, target, name, scope = goal_row
         goal = {}
+        goal['id'] = id
         goal['name'] = name
         goal['target'] = target
+        goal['scope'] = scope
 
         if scope == 'week':
             # exclude month from this grouping, or else weeks get chopped
