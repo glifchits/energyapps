@@ -26,7 +26,7 @@ define(['knockout', 'jquery-ui'], function(ko, jqueryui) {
             width: document.querySelector("#chart" + chartId).offsetWidth,
             height: 200,
             renderer: 'line',
-            dataURL: baseurl + "?series=true",
+            dataURL: baseurl + "&series=true",
             onData: function(data) {
                 return onDataCallback(data);
             },

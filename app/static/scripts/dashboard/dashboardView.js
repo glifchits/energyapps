@@ -14,6 +14,8 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
         return result;
     };
 
+    var DATE = '2013-12-25';
+
     var TodayWidget = function() {
 
         var chartCallback = function(data) {
@@ -56,7 +58,7 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
             return chartingData;
         };
 
-        widget = new Widget('Today', 'abs', 'cost', '/data/today', chartCallback);
+        widget = new Widget('Today', 'abs', 'cost', '/data/today?date='+DATE, chartCallback);
         var self = widget;
 
         self.text1 = "you have spent";
@@ -104,7 +106,7 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
             ];
         };
 
-        widget = new Widget('Yesterday', 'comp', 'value', '/data/yesterday', chartCallback);
+        widget = new Widget('Yesterday', 'comp', 'value', '/data/yesterday?date='+DATE, chartCallback);
         var self = widget;
 
         self.text1 = "you spent";
@@ -149,7 +151,7 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
             } ];
         };
 
-        widget = new Widget("Last 7 days", 'comp', 'value', '/data/week', chartCallback);
+        widget = new Widget("Last 7 days", 'comp', 'value', '/data/week?date='+DATE, chartCallback);
         var self = widget;
 
         self.text1 = "you spent";
