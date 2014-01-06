@@ -16,11 +16,19 @@
 
 <h1>Goals</h1>
 
-{% for goal in goals %}
-{{ goal.target }}
-{{ goal.name }}
-{{ goal.scope }}
-<br/>
+{% for id, goal in enumerate(goals) %}
+<form class='goal-form block-group' id='goal{{ id }}'>
+  <input name=goalname id=goalname type=text value='{{ goal.name }}'>
+  <input name=target id=target type=number value='{{ goal.target }}'>
+  <label for=target>Wh</label>
+  <select name=scope>
+    {% for scope in goal_scopes %}
+    <option value="{{ scope }}"
+    {% if goal.scope == scope %} selected {% endif %}>
+    {{ scope|title }}</option>
+    {% endfor %}
+  </select>
+</form>
 {% endfor %}
 
 {% endblock %}

@@ -108,6 +108,8 @@ def get_eui():
 @login_required
 def edit_profile():
     goals = schema.Goal.query.all()
-    return render_template('auth/edit_profile.html', goals=goals)
+    goal_scopes = [r[0] for r in db.engine.execute("select scope from scope;")]
+    return render_template('auth/edit_profile.html', goals=goals,
+            enumerate=enumerate, goal_scopes=goal_scopes)
 
 
