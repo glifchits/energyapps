@@ -16,19 +16,28 @@
 
 <h1>Goals</h1>
 
-{% for id, goal in enumerate(goals) %}
-<form class='goal-form block-group' id='goal{{ id }}'>
-  <input name=goalname id=goalname type=text value='{{ goal.name }}'>
-  <input name=target id=target type=number value='{{ goal.target }}'>
-  <label for=target>Wh</label>
-  <select name=scope>
-    {% for scope in goal_scopes %}
-    <option value="{{ scope }}"
-    {% if goal.scope == scope %} selected {% endif %}>
-    {{ scope|title }}</option>
-    {% endfor %}
-  </select>
-</form>
-{% endfor %}
+<div id='goals-view' data-bind='foreach: goals'>
+  <form class='goal-form block-group'>
+    <label for=target class='goal-name block' data-bind="text: name"></label>
+    <input name=target class='goal-target block' type=number data-bind="value: target">
+    <label for=target class='goal-target block'>Wh</label>
+    <label for=scope class='goal-scope block'>Goal scope</label>
+    <select name=scope class='goal-scope block' data-bind='
+      options: $root.scopeOptions,
+      optionsText: function(item) {
+        return item[0].toUpperCase() + item.substring(1, item.length);
+      },
+      value: scope,
+      optionsCaption: "Select..."
+      '></select>
+  </form>
+</div>
 
+<a href='#' id='add-goal'>Add a new goal</a>
+
+{% endblock %}
+
+{% block beforeend %}
+<script data-main='/static/scripts/profileEdit.js'
+  src='/static/vendor/requirejs/require.js'></script>
 {% endblock %}
