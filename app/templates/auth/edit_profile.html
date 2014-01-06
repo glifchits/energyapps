@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1>Settings</h1>
+
+<form id=settings class='block-group'>
+  <div class=group>
+    <label for=name>Name</label>
+    <input name=name id=name type=text value='{{ g.user.name }}'>
+  </div>
+  <div class=group>
+    <label for=email>Email</label>
+    <input name=email id=email type=text value='{{ g.user.email }}'>
+  </div>
+</form>
+
+<h1>Goals</h1>
+
+{% for goal in goals %}
+{{ goal.target }}
+{{ goal.name }}
+{{ goal.scope }}
+<br/>
+{% endfor %}
+
+{% endblock %}

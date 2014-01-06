@@ -102,3 +102,12 @@ def register():
 @login_required
 def get_eui():
     return render_template('auth/wait_for_eui.html')
+
+
+@auth.route('/profile')
+@login_required
+def edit_profile():
+    goals = schema.Goal.query.all()
+    return render_template('auth/edit_profile.html', goals=goals)
+
+

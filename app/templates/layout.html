@@ -15,7 +15,9 @@
         <ul id=menu class=block>
           <li class=login>
           {% if g.user.is_authenticated() %}
-            {{ g.user.name }} <a href='{{ url_for('auth.logout') }}'>Log out</a>
+          {{ g.user.name }}
+          <a href='{{ url_for('auth.edit_profile') }}'>Edit profile</a>
+          <a href='{{ url_for('auth.logout') }}'>Log out</a>
           {% else %}
           <a href='{{ url_for('auth.login') }}'>Log in</a> or <a href='{{ url_for('auth.register') }}'>Sign up!</a>
           {% endif %}
