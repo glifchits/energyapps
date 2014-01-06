@@ -65,6 +65,8 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
         self.text2 = "on power so far";
 
         self.displayValue = ko.computed(function() {
+            if (!self.value())
+                return '--';
             return "$" + self.value().toFixed(2);
         });
 
@@ -113,6 +115,8 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
         self.text2 = "power than average";
 
         self.displayValue = ko.computed(function() {
+            if (!self.value() || !self.aggregate())
+                return "--";
             val = (self.value() - self.aggregate()) / self.aggregate();
             return (100 * Math.abs(val)).toFixed(1) + "% " + (val > 0 ? "more" : "less");
         });
@@ -158,6 +162,8 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
         self.text2 = "power than average";
 
         self.displayValue = ko.computed(function() {
+            if (!self.value() || !self.aggregate())
+                return '--';
             val = (self.value() - self.aggregate()) / self.aggregate();
             return (100 * Math.abs(val)).toFixed(1) + "% " + (val > 0 ? "more" : "less");
         });

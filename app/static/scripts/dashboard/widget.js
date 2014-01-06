@@ -10,14 +10,17 @@ define(['knockout', 'dashboard/chart'], function(ko, Chart) {
         self.title = title;
         self.chartId = self.title.replace(new RegExp(' ', 'g'), '')+Math.round(Math.random()*100);
 
-        self.value = ko.observable(0);
-        self.aggregate = ko.observable(0);
+        self.value = ko.observable(null);
+        self.aggregate = ko.observable(null);
 
         self.text1 = "text1";
         self.text2 = "text2";
 
         self.displayValue = ko.computed(function() {
-            return self.value().toFixed(2);
+            if (self.value())
+                return self.value().toFixed(2);
+            else
+                return '--';
         });
 
         self.cssClass = ko.computed(function() {
