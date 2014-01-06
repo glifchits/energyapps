@@ -407,6 +407,9 @@ def week():
         app.logger.debug("no parameter 'date' provided, 400")
         abort(400)
 
+    this_date = from_date_string(date)
+    one_week = timedelta(days=7)
+
     if series:
         sql = """
         select
@@ -444,14 +447,8 @@ def week():
             sum(value) as value
         from data_view
         where owner = {owner_id}
-        and (year, week) = (
-            select year, week
-            from data_view
-            where owner = {owner_id}
-            group by year, week
-            order by year desc, week desc
-            limit 1
-        )
+        and start >= '{start_date}'::date
+        and start < '{end_date}'::date
 
         UNION
 
@@ -469,7 +466,11 @@ def week():
             where owner = {owner_id}
             group by year, week
         ) as query
-        """.format( owner_id = owner_id )
+        """.format(
+            owner_id = owner_id,
+            start_date = to_date_string(this_date - one_week),
+            end_date = to_date_string(this_date)
+        )
 
     def datum_factory(row):
         return {
