@@ -318,6 +318,9 @@ def yesterday():
         app.logger.debug("no parameter 'date' provided, 400")
         abort(400)
 
+    this_date = from_date_string(date)
+    one_day = timedelta(days=1)
+
     if series:
         sql = """
         select
@@ -357,14 +360,9 @@ def yesterday():
             sum(value) as value
         from data_view
         where owner = {owner_id}
-        and (year, month, day) = (
-            select year, month, day
-            from data_view
-            where owner = {owner_id}
-            group by year, month, day
-            order by year desc, month desc, day desc
-            limit 1 offset 1
-        )
+        and start >= '{start_date}'::date
+        and start < '{end_date}'::date
+
         UNION
         -- select daily average
         select
@@ -381,7 +379,11 @@ def yesterday():
             where owner = {owner_id}
             group by year, month, day
         ) as query
-        """.format( owner_id = owner_id )
+        """.format(
+            owner_id = owner_id,
+            start_date = to_date_string(this_date - one_day),
+            end_date = to_date_string(this_date)
+        )
 
     def datum_factory(row):
         return {
