@@ -24,7 +24,7 @@ GROUPS = ['year', 'month', 'week', 'day', 'hour']
 
 def to_date_string(t):
     # returns the "yyyy-mm-dd"
-    return datetime.strftime(s, "%Y-%m-%d")
+    return datetime.strftime(t, "%Y-%m-%d")
 
 def from_date_string(s):
     # using my standard "yyyy-mm-dd"
@@ -288,14 +288,13 @@ def today():
             sum(value) as value
         from data_view
         where owner = {owner_id}
-        and (year, month, day) = (
-            select year, month, day
-            from data_view
-            where owner = {owner_id}
-            order by start desc
-            limit 1
+        and start >= '{start_date}'::date
+        and start < '{end_date}'::date
+        """.format(
+            owner_id = owner_id,
+            start_date = to_date_string(this_date),
+            end_date = to_date_string(this_date + one_day)
         )
-        """.format( owner_id = owner_id )
 
     def datum_factory(row):
         return {
