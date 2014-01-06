@@ -30,10 +30,12 @@
       value: scope,
       optionsCaption: "Select..."
       '></select>
+    <a href="#" class='block save button' data-bind="css: { 'disabled': !changed() }">Save</a>
+    <a href="#" class='block delete button'>Delete</a>
   </form>
 </div>
 
-<a href='#' id='add-goal'>Add a new goal</a>
+<a href='#' id='add-goal' data-bind='click: addGoal'>Add a new goal</a>
 
 {% endblock %}
 

@@ -20,6 +20,10 @@ define(['knockout', 'profile/goal'], function(ko, Goal) {
         self.scopeOptions = ko.observableArray(['day', 'week', 'month']);
         
         self.update();
+
+        self.addGoal = function() {
+            self.goals.push(new Goal());
+        };
     };
 
     return ProfileView;
