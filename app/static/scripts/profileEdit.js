@@ -3,10 +3,5 @@ require(['./common'], function(common) {
 
         ko.applyBindings(new ProfileView());
 
-        $('#add-goal').click(function(e) {
-            e.preventDefault();
-            console.log('clicky');
-        });
-
     });
 });
