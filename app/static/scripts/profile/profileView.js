@@ -7,7 +7,6 @@ define(['knockout', 'profile/goal'], function(ko, Goal) {
         self.update = function() {
             spinner(true, "Loading goals...");
             $.getJSON('/data/goals', function(goalsData) {
-                console.log('updating goals');
                 goalsData.forEach(function(goalData) {
                     var goalObj = new Goal();
                     goalObj.id(goalData.id);
