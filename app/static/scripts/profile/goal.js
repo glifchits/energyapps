@@ -6,7 +6,21 @@ define(['knockout'], function(ko) {
         self.target = ko.observable(0);
         self.scope = ko.observable(null);
 
-        self.changed = ko.observable(false);
+        self.computeHash = ko.computed(function() {
+            /* returns a string that tries to uniquely
+             * capture the current state of this object */
+            var res = "" + self.id() + "-" + self.target() + self.scope();
+            return res;
+        });
+
+        self.initialState = ko.observable(null);
+        // when initialized, set this to the computedHash
+
+        self.changed = function() {
+            /* returns whether the object has changed since its
+             * state was saved (by setting self.initialState) */
+            return self.computeHash() !== self.initialState();
+        };
 
         self.name = ko.computed(function() {
             switch (self.scope()) {
