@@ -154,9 +154,32 @@ def series(ext=None):
         abort(400)
 
 
-@data.route('/goals')
+def save_goal(request):
+    app.logger.debug('saving goal', request)
+    goal_id = request.args.get('id')
+    if goal_id:
+        assert goal_id.isdigit(), "invalid goal_id: %s" % goal_id
+        goal = schema.Goal.query.get(int(goal_id))
+    else:
+        goal = schema.Goal()
+    goal.user = g.user.get_id()
+    goal.target = request.args.get('target')
+    goal.scope = request.args.get('scope')
+    db.session.add(goal)
+    app.logger.debug("committing: %s" % session.dirty)
+    db.session.commit()
+
+
+@data.route('/goals', methods=['GET', 'POST'])
 @login_required
 def goals():
+    if request.method == 'POST':
+        app.logger.debug('got POST')
+        return save_goal(request)
+
+    if request.method != "GET":
+        abort(404)
+
     owner_id = g.user.get_id()
     now = datetime.now()
     month_start = datetime(now.year, now.month, 1)
