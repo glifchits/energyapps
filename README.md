@@ -1,7 +1,7 @@
 energyapps
 ==========
 
-This is my submission to the [http://energyappsontario.challengepost.com](GreenButton energy apps for Ontario contest).
+This is my submission to the [GreenButton energy apps for Ontario contest](http://energyappsontario.challengepost.com).
 Its still a work in progress.
 
 I'm publicly releasing this code before the contest end date to demonstrate a significant project I'm working on while I
