@@ -5,6 +5,7 @@ define(['knockout', 'profile/goal'], function(ko, Goal) {
         self.goals = ko.observableArray([]);
 
         self.update = function() {
+            spinner(true, "Loading goals...");
             $.getJSON('/data/goals', function(goalsData) {
                 console.log('updating goals');
                 goalsData.forEach(function(goalData) {
@@ -12,8 +13,10 @@ define(['knockout', 'profile/goal'], function(ko, Goal) {
                     goalObj.id(goalData.id);
                     goalObj.target(goalData.target);
                     goalObj.scope(goalData.scope);
+                    goalObj.initialState(goalObj.computeHash());
                     self.goals.push(goalObj);
                 });
+                spinner(false);
             });
         };
 
