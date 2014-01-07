@@ -30,6 +30,23 @@ define(['knockout'], function(ko) {
                 default:        return "Select a goal scope!";
             };
         });
+
+        self.save = function() {
+            var data = {};
+            if (self.id() !== 0)
+                data['id'] = self.id();
+            data['target'] = self.target();
+            data['scope']  = self.scope();
+            console.log("data to save", data);
+
+            var dataList = [];
+            for (var key in data) {
+                var val = data[key];
+                dataList.push(key + '=' + val);
+            };
+            var dataStr = dataList.join('&');
+            console.log(dataStr);
+        };
     };
     return Goal;
 
