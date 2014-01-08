@@ -19,7 +19,10 @@
 <div id='goals-view' data-bind='foreach: goals'>
   <form class='goal-form block-group' data-bind='attr { id: "form" + id() }'>
     <label for=target class='goal-name block' data-bind="text: name"></label>
-    <input name=target class='goal-target block' type=number data-bind="value: target">
+    <input name=target class='goal-target block' type=number data-bind="
+      value: target,
+      enable: scope() !== undefined
+      ">
     <label for=target class='goal-target block'>Wh</label>
     <label for=scope class='goal-scope block'>Goal scope</label>
     <select name=scope class='goal-scope block' data-bind='
@@ -30,8 +33,8 @@
       value: scope,
       optionsCaption: "Select..."
       '></select>
-    <a href="#" class='save block' data-bind="attr { id: 'goal' + id() }, css: { disabled: !changed() }, click: save">Save</a>
-    <a href="#" class='delete block'>Delete</a>
+    <a href="#" class='save block' data-bind="css: { disabled: !changed() }, click: save">Save</a>
+    <a href="#" class='delete block' data-bind="click: remove">Delete</a>
   </form>
 </div>
 
