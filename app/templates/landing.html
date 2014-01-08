@@ -14,10 +14,10 @@
 
 <div class='landing-auth block-group'>
   <form action='{{ url_for('auth.login') }}' class=block>
-    <button class=login name=login type=submit>Log In</button>
+    <button class=login name=login type=submit tabindex=1>Log In</button>
   </form>
   <form action='{{ url_for('auth.register') }}' class=block>
-    <button class=register name=register type=submit>Register</button>
+    <button class=register name=register type=submit tabindex=2>Register</button>
   </form>
 </div>
 {% endblock %}
