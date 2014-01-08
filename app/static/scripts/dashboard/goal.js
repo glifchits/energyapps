@@ -29,7 +29,7 @@ define(['knockout'], function(ko) {
         var current = parseInt(self.attributes.current.value);
         var goal = parseInt(self.attributes.goal.value);
         var messageText = self.attributes.message.value;
-        var titleText = self.attributes.title.value;
+        var titleText = 'goal title';
 
         var currentPct = (current - min) / (max - min);
         var goalPct = (goal - min) / (max - min);
