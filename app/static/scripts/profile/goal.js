@@ -37,16 +37,22 @@ define(['knockout'], function(ko) {
                 data['id'] = self.id();
             data['target'] = self.target();
             data['scope']  = self.scope();
-            console.log("data to save", data);
 
             var dataList = [];
             for (var key in data) {
                 var val = data[key];
                 dataList.push(key + '=' + val);
             };
-            var dataStr = dataList.join('&');
-            console.log(dataStr);
+            var paramStr = dataList.join('&');
+
+            spinner(true, "Saving goal...");
+            $.post('/data/goals?' + paramStr, function(data) {
+                spinner(false);
+            });
+
+            self.initialState(self.computeHash());
         };
+
     };
     return Goal;
 
