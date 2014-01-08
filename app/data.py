@@ -33,9 +33,15 @@ def from_date_string(s):
 def json_serialize_query(sql, datum_factory):
     queryset = db.engine.execute(sql)
     results = []
-    for row in queryset:
-        datum = datum_factory(row)
-        results.append(dict(datum))
+    row = None # allocate row at this scope so I can see it in the except
+    try:
+        for row in queryset:
+            datum = datum_factory(row)
+            results.append(dict(datum))
+    except TypeError as e:
+        app.logger.debug("caught typeerror: assuming no results.\n\
+        offensive row is %s\nexception is: %s" % (row, e))
+        pass
     res = json.dumps(results, indent=4)
     response = Response(res, status=200, mimetype='application/json')
     return response
@@ -419,8 +425,8 @@ def yesterday():
 
     def datum_factory(row):
         return {
-            'type': row[1],
             'start': str(row[0]),
+            'type': str(row[1]),
             'cost': float(row[2]),
             'value': float(row[3])
         }
@@ -507,7 +513,7 @@ def week():
     def datum_factory(row):
         return {
             'start': str(row[0]),
-            'type': row[1],
+            'type': str(row[1]),
             'cost': float(row[2]),
             'value': float(row[3])
         }
