@@ -17,24 +17,24 @@
 <h1>Goals</h1>
 
 <div id='goals-view' data-bind='foreach: goals'>
-  <form class='goal-form block-group' data-bind='attr { id: "form" + id() }'>
-    <label for=target class='goal-name block' data-bind="text: name"></label>
-    <input name=target class='goal-target block' type=number data-bind="
-      value: target,
-      enable: scope() !== undefined
-      ">
-    <label for=target class='goal-target block'>Wh</label>
-    <label for=scope class='goal-scope block'>Goal scope</label>
-    <select name=scope class='goal-scope block' data-bind='
+  <form class='goal-form' data-bind='attr { id: "form" + id() }'>
+    <label for=target class='goal-name' data-bind="text: name"></label>
+    <input name=target type=number data-bind="
+    value: target,
+    enable: scope() !== undefined
+    ">
+    <label for=target>Wh</label>
+    <label for=scope>Goal scope</label>
+    <select name=scope data-bind='
       options: $root.scopeOptions,
       optionsText: function(item) {
-        return item[0].toUpperCase() + item.substring(1, item.length);
+      return item[0].toUpperCase() + item.substring(1, item.length);
       },
       value: scope,
       optionsCaption: "Select..."
       '></select>
-    <a href="#" class='save block' data-bind="css: { disabled: !changed() }, click: save">Save</a>
-    <a href="#" class='delete block' data-bind="click: remove">Delete</a>
+    <a href="#" class='save' data-bind="css: { disabled: !changed() }, click: save">Save</a>
+    <a href="#" class='delete' data-bind="click: remove">Delete</a>
   </form>
 </div>
 
