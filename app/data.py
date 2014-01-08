@@ -154,18 +154,14 @@ def series(ext=None):
         abort(400)
 
 
-def save_goal(request):
-    goal_id = request.args.get('id')
-    delete = request.args.get('delete')
+@data.route('/goals', methods=['POST'])
+@data.route('/goals/<int:goal_id>', methods=['POST'])
+@login_required
+def save_goal(goal_id=None):
+    app.logger.debug('save goal with goal id: %s' % goal_id)
     if goal_id:
-        assert goal_id.isdigit(), "invalid goal_id: %s" % goal_id
         goal = schema.Goal.query.get(int(goal_id))
         app.logger.debug('got goal', goal)
-        if delete:
-            app.logger.debug('deleting goal', goal)
-            db.session.delete(goal)
-            db.session.commit()
-            return 'delete success'
     else:
         goal = schema.Goal()
     goal.user = g.user.get_id()
@@ -177,16 +173,21 @@ def save_goal(request):
     return "success"
 
 
-@data.route('/goals', methods=['GET', 'POST'])
+@data.route('/goals/<int:goal_id>/delete', methods=["POST"])
+@login_required
+def delete_goal(goal_id):
+    app.logger.debug('delete goal with goal id: %s' % goal_id)
+
+    goal = schema.Goal.query.get(int(goal_id))
+    app.logger.debug('about to delete goal: %s' % goal)
+    db.session.delete(goal)
+    db.session.commit()
+    return 'success'
+
+
+@data.route('/goals', methods=['GET'])
 @login_required
 def goals():
-    if request.method == 'POST':
-        app.logger.debug('got POST')
-        return save_goal(request)
-
-    if request.method != "GET":
-        abort(404)
-
     owner_id = g.user.get_id()
     now = datetime.now()
     month_start = datetime(now.year, now.month, 1)
