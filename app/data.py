@@ -154,37 +154,6 @@ def series(ext=None):
         abort(400)
 
 
-@data.route('/goals', methods=['POST'])
-@data.route('/goals/<int:goal_id>', methods=['POST'])
-@login_required
-def save_goal(goal_id=None):
-    app.logger.debug('save goal with goal id: %s' % goal_id)
-    if goal_id:
-        goal = schema.Goal.query.get(int(goal_id))
-        app.logger.debug('got goal', goal)
-    else:
-        goal = schema.Goal()
-    goal.user = g.user.get_id()
-    goal.target = request.args.get('target')
-    goal.scope = request.args.get('scope')
-    db.session.add(goal)
-    app.logger.debug("committing: %s" % db.session.dirty)
-    db.session.commit()
-    return "success"
-
-
-@data.route('/goals/<int:goal_id>/delete', methods=["POST"])
-@login_required
-def delete_goal(goal_id):
-    app.logger.debug('delete goal with goal id: %s' % goal_id)
-
-    goal = schema.Goal.query.get(int(goal_id))
-    app.logger.debug('about to delete goal: %s' % goal)
-    db.session.delete(goal)
-    db.session.commit()
-    return 'success'
-
-
 @data.route('/goals', methods=['GET'])
 @login_required
 def goals():
@@ -261,6 +230,37 @@ def goals():
         goals.append(goal)
 
     return json.dumps(goals, indent=4)
+
+
+@data.route('/goals', methods=['POST'])
+@data.route('/goals/<int:goal_id>', methods=['POST'])
+@login_required
+def save_goal(goal_id=None):
+    app.logger.debug('save goal with goal id: %s' % goal_id)
+    if goal_id:
+        goal = schema.Goal.query.get(int(goal_id))
+        app.logger.debug('got goal', goal)
+    else:
+        goal = schema.Goal()
+    goal.user = g.user.get_id()
+    goal.target = request.args.get('target')
+    goal.scope = request.args.get('scope')
+    db.session.add(goal)
+    app.logger.debug("committing: %s" % db.session.dirty)
+    db.session.commit()
+    return "success"
+
+
+@data.route('/goals/<int:goal_id>/delete', methods=["POST"])
+@login_required
+def delete_goal(goal_id):
+    app.logger.debug('delete goal with goal id: %s' % goal_id)
+
+    goal = schema.Goal.query.get(int(goal_id))
+    app.logger.debug('about to delete goal: %s' % goal)
+    db.session.delete(goal)
+    db.session.commit()
+    return 'success'
 
 
 @data.route('/today')
