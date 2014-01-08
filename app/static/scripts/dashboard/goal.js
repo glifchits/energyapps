@@ -9,9 +9,7 @@ define(['knockout'], function(ko) {
         self.goal = ko.observable(6);
         self.titleText = ko.observable("title");
         // some unlikely to collide, arbitrary value
-        self.goalId = ko.computed(function() {
-            return 'goal' + Math.round(Math.random() * 10000);
-        });
+        self.goalId = 'goal' + Math.round(Math.random() * 10000);
         
         self.messageText = ko.computed(function() {
             if (self.goal() > self.current())
@@ -24,14 +22,14 @@ define(['knockout'], function(ko) {
     window.drawGoals = function(goal) {
         var self = goal[1].children[0];
 
-        var min = parseInt(self.attributes.min.value);
-        var max = parseInt(self.attributes.max.value);
-        var current = parseInt(self.attributes.current.value);
-        var goal = parseInt(self.attributes.goal.value);
-        var messageText = self.attributes.message.value;
+        var min = 1;
+        var max = 10;
+        var used = 5;
+        var goal = 6;
+        var messageText = 'goal message';
         var titleText = 'goal title';
 
-        var currentPct = (current - min) / (max - min);
+        var usedPct = (used - min) / (max - min);
         var goalPct = (goal - min) / (max - min);
 
         var height = 30;
@@ -46,23 +44,23 @@ define(['knockout'], function(ko) {
             .attr('y', 0)
             .attr('height', height)
 
-        var current = svg.append("rect")
+        var usedSvg = svg.append("rect")
             .attr('class', 'current')
             .attr('x', 0)
             .attr('y', 0)
             .attr('height', height)
 
-        var goal = svg.append("rect")
+        var goalSvg = svg.append("rect")
             .attr('class', 'goal')
-            .attr('x', 0)
+            .attr('width', 4)
             .attr('y', 0)
             .attr('height', height)
 
-        var message = svg.append("text")
+        var messageSvg = svg.append("text")
             .text(messageText)
             .attr('y', height - msgPadding)
 
-        var title = svg.append("text")
+        var titleSvg = svg.append("text")
             .text(titleText)
             .attr('x', msgPadding)
             .attr('y', height - msgPadding)
@@ -70,11 +68,11 @@ define(['knockout'], function(ko) {
         var updateChart = function() {
             width = self.offsetWidth;
             background.attr('width', width);
-            goal.attr('width', goalPct * width);
-            current.attr('width', currentPct * width);
-            msg = message[0][0];
+            goalSvg.attr('x', goalPct * width);
+            usedSvg.attr('width', usedPct * width);
+            msg = messageSvg[0][0];
             msgWidth = msg.offsetWidth;
-            message.attr('x', width - msgWidth - msgPadding);
+            messageSvg.attr('x', width - msgWidth - msgPadding);
         };
         
         updateChart();
