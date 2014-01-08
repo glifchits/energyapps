@@ -68,7 +68,6 @@ class Goal(db.Model):
     user = db.Column(db.Integer, db.ForeignKey('users.id'))
     # attributes
     target = db.Column(db.Float)
-    name = db.Column(db.String)
     scope = db.Column(db.String)
 
 

@@ -155,19 +155,26 @@ def series(ext=None):
 
 
 def save_goal(request):
-    app.logger.debug('saving goal', request)
     goal_id = request.args.get('id')
+    delete = request.args.get('delete')
     if goal_id:
         assert goal_id.isdigit(), "invalid goal_id: %s" % goal_id
         goal = schema.Goal.query.get(int(goal_id))
+        app.logger.debug('got goal', goal)
+        if delete:
+            app.logger.debug('deleting goal', goal)
+            db.session.delete(goal)
+            db.session.commit()
+            return 'delete success'
     else:
         goal = schema.Goal()
     goal.user = g.user.get_id()
     goal.target = request.args.get('target')
     goal.scope = request.args.get('scope')
     db.session.add(goal)
-    app.logger.debug("committing: %s" % session.dirty)
+    app.logger.debug("committing: %s" % db.session.dirty)
     db.session.commit()
+    return "success"
 
 
 @data.route('/goals', methods=['GET', 'POST'])
@@ -194,10 +201,9 @@ def goals():
     goals_rows = db.engine.execute(goals_sql)
 
     for goal_row in goals_rows:
-        id, user, target, name, scope = goal_row
+        id, user, target, scope = goal_row
         goal = {}
         goal['id'] = id
-        goal['name'] = name
         goal['target'] = target
         goal['scope'] = scope
 
