@@ -33,8 +33,6 @@ define(['knockout'], function(ko) {
 
         self.save = function() {
             var data = {};
-            if (self.id() !== 0)
-                data['id'] = self.id();
             data['target'] = self.target();
             data['scope']  = self.scope();
 
@@ -45,12 +43,25 @@ define(['knockout'], function(ko) {
             };
             var paramStr = dataList.join('&');
 
+            url = '/data/goals';
+            if (self.id() !== 0)
+                url += '/' + self.id(); // add the id (modify old goal)
+            url += '?' + paramStr;
+
             spinner(true, "Saving goal...");
-            $.post('/data/goals?' + paramStr, function(data) {
+            $.post(url, function(data) {
                 spinner(false);
             });
 
             self.initialState(self.computeHash());
+        };
+
+        self.remove = function() {
+            spinner(true, "Deleting goal...");
+            $.post('/data/goals/' + self.id() + '/delete', function(data) {
+                console.log('delete, got data', data);
+                spinner(false);
+            });
         };
 
     };
