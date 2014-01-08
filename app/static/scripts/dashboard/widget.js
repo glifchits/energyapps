@@ -29,13 +29,18 @@ define(['knockout', 'dashboard/chart'], function(ko, Chart) {
 
         self.update = function() {
             $.getJSON(url, function(data) {
-                if (type === 'abs')
+                if (data.length === 0) // no data received: this is an ok case
+                    return; // but still, do nothing
+                else if (type === 'abs')
                     self.value(data[0][measure]);
                 else {
                     var mapData = {};
                     data.forEach(function(d) {
                         mapData[d.type] = d;
                     });
+                    if (mapData.length !== 2)
+                        return; // missing data
+                    // is ok. aggregate data will be there but value might not
                     self.value(mapData.value[measure]);
                     self.aggregate(mapData.aggregate[measure]);
                 }
