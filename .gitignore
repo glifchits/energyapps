@@ -4,3 +4,4 @@ env
 **/.sass-cache
 **/vendor
 **/most_recent_eui.xml
+**/testdata
