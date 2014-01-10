@@ -70,6 +70,9 @@ class Goal(db.Model):
     target = db.Column(db.Float)
     scope = db.Column(db.String)
 
+    def __repr__(self):
+        return "<Goal %s-%s>" % (self.scope, self.target)
+
 
 class User(db.Model):
     __tablename__ = 'users'
