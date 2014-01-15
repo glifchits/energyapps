@@ -16,7 +16,7 @@ app.register_blueprint(charts)
 
 @app.before_request
 def before_request():
-    g.appname = 'ener.me'
+    g.appname = 'mPowr'
     g.user = current_user
     if g.user.is_authenticated() and 'access_token' not in session:
         access_token = g.user.access_token
