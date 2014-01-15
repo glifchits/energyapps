@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>GeorgeEnergyApp</title>
+    <title>{{ g.appname }}</title>
     <link href='http://fonts.googleapis.com/css?family=Lato:400,700italic' rel='stylesheet' type='text/css'>
     <link href='/static/css/styles.css' rel=stylesheet type=text/css>
     <link href='/static/vendor/pocketgrid.css' rel=stylesheet type=text/css>
@@ -11,7 +11,7 @@
   <body>
     <header>
       <div class=block-group>
-        <span class='header block'><a href=/>EnergyApps</a></span>
+        <span class='header block'><a href=/>{{ g.appname }}</a></span>
         <ul id=menu class=block>
           <li class=login>
           {% if g.user.is_authenticated() %}
