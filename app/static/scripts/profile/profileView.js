@@ -19,7 +19,7 @@ define(['knockout', 'profile/goal'], function(ko, Goal) {
             });
         };
 
-        self.scopeOptions = ko.observableArray(['day', 'week', 'month']);
+        self.scopeOptions = ko.observableArray(['week', 'month']);
         
         self.update();
 
