@@ -1,6 +1,7 @@
 env
 *.pyc
 *.css
+app/secret_config.py
 **/.sass-cache
 **/vendor
 **/most_recent_eui.xml
