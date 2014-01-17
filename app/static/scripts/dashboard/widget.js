@@ -38,7 +38,7 @@ define(['knockout', 'dashboard/chart'], function(ko, Chart) {
                     data.forEach(function(d) {
                         mapData[d.type] = d;
                     });
-                    if (mapData.length !== 2)
+                    if (!mapData.value || !mapData.aggregate)
                         return; // missing data
                     // is ok. aggregate data will be there but value might not
                     self.value(mapData.value[measure]);
