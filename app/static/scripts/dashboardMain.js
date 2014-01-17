@@ -11,8 +11,8 @@ require(['./common'], function(common) {
                 var hoursDiff = (now - date) / (1000 * 60 * 60);
                 if (hoursDiff > 1) {
                     url = '/eui?start=' + (date.getTime() / 1000);
-                    spinner(true);
-                    $.getJSON(url, function(data) {
+                    spinner(true, "Updating energy data...");
+                    $.get(url, function(data) {
                         console.log('received eui', data);
                         spinner(false);
                     });
