@@ -230,6 +230,8 @@ def goals():
         elif scope == 'month':
             goal['end'] = int(dmonth)       # num days in month
             goal['current'] = float(day)    # current day of month
+        else: # scope is daily
+            goal['current'] = 0
 
         goal['current'] += hour/24.0 # amount of the day that has passed
 
