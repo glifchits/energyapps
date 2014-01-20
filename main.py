@@ -46,5 +46,13 @@ def home():
     return render_template('landing.html')
 
 
+@app.route('/favicon.ico')
+def favicon():
+    import os
+    cwd = os.getcwd()
+    path = 'app/static/img/favicon.ico'
+    return redirect(url_for('static', filename='img/favicon.ico'))
+
+
 if __name__ == '__main__':
     app.run()
