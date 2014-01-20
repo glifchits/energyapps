@@ -5,10 +5,10 @@ from flask.ext.login import LoginManager
 import os
 import schema
 import constants
-import config
+from config import exported as exportedConfig
 
 app = Flask(__name__)
-app.config.from_object(config.LocalConfig)
+app.config.from_object(exportedConfig)
 
 db = SQLAlchemy(app)
 db.create_all()

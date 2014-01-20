@@ -15,6 +15,7 @@ from xml.etree import ElementTree
 import parsedata as data
 import api_points as apipt
 import secret_config as secret
+from config import exported as config
 
 api = Blueprint('api', __name__)
 
@@ -34,12 +35,13 @@ def to_data_custodian():
 
 
 @api.route('/auth')
+@login_required
 def auth():
     app.logger.debug( '/auth GET %s' % request.args )
     params = {
         'grant_type': 'authorization_code',
         'code': request.args.get('code'),
-        'redirect_uri': secret.REDIRECT_URI
+        'redirect_uri': config.REDIRECT_URI
     }
     r = requests.post(apipt.TOKEN_URL, data=params, headers=auth_header(),
             verify=False)
