@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Redirecting to your data custodian...</h1>
+
+<p>
+  When you click <i>next</i>, you'll be redirected to the page of your
+  data custodian. Go through the authentication process and allow
+  <span class=wordmark>{{ g.appname }}</span> to access your energy
+  consumption data. When you finish the process, you'll be returned back
+  to <span class=wordmark>{{ g.appname }}</span> where you'll get
+  started looking at your energy consumption data!
+</p>
+
+<form action="{{ url }}">
+  <button class=block type=submit>Next</button>
+</form>
+{% endblock %}

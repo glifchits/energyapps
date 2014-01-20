@@ -2,7 +2,6 @@ from flask import render_template, g, session, redirect, url_for
 from flask.ext.login import current_user
 
 from app import app
-from app import config
 
 from app.api import api
 app.register_blueprint(api)
@@ -10,8 +9,6 @@ from app.auth import auth
 app.register_blueprint(auth)
 from app.data import data
 app.register_blueprint(data)
-from app.charts import charts
-app.register_blueprint(charts)
 
 
 @app.before_request
@@ -32,7 +29,7 @@ def home():
             app.logger.debug('user %s is active' % g.user.get_id())
             if g.user.access_token is None:
                 app.logger.debug('user has no access token, to data custodian')
-                return redirect(url_for('api.to_data_custodian'))
+                return render_template('redirect.html', url=url_for('api.to_data_custodian'))
 
             if g.user.has_eui():
                 app.logger.debug('user has data, showing dashboard')
