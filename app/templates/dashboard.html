@@ -9,11 +9,12 @@
 {% block content %}
 
 <div id=goals>
+  <a href="/profile">Add goals</a>
   <ul data-bind="foreach: { data: goals, afterRender: drawGoals }">
     <li class='block-group'>
       <span class='block meter' data-bind="attr: {
-        'id': goalId, 'min': min, 'max': max,
-        'current': current, 'goal': goal,
+        'id': goalId, 'current': current, 'goal': goal,
+        'min': min, 'max': max,
         'message': messageText, 'title': titleText
         }"></span>
       <a href="#" class=block>Edit</a>
