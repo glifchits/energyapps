@@ -113,3 +113,16 @@ def edit_profile():
             enumerate=enumerate, goal_scopes=goal_scopes)
 
 
+@auth.route('/profile/edit', methods=['POST'])
+@login_required
+def change_userinfo():
+    name = request.form.get('name')
+    email = request.form.get('email')
+
+    user = g.user
+    user.name = name
+    user.email = email
+    db.session.commit()
+
+    app.logger.debug('got args, name: %s email: %s' % (name, email))
+    return redirect(url_for('.edit_profile'))

@@ -3,7 +3,7 @@
 {% block content %}
 <h1>Settings</h1>
 
-<form id=settings class='block-group'>
+<form id=settings class='block-group' method='POST' action='{{ url_for('auth.change_userinfo') }}'>
   <div class=group>
     <label for=name>Name</label>
     <input name=name id=name type=text value='{{ g.user.name }}'>
@@ -11,6 +11,9 @@
   <div class=group>
     <label for=email>Email</label>
     <input name=email id=email type=text value='{{ g.user.email }}'>
+  </div>
+  <div class=group>
+    <button id=user-info-save>Save</button>
   </div>
 </form>
 
