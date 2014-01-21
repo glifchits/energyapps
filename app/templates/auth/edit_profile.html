@@ -20,9 +20,9 @@
 <h1>Goals</h1>
 
 <div id='goals-view' data-bind='foreach: goals'>
-  <form class='goal-form' data-bind='attr { id: "form" + id() }'>
+  <form class='goal-form' data-bind='attr { id: "form" + id() }, visible: show()'>
     <label for=target class='goal-name' data-bind="text: name"></label>
-    <a data-bind=" click: setToAverage, visible: resetVisible ">Avg</a>
+    <a data-bind="click: setToAverage">Avg</a>
     <input name=target type=number data-bind="
     value: target, valueUpdate: 'afterkeydown',
     enable: scope() !== undefined

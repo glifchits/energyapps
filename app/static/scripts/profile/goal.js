@@ -101,7 +101,10 @@ define(['knockout'], function(ko) {
             self.initialState(self.computeHash());
         };
 
+        self.show = ko.observable(true);
+
         self.remove = function() {
+            self.show(false);
             if (self.id() === 0)
                 return;
 
