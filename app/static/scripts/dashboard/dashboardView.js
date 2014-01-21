@@ -197,12 +197,11 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
             $.getJSON(url, function(jsonGoals) {
                 jsonGoals.forEach(function(goal) {
                     var goalObj = new Goal();
-                    console.log('adding goal', goal.end);
                     goalObj.min(goal.start);
                     goalObj.max(goal.end);
                     goalObj.goal(goal.value / goal.target);
                     goalObj.current(goal.current);
-                    goalObj.titleText(goal.name);
+                    goalObj.scope(goal.scope);
                     self.goals.push(goalObj);
                 });
             });

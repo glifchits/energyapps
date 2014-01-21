@@ -7,9 +7,17 @@ define(['knockout'], function(ko) {
         self.min = ko.observable(0);
         self.current = ko.observable(5);
         self.goal = ko.observable(6);
-        self.titleText = ko.observable("title text");
+        self.scope = ko.observable();
         // some unlikely to collide, arbitrary value
         self.id = 'goal' + Math.round(Math.random() * 10000);
+
+        self.titleText = ko.computed(function() {
+            switch(self.scope()) {
+                case "week": return "weekly usage";
+                case "month": return "monthly usage";
+                default: return "undefined scope!";
+            };
+        });
         
         self.messageText = ko.computed(function() {
             if (self.goal() < self.current())
