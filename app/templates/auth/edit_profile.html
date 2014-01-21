@@ -22,11 +22,12 @@
 <div id='goals-view' data-bind='foreach: goals'>
   <form class='goal-form' data-bind='attr { id: "form" + id() }'>
     <label for=target class='goal-name' data-bind="text: name"></label>
+    <a data-bind=" click: setToAverage, visible: resetVisible ">Avg</a>
     <input name=target type=number data-bind="
     value: target, valueUpdate: 'afterkeydown',
     enable: scope() !== undefined
     ">
-    <label for=target>Wh</label>
+    <label for=target>watt hours</label>
     <label for=scope>Goal scope</label>
     <select name=scope data-bind='
       options: $root.scopeOptions,
@@ -37,6 +38,7 @@
       optionsCaption: "Select..."
       '></select>
     <a href="#" class='save' data-bind="css: { disabled: !changed() }, click: save">Save</a>
+    <a href="#" class='cancel' data-bind="css: { disabled: !changed() }, click: cancelChanges">Cancel</a>
     <a href="#" class='delete' data-bind="click: remove">Delete</a>
   </form>
 </div>
