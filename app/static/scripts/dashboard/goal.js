@@ -21,7 +21,6 @@ define(['knockout'], function(ko) {
 
     window.drawGoal = function(inserted, goalObj) {
         var meterSpan = $('#' + goalObj.id);
-        console.log(goalObj);
 
         var self = meterSpan[0];
 
@@ -32,11 +31,8 @@ define(['knockout'], function(ko) {
         var messageText = goalObj.messageText();
         var titleText = goalObj.titleText();
 
-        console.log('min, max, used, goal, messageText, titleText');
-        console.log(min, max, used, goal, messageText, titleText);
-
         var usedPct = (used - min) / (max - min);
-        var goalPct = (goal - min) / (max - min);
+        var goalPct = goal;
 
         var height = 30;
         var msgPadding = (height / 2.8).toFixed(1);
@@ -50,13 +46,13 @@ define(['knockout'], function(ko) {
             .attr('y', 0)
             .attr('height', height)
 
-        var usedSvg = svg.append("rect")
+        var goalSvg = svg.append("rect")
             .attr('class', 'current')
             .attr('x', 0)
             .attr('y', 0)
             .attr('height', height)
 
-        var goalSvg = svg.append("rect")
+        var usedSvg = svg.append("rect")
             .attr('class', 'goal')
             .attr('width', 4)
             .attr('y', 0)
@@ -74,8 +70,8 @@ define(['knockout'], function(ko) {
         var updateChart = function() {
             width = self.offsetWidth;
             background.attr('width', width);
-            goalSvg.attr('x', goalPct * width);
-            usedSvg.attr('width', usedPct * width);
+            usedSvg.attr('x', usedPct * width);
+            goalSvg.attr('width', goalPct * width);
             msg = messageSvg[0][0];
             msgWidth = msg.offsetWidth;
             messageSvg.attr('x', width - msgWidth - msgPadding);
