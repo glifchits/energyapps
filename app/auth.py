@@ -1,5 +1,6 @@
 
-from flask import redirect, url_for, render_template, session, request, flash, g
+from flask import redirect, url_for, render_template, session, request, flash,\
+    g, abort
 from flask import Blueprint, current_app as app
 from flask.ext.login import login_user, logout_user, login_required
 from flask_wtf import Form
@@ -79,6 +80,10 @@ def register():
         name = request.form.get('name')
         email = request.form.get('email')
         password = request.form.get('password')
+
+        if not name or not email or not password:
+            flash((CSS_ERR, 'Did not register: no name, email or password'))
+            return redirect(url_for('.register'))
 
         try:
             user = schema.User()
