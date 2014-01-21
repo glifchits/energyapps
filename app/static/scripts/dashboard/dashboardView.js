@@ -194,8 +194,8 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
 
         self.updateGoals = function() {
             url = '/data/goals';
-            $.getJSON(url, function(jsonGoals) {
-                jsonGoals.forEach(function(goal) {
+            $.getJSON(url, function(jsonData) {
+                jsonData.goals.forEach(function(goal) {
                     var goalObj = new Goal();
                     goalObj.min(goal.start);
                     goalObj.max(goal.end);
@@ -204,6 +204,8 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
                     goalObj.scope(goal.scope);
                     self.goals.push(goalObj);
                 });
+
+                
             });
         };
         self.updateGoals();
