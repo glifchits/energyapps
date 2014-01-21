@@ -9,7 +9,7 @@ define(['knockout'], function(ko) {
         self.goal = ko.observable(6);
         self.titleText = ko.observable("title text");
         // some unlikely to collide, arbitrary value
-        self.goalId = 'goal' + Math.round(Math.random() * 10000);
+        self.id = 'goal' + Math.round(Math.random() * 10000);
         
         self.messageText = ko.computed(function() {
             if (self.goal() < self.current())
@@ -19,71 +19,70 @@ define(['knockout'], function(ko) {
         });
     };
 
-    window.drawGoals = function(goal) {
-        /*
-        console.log('goal is', goal);
-        var self = goal[1].children[0];
-        */
-        $('span.meter').each(function() {
-            var self = this;
-            console.log('goal self is', self);
+    window.drawGoal = function(inserted, goalObj) {
+        var meterSpan = $('#' + goalObj.id);
+        console.log(goalObj);
 
-            var min = parseInt(self.attributes.min.value);
-            var max = parseInt(self.attributes.max.value);
-            var used = parseFloat(self.attributes.current.value);
-            var goal = parseFloat(self.attributes.goal.value);
-            var messageText = self.attributes.message.value;
-            var titleText = 'goal title';
+        var self = meterSpan[0];
 
-            var usedPct = (used - min) / (max - min);
-            var goalPct = (goal - min) / (max - min);
+        var min = goalObj.min();
+        var max = goalObj.max();
+        var used = goalObj.current();
+        var goal = goalObj.goal();
+        var messageText = goalObj.messageText();
+        var titleText = goalObj.titleText();
 
-            var height = 30;
-            var msgPadding = (height / 2.8).toFixed(1);
+        console.log('min, max, used, goal, messageText, titleText');
+        console.log(min, max, used, goal, messageText, titleText);
 
-            var svg = d3.select(self).append("svg")
-              .append('g');
+        var usedPct = (used - min) / (max - min);
+        var goalPct = (goal - min) / (max - min);
 
-            var background = svg.append("rect")
-                .attr('class', 'background')
-                .attr('x', 0)
-                .attr('y', 0)
-                .attr('height', height)
+        var height = 30;
+        var msgPadding = (height / 2.8).toFixed(1);
 
-            var usedSvg = svg.append("rect")
-                .attr('class', 'current')
-                .attr('x', 0)
-                .attr('y', 0)
-                .attr('height', height)
+        var svg = d3.select(self).append("svg")
+          .append('g');
 
-            var goalSvg = svg.append("rect")
-                .attr('class', 'goal')
-                .attr('width', 4)
-                .attr('y', 0)
-                .attr('height', height)
+        var background = svg.append("rect")
+            .attr('class', 'background')
+            .attr('x', 0)
+            .attr('y', 0)
+            .attr('height', height)
 
-            var messageSvg = svg.append("text")
-                .text(messageText)
-                .attr('y', height - msgPadding)
+        var usedSvg = svg.append("rect")
+            .attr('class', 'current')
+            .attr('x', 0)
+            .attr('y', 0)
+            .attr('height', height)
 
-            var titleSvg = svg.append("text")
-                .text(titleText)
-                .attr('x', msgPadding)
-                .attr('y', height - msgPadding)
+        var goalSvg = svg.append("rect")
+            .attr('class', 'goal')
+            .attr('width', 4)
+            .attr('y', 0)
+            .attr('height', height)
 
-            var updateChart = function() {
-                width = self.offsetWidth;
-                background.attr('width', width);
-                goalSvg.attr('x', goalPct * width);
-                usedSvg.attr('width', usedPct * width);
-                msg = messageSvg[0][0];
-                msgWidth = msg.offsetWidth;
-                messageSvg.attr('x', width - msgWidth - msgPadding);
-            };
-            
-            updateChart();
-            $(window).resize(updateChart);
-        });
+        var messageSvg = svg.append("text")
+            .text(messageText)
+            .attr('y', height - msgPadding)
+
+        var titleSvg = svg.append("text")
+            .text(titleText)
+            .attr('x', msgPadding)
+            .attr('y', height - msgPadding)
+
+        var updateChart = function() {
+            width = self.offsetWidth;
+            background.attr('width', width);
+            goalSvg.attr('x', goalPct * width);
+            usedSvg.attr('width', usedPct * width);
+            msg = messageSvg[0][0];
+            msgWidth = msg.offsetWidth;
+            messageSvg.attr('x', width - msgWidth - msgPadding);
+        };
+        
+        updateChart();
+        $(window).resize(updateChart);
     };
     
     return Goal;

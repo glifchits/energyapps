@@ -10,14 +10,9 @@
 
 <div id=goals>
   <a href="/profile">Add goals</a>
-  <ul data-bind="foreach: { data: goals, afterRender: drawGoals }">
+  <ul data-bind="foreach: { data: goals, afterRender: drawGoal }">
     <li class='block-group'>
-      <span class='block meter' data-bind="attr: {
-        'id': goalId, 'current': current, 'goal': goal,
-        'min': min, 'max': max,
-        'message': messageText, 'title': titleText
-        }"></span>
-      <a href="#" class=block>Edit</a>
+      <span class='block meter' data-bind="attr: { 'id': id }, text: $index"></span>
     </li>
   </ul>
 </div>
