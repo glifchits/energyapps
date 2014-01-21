@@ -13,8 +13,18 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
         });
         return result;
     };
-
-    var DATE = '2013-12-25';
+ 
+    var getDateStr = function(date, dayOffset) {
+        dayOffset = dayOffset || 0;
+        d = new Date(date - (dayOffset * 24 * 60 * 60 * 1000));
+        year = d.getUTCFullYear();
+        month = d.getUTCMonth() + 1;
+        day = d.getUTCDate();
+        return year + '-' + ('0' + month).slice(-2) + '-' + ('0' + day).slice(-2);
+    };
+   
+    var now = new Date();
+    var DATE = getDateStr(now);
 
     var TodayWidget = function() {
 
@@ -176,15 +186,6 @@ define(['knockout', 'dashboard/widget', 'dashboard/goal'], function(ko, Widget, 
         return widget;
     };
 
-
-    var getDateStr = function(date, dayOffset) {
-        dayOffset = dayOffset || 0;
-        d = new Date(date - (dayOffset * 24 * 60 * 60 * 1000));
-        year = d.getUTCFullYear();
-        month = d.getUTCMonth();
-        day = d.getUTCDate();
-        return year + '-' + ('0' + month).slice(-2) + '-' + ('0' + day).slice(-2);
-    };
 
     var DashboardViewModel = function() {
         var self = this;
