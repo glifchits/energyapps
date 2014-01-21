@@ -131,3 +131,16 @@ def change_userinfo():
 
     app.logger.debug('got args, name: %s email: %s' % (name, email))
     return redirect(url_for('.edit_profile'))
+
+
+@auth.route('/profile/delete')
+@login_required
+def delete_profile():
+    user_id = g.user.get_id()
+    app.logger.debug('about to delete user ID %s' % user_id)
+    sql = '''
+    delete from users
+    where id = %s
+    ''' % user_id
+    db.engine.execute(sql)
+    return redirect(url_for('home'))

@@ -43,6 +43,11 @@
 
 <a href='#' id='add-goal' data-bind='click: addGoal'>Add a new goal</a>
 
+
+<h3>Delete profile</h3>
+
+<a href='{{ url_for('auth.delete_profile') }}' id='delete-profile'>Delete your profile</a>
+
 {% endblock %}
 
 {% block beforeend %}
