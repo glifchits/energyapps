@@ -23,7 +23,7 @@
   <form class='goal-form' data-bind='attr { id: "form" + id() }'>
     <label for=target class='goal-name' data-bind="text: name"></label>
     <input name=target type=number data-bind="
-    value: target,
+    value: target, valueUpdate: 'afterkeydown',
     enable: scope() !== undefined
     ">
     <label for=target>Wh</label>
