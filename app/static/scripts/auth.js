@@ -11,6 +11,10 @@ require(['./common'], function() {
                 return self.name() && self.email() && self.pass()
                    && self.pass() === self.conf();
             });
+
+            self.canLogin = ko.computed(function() {
+                return self.email() && self.pass();
+            });
         };
 
         ko.applyBindings(new authModel);
