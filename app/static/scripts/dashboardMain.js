@@ -14,6 +14,8 @@ require(['./common'], function(common) {
                     spinner(true, "Updating energy data...");
                     $.get(url, function(data) {
                         console.log('received eui', data);
+                    })
+                    .complete(function(data) {
                         spinner(false);
                     });
                 };
