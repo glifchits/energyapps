@@ -3,10 +3,10 @@ define(['knockout'], function(ko) {
     var Goal = function() {
         var self = this;
         
-        self.max = ko.observable(10);
+        self.max = ko.observable(1);
         self.min = ko.observable(0);
-        self.current = ko.observable(5);
-        self.goal = ko.observable(6);
+        self.current = ko.observable(0);
+        self.goal = ko.observable(0);
         self.scope = ko.observable();
         // some unlikely to collide, arbitrary value
         self.id = 'goal' + Math.round(Math.random() * 10000);
@@ -20,7 +20,8 @@ define(['knockout'], function(ko) {
         });
         
         self.messageText = ko.computed(function() {
-            if (self.goal() < self.current())
+            curr = (self.current() - self.min()) / (self.max() - self.min());
+            if (self.goal() > curr)
                 return "slow down!";
             else
                 return "on track!";
