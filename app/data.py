@@ -237,7 +237,52 @@ def goals():
 
         goals.append(goal)
 
-    return json.dumps(goals, indent=4)
+    sql = """
+    select
+        'week' as scope,
+        avg(week_q.cost) as cost,
+        avg(week_q.value) as value
+    from (
+        select
+            sum(cost) as cost,
+            sum(value) as value
+        from data_view
+        where owner = {owner_id}
+        group by week
+    ) as week_q
+
+    union
+
+    select
+        'month' as scope,
+        avg(monthq.cost) as cost,
+        avg(monthq.value) as value
+    from (
+        select
+            sum(cost) as cost,
+            sum(value) as value
+        from data_view
+        where owner = {owner_id}
+        group by month
+    ) as monthq
+    order by scope
+    """.format(owner_id = owner_id)
+
+    app.logger.debug('executing sql for goal avgs:\n%s' % sql)
+    res = db.engine.execute(sql)
+
+    month, week = [{
+        'scope': x[0],
+        'cost': float(x[1]),
+        'value': float(x[2])
+        } for x in res]
+
+    app.logger.debug('month: %s\nweek: %s' % (month, week))
+
+    result = {}
+    result['goals'] = goals
+    result['averages'] = [month, week]
+    return json.dumps(result, indent=4)
 
 
 @data.route('/goals', methods=['POST'])
