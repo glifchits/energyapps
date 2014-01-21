@@ -9,7 +9,7 @@
 {% block content %}
 
 <div id=goals>
-  <a href="/profile">Add goals</a>
+  <a href="/profile" data-bind="visible: goals.length > 0">Add goals</a>
   <ul data-bind="foreach: { data: goals, afterRender: drawGoal }">
     <li class='block-group'>
       <span class='block meter' data-bind="attr: { 'id': id }"></span>
