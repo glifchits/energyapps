@@ -1,11 +1,17 @@
 energyapps
 ==========
 
-This is my submission to the [GreenButton energy apps for Ontario contest](http://energyappsontario.challengepost.com).
-Its still a work in progress.
+I wrote this app for a contest: unfortunate circumstances meant I couldn't meet the deadline, but it is a nearly complete
+implementation (minus some polish). I used Flask to serve the data, SQLAlchemy to store it in a PostgreSQL database, and
+Rickshaw.js to visualize the data.
 
-I'm publicly releasing this code before the contest end date to demonstrate a significant project I'm working on while I
-talk to recruiters for a fall 2014 co-op term.
+Screenshots
+-----------
+
+![Image](doc/mpowr-2-reg.png)
+![Image](doc/mpowr-3-dash.png)
+![Image](doc/mpowr-5-graph2.png)
+![Image](doc/mpowr-6-prof.png)
 
 Disclaimer
 ----------
@@ -16,7 +22,4 @@ than I'm used to.
 License
 -------
 
-While the contest is in progress, this code is licensed under the 
-[Microsoft Reference Source License](http://referencesource.microsoft.com/referencesourcelicense.aspx).
-You may not redistribute or modify this code. This is only because I'm paranoid that someone will claim this work
-for their own. I hope to release this under a liberal license after the contest.
+Public domain.
